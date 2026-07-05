@@ -32,11 +32,15 @@ export function buildMetadata(overrides: { title?: string; description?: string 
       siteName: site.name,
       locale: site.locale,
       type: "website",
+      // Explícita porque las páginas que definen su propio openGraph no heredan la
+      // imagen del file convention app/opengraph-image.tsx del layout raíz.
+      images: [{ url: `${base}/opengraph-image`, width: 1200, height: 630 }],
     },
     twitter: {
       card: "summary_large_image",
       title: socialTitle,
       description,
+      images: [`${base}/opengraph-image`],
     },
   };
 }
