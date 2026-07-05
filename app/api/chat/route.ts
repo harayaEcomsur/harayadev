@@ -1,14 +1,14 @@
 import { streamText } from "ai";
-import { anthropic } from "@/lib/anthropic";
+import { google } from "@/lib/gemini";
 import { checkRateLimit } from "@/lib/rate-limit";
 import { buildSystemPrompt } from "@/lib/chat-prompt";
 
 export const runtime = "edge";
 
 export async function POST(req: Request) {
-  if (!process.env.ANTHROPIC_API_KEY) {
+  if (!process.env.GEMINI_API_KEY) {
     return new Response(
-      JSON.stringify({ error: "El chat no está configurado todavía (falta ANTHROPIC_API_KEY)." }),
+      JSON.stringify({ error: "El chat no está configurado todavía (falta GEMINI_API_KEY)." }),
       { status: 501, headers: { "Content-Type": "application/json" } }
     );
   }
@@ -30,7 +30,7 @@ export async function POST(req: Request) {
 
   try {
     const result = await streamText({
-      model: anthropic("claude-haiku-4-5-20251001"),
+      model: google("gemini-2.5-flash"),
       system: buildSystemPrompt(),
       messages,
       maxTokens: 300,

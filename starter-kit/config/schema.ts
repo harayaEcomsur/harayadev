@@ -116,7 +116,7 @@ export const clientConfigSchema = z.object({
   chat: z.object({
     businessDescription: z.string(),
     qaPairs: z.array(z.object({ q: z.string(), a: z.string() })).max(40).default([]),
-    model: z.string().default("claude-haiku-4-5-20251001"),
+    model: z.string().default("gemini-2.5-flash"),
     maxTokensPerReply: z.number().default(300),
     fallbackToWhatsapp: z.boolean().default(true),
     systemPromptExtra: z.string().optional(),

@@ -31,7 +31,7 @@ Variables de entorno (`.env.local`, ver `.env.example`):
 - `NEXT_PUBLIC_SITE_URL` — usado en metadata, sitemap.xml y robots.txt.
 - `WHATSAPP_NUMBER` — opcional, formato E.164 sin "+" (ej. `56912345678`). No se hardcodea
   en el código a propósito; si no está definida, el link/botón de WhatsApp no se muestra.
-- `ANTHROPIC_API_KEY` — requerido para el chat IA (widget flotante en todo el sitio). Si
+- `GEMINI_API_KEY` — requerido para el chat IA (widget flotante en todo el sitio). Si
   falta, el widget muestra un mensaje de error amigable en vez de fallar en silencio.
 
 ## Estructura
@@ -49,5 +49,7 @@ Variables de entorno (`.env.local`, ver `.env.example`):
 
 ## Pendiente
 
-- Agregar `ANTHROPIC_API_KEY` en Vercel para que el chat IA responda en producción.
 - Imágenes reales de los 3 proyectos en `/proyectos` (hoy solo texto).
+- El chat usa Gemini (`gemini-2.5-flash`) por ahora en vez de Anthropic Claude, porque la
+  cuenta de Anthropic no tenía saldo. Volver a Anthropic es un cambio acotado a
+  `lib/gemini.ts` + `app/api/chat/route.ts` cuando se resuelva.

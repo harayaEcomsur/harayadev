@@ -60,6 +60,6 @@ Próximos pasos:
 2. Agrega las imágenes en public/clients/${slug}/
 3. Sube el branch: git push -u origin ${branchName}
 4. En Vercel: crea un proyecto apuntando a este branch, con "Root Directory" = starter-kit
-5. Configura las variables de entorno (ANTHROPIC_API_KEY, NEXT_PUBLIC_SITE_URL, RESEND_API_KEY) en Vercel
+5. Configura las variables de entorno (GEMINI_API_KEY, NEXT_PUBLIC_SITE_URL, RESEND_API_KEY) en Vercel
 6. Comparte el link de preview con el cliente. Cuando esté aprobado, conecta el dominio propio y promueve a producción.
 `);

@@ -51,10 +51,10 @@ export const projects: Project[] = [
   {
     slug: "starter-kit",
     title: "Starter kit: sitios web con IA para pymes chilenas",
-    client: "Producto propio (Haraya Ecomsur)",
+    client: "Producto propio (HarayaDev)",
     summary:
       "Template config-driven en Next.js para generar sitios web personalizados con chat IA en minutos: un solo archivo de configuración define identidad, contenido y módulos activables, sin tocar código.",
-    stack: ["Next.js 14", "TypeScript", "Tailwind CSS", "Zod", "Vercel AI SDK + Anthropic Claude Haiku", "Resend"],
+    stack: ["Next.js 14", "TypeScript", "Tailwind CSS", "Zod", "Vercel AI SDK + Google Gemini", "Resend"],
     role: "Arquitectura y desarrollo full stack",
     highlights: [
       "Un archivo `client.config.ts` validado con Zod define todo el sitio",

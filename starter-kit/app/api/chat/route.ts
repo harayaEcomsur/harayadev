@@ -1,5 +1,5 @@
 import { streamText } from "ai";
-import { anthropic } from "@/lib/anthropic";
+import { google } from "@/lib/gemini";
 import { clientConfig } from "@/config/client.config";
 import { checkRateLimit } from "@/lib/rate-limit";
 
@@ -24,9 +24,9 @@ function buildSystemPrompt(): string {
 }
 
 export async function POST(req: Request) {
-  if (!process.env.ANTHROPIC_API_KEY) {
+  if (!process.env.GEMINI_API_KEY) {
     return new Response(
-      JSON.stringify({ error: "El chat no está configurado todavía (falta ANTHROPIC_API_KEY)." }),
+      JSON.stringify({ error: "El chat no está configurado todavía (falta GEMINI_API_KEY)." }),
       { status: 501, headers: { "Content-Type": "application/json" } }
     );
   }
@@ -48,7 +48,7 @@ export async function POST(req: Request) {
 
   try {
     const result = await streamText({
-      model: anthropic(clientConfig.chat.model),
+      model: google(clientConfig.chat.model),
       system: buildSystemPrompt(),
       messages,
       maxTokens: clientConfig.chat.maxTokensPerReply,
