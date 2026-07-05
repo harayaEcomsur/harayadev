@@ -50,6 +50,6 @@ Variables de entorno (`.env.local`, ver `.env.example`):
 ## Pendiente
 
 - Imágenes reales de los 3 proyectos en `/proyectos` (hoy solo texto).
-- El chat usa Gemini (`gemini-2.5-flash`) por ahora en vez de Anthropic Claude, porque la
+- El chat usa Gemini (`gemini-2.5-flash-lite`) por ahora en vez de Anthropic Claude, porque la
   cuenta de Anthropic no tenía saldo. Volver a Anthropic es un cambio acotado a
   `lib/gemini.ts` + `app/api/chat/route.ts` cuando se resuelva.

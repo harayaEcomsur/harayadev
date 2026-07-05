@@ -18,7 +18,7 @@ npm run new-client -- --name "Panadería Rosita" [--preset restaurante|barberia|
 
 Variables de entorno (`.env.local`, ver `.env.example`):
 
-- `GEMINI_API_KEY` — requerido para el chat IA (modelo `gemini-2.5-flash`, tier gratuito en Google AI Studio).
+- `GEMINI_API_KEY` — requerido para el chat IA (modelo `gemini-2.5-flash-lite`, tier gratuito en Google AI Studio).
 - `RESEND_API_KEY` — opcional, requerido solo si el módulo `contactForm` debe enviar emails reales.
 - `NEXT_PUBLIC_SITE_URL` — usado en metadata, sitemap.xml y robots.txt.
 
@@ -55,7 +55,7 @@ Variables de entorno (`.env.local`, ver `.env.example`):
 - **Secciones** (`components/sections/*`) se renderizan u ocultan según
   `client.config.ts#modules` (flags) y si el cliente llenó el contenido correspondiente.
 - **Chat IA** (`app/api/chat/route.ts`): streaming con Vercel AI SDK + Google Gemini
-  (`gemini-2.5-flash` por defecto, configurable en `client.config.ts#chat.model`). El
+  (`gemini-2.5-flash-lite` por defecto, configurable en `client.config.ts#chat.model`). El
   system prompt se arma dinámicamente desde
   `client.config.ts#chat` (descripción del negocio + hasta 40 pares P/R), con
   instrucción de derivar a WhatsApp si no sabe la respuesta. Rate limiting básico

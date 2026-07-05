@@ -116,8 +116,11 @@ export const clientConfigSchema = z.object({
   chat: z.object({
     businessDescription: z.string(),
     qaPairs: z.array(z.object({ q: z.string(), a: z.string() })).max(40).default([]),
-    model: z.string().default("gemini-2.5-flash"),
-    maxTokensPerReply: z.number().default(300),
+    // gemini-2.5-flash gasta la mayoría del budget de tokens en "thinking" interno antes
+    // de responder, truncando respuestas cortas. flash-lite no tiene ese overhead y usa
+    // la misma cuota gratuita.
+    model: z.string().default("gemini-2.5-flash-lite"),
+    maxTokensPerReply: z.number().default(500),
     fallbackToWhatsapp: z.boolean().default(true),
     systemPromptExtra: z.string().optional(),
   }),

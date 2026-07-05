@@ -30,10 +30,13 @@ export async function POST(req: Request) {
 
   try {
     const result = await streamText({
-      model: google("gemini-2.5-flash"),
+      // gemini-2.5-flash gasta la mayoría del budget de maxTokens en "thinking" interno
+      // antes de responder (thoughtsTokenCount), truncando respuestas cortas. flash-lite
+      // no tiene ese overhead y usa la misma cuota gratuita.
+      model: google("gemini-2.5-flash-lite"),
       system: buildSystemPrompt(),
       messages,
-      maxTokens: 300,
+      maxTokens: 500,
     });
 
     return result.toDataStreamResponse();

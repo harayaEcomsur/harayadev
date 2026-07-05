@@ -9,10 +9,22 @@ function buildSystemPrompt(): string {
   const { chat, meta, contact } = clientConfig;
   const qa = chat.qaPairs.map((p, i) => `${i + 1}. P: ${p.q}\n   R: ${p.a}`).join("\n");
 
+  const contactLine = [
+    contact.phone ? `teléfono ${contact.phone}` : null,
+    contact.whatsapp ? `WhatsApp +${contact.whatsapp}` : null,
+    contact.email ? `email ${contact.email}` : null,
+    contact.address ? `dirección ${contact.address}` : null,
+  ]
+    .filter(Boolean)
+    .join(", ");
+
   return [
     `Eres el asistente virtual de "${meta.businessName}" (${meta.rubro}).`,
     chat.businessDescription,
     qa ? `Preguntas frecuentes y sus respuestas oficiales:\n${qa}` : "",
+    contactLine
+      ? `Datos de contacto: ${contactLine}. Si preguntan cómo contactar o piden alguno de estos datos, dalos directamente en tu respuesta.`
+      : "",
     chat.fallbackToWhatsapp
       ? `Si no sabes la respuesta o el cliente pide hablar con una persona, indica amablemente que puede escribir por WhatsApp al ${contact.whatsapp ?? "el número de contacto"}.`
       : "",
