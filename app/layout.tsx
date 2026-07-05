@@ -1,13 +1,17 @@
 import type { Metadata } from "next";
-import { Space_Grotesk, Inter } from "next/font/google";
+import { Archivo, JetBrains_Mono } from "next/font/google";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { ChatWidget } from "@/components/chat/ChatWidget";
 import { buildMetadata, buildPersonOrgJsonLd } from "@/lib/seo";
 import "./globals.css";
 
-const heading = Space_Grotesk({ subsets: ["latin"], weight: ["500", "600", "700"], variable: "--font-heading" });
-const body = Inter({ subsets: ["latin"], variable: "--font-body" });
+const archivo = Archivo({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800", "900"],
+  variable: "--font-body",
+});
+const mono = JetBrains_Mono({ subsets: ["latin"], weight: ["400", "500", "700"], variable: "--font-mono" });
 
 export const metadata: Metadata = buildMetadata();
 
@@ -15,7 +19,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   const jsonLd = buildPersonOrgJsonLd();
 
   return (
-    <html lang="es-CL" className={`${heading.variable} ${body.variable}`}>
+    // Archivo cubre heading y body en este diseño; JetBrains Mono es la mono de etiquetas.
+    <html lang="es-CL" className={`${archivo.variable} ${mono.variable}`} style={{ ["--font-heading" as string]: "var(--font-body)" }}>
       <body>
         <Header />
         {children}

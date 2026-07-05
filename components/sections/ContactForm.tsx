@@ -57,7 +57,7 @@ export function ContactForm() {
           id="name"
           name="name"
           required
-          className="w-full rounded-lg border border-black/10 px-3 py-2 focus:border-primary focus:outline-none"
+          className="w-full rounded-lg border border-line bg-background px-3 py-2 text-foreground focus:border-primary focus:outline-none"
         />
       </div>
       <div>
@@ -68,7 +68,7 @@ export function ContactForm() {
           id="contactInfo"
           name="contactInfo"
           required
-          className="w-full rounded-lg border border-black/10 px-3 py-2 focus:border-primary focus:outline-none"
+          className="w-full rounded-lg border border-line bg-background px-3 py-2 text-foreground focus:border-primary focus:outline-none"
         />
       </div>
       <div>
@@ -80,7 +80,7 @@ export function ContactForm() {
           name="message"
           required
           rows={5}
-          className="w-full rounded-lg border border-black/10 px-3 py-2 focus:border-primary focus:outline-none"
+          className="w-full rounded-lg border border-line bg-background px-3 py-2 text-foreground focus:border-primary focus:outline-none"
         />
       </div>
       <button
@@ -90,7 +90,7 @@ export function ContactForm() {
       >
         {status === "sending" ? "Enviando…" : "Enviar mensaje"}
       </button>
-      {status === "error" && <p className="text-sm text-red-600">{errorMsg}</p>}
+      {status === "error" && <p className="text-sm text-primary">{errorMsg}</p>}
     </form>
   );
 }

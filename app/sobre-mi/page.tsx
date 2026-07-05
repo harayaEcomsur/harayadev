@@ -96,7 +96,7 @@ export default function SobreMiPage() {
         <h2 className="mt-12 font-heading text-2xl font-semibold text-foreground">Experiencia</h2>
         <ul className="mt-4 space-y-4">
           {EXPERIENCE.map((item) => (
-            <li key={item.company} className="rounded-xl border border-black/5 p-4 shadow-sm">
+            <li key={item.company} className="rounded-xl border border-line bg-card p-4 shadow-sm">
               <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
                 <span className="font-heading font-semibold text-foreground">
                   {item.company} <span className="font-normal text-foreground/60">· {item.role}</span>

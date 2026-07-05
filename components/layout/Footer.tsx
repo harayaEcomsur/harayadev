@@ -1,37 +1,34 @@
 import Link from "next/link";
-import { Container } from "@/components/ui/Container";
 import { site } from "@/lib/site";
-import { buildWhatsAppLink } from "@/lib/whatsapp";
 
 export function Footer() {
   return (
-    <footer className="border-t border-black/5 py-10 text-sm text-foreground/60">
-      <Container className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <p>
-          © {new Date().getFullYear()} {site.legalName}.
-        </p>
-        <div className="flex flex-wrap gap-4">
-          <a href={site.github} target="_blank" rel="noopener noreferrer" className="hover:text-primary">
-            GitHub
-          </a>
-          <a href={`mailto:${site.email}`} className="hover:text-primary">
+    <footer className="border-t border-line px-4 py-9 sm:px-6 lg:px-8">
+      <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-6">
+        <Link href="/" className="text-xl font-black text-foreground">
+          haraya<span className="text-primary">dev</span>
+        </Link>
+        <div className="flex flex-wrap items-center gap-7 font-mono text-[13px] text-soft">
+          {site.whatsapp && <span>+{site.whatsapp}</span>}
+          <a href={`mailto:${site.email}`} className="transition-colors hover:text-foreground">
             {site.email}
           </a>
-          {site.whatsapp && (
-            <a
-              href={buildWhatsAppLink(site.whatsapp)}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:text-primary"
-            >
-              WhatsApp
-            </a>
-          )}
-          <Link href="/contacto" className="hover:text-primary">
-            Contacto
+          <a
+            href={site.github}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="transition-colors hover:text-foreground"
+          >
+            GitHub
+          </a>
+          <Link href="/sobre-mi" className="transition-colors hover:text-foreground">
+            Sobre mí
           </Link>
         </div>
-      </Container>
+        <span className="text-[13px] text-soft/60">
+          © {new Date().getFullYear()} {site.legalName}
+        </span>
+      </div>
     </footer>
   );
 }

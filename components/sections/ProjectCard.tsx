@@ -3,7 +3,7 @@ import type { Project } from "@/content/projects";
 
 export function ProjectCard({ project }: { project: Project }) {
   return (
-    <article className="rounded-2xl border border-black/5 p-6 shadow-sm sm:p-8">
+    <article className="rounded-2xl border border-line bg-card p-6 shadow-sm sm:p-8">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
           <h2 className="font-heading text-xl font-semibold text-foreground sm:text-2xl">{project.title}</h2>

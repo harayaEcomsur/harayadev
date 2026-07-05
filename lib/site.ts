@@ -1,8 +1,8 @@
 export const site = {
   name: "HarayaDev",
-  legalName: "COMERCIAL HECTOR ALFONSO ARAYA EIRL",
+  legalName: "COMERCIAL HECTOR ALFONSO ARAYA CASTILLO E.I.R.L.",
   personName: "Hector Araya C.",
-  tagline: "Desarrollo web y soluciones con IA para empresas y pymes chilenas.",
+  tagline: "Desarrollo web y soluciones con IA para pymes chilenas",
   description:
     "Desarrollo web full stack, integraciones con IA y sitios web con IA para pymes chilenas. Panel de proyectos, servicios y contacto de Hector Araya C. / HarayaDev.",
   billingNote: "Emitimos factura y boleta de honorarios.",
