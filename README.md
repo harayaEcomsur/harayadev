@@ -32,8 +32,7 @@ Variables de entorno (`.env.local`, ver `.env.example`):
   más `app/api/contact/route.ts`, `sitemap.ts` y `robots.ts`.
 - `content/projects.ts` y `content/services.ts` — contenido tipado (no config-driven:
   esta es una sola marca con contenido fijo, a diferencia del starter-kit).
-- `lib/site.ts` — constantes de marca (nombre, tagline, contacto). Contiene placeholders
-  `TODO` para el email/WhatsApp reales de contacto.
+- `lib/site.ts` — constantes de marca (nombre, tagline, contacto).
 - `lib/seo.ts` — metadata y JSON-LD (`Organization` + `Person`).
 - `components/` — mismo patrón de UI que `starter-kit/` (Container, Header, Footer,
   secciones), pero sin el mecanismo config-driven multi-tenant.
@@ -43,6 +42,5 @@ Variables de entorno (`.env.local`, ver `.env.example`):
 - `app/sobre-mi/page.tsx` tiene un placeholder `TODO` para la experiencia profesional
   real (empresas, cargos, períodos) — no se completó con datos inferidos de repos de
   GitHub para evitar publicar historial laboral no confirmado.
-- `lib/site.ts` tiene placeholders `TODO` para el email y WhatsApp reales de contacto.
 - Imágenes reales de los 3 proyectos en `/proyectos` (hoy solo texto).
 - Deploy real en Vercel de este sitio raíz.

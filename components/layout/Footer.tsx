@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Container } from "@/components/ui/Container";
 import { site } from "@/lib/site";
+import { buildWhatsAppLink } from "@/lib/whatsapp";
 
 export function Footer() {
   return (
@@ -15,6 +16,14 @@ export function Footer() {
           </a>
           <a href={`mailto:${site.email}`} className="hover:text-primary">
             {site.email}
+          </a>
+          <a
+            href={buildWhatsAppLink(site.whatsapp)}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-primary"
+          >
+            WhatsApp
           </a>
           <Link href="/contacto" className="hover:text-primary">
             Contacto

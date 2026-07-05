@@ -3,6 +3,7 @@ import { Container } from "@/components/ui/Container";
 import { ContactForm } from "@/components/sections/ContactForm";
 import { site } from "@/lib/site";
 import { buildMetadata } from "@/lib/seo";
+import { buildWhatsAppLink } from "@/lib/whatsapp";
 
 export const metadata: Metadata = buildMetadata(
   {
@@ -26,6 +27,17 @@ export default function ContactoPage() {
               Email:{" "}
               <a href={`mailto:${site.email}`} className="text-primary hover:underline">
                 {site.email}
+              </a>
+            </p>
+            <p>
+              WhatsApp:{" "}
+              <a
+                href={buildWhatsAppLink(site.whatsapp, "Hola! Vi tu sitio y quiero conversar sobre un proyecto")}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-primary hover:underline"
+              >
+                +{site.whatsapp}
               </a>
             </p>
             <p>
