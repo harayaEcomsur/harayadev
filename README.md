@@ -25,6 +25,8 @@ Variables de entorno (`.env.local`, ver `.env.example`):
 - `RESEND_API_KEY` — opcional, requerido solo para que el formulario de contacto envíe emails reales.
 - `CONTACT_TO_EMAIL` — opcional, email de destino del formulario (si no se define, usa `lib/site.ts#email`).
 - `NEXT_PUBLIC_SITE_URL` — usado en metadata, sitemap.xml y robots.txt.
+- `WHATSAPP_NUMBER` — opcional, formato E.164 sin "+" (ej. `56912345678`). No se hardcodea
+  en el código a propósito; si no está definida, el link/botón de WhatsApp no se muestra.
 
 ## Estructura
 
@@ -39,8 +41,6 @@ Variables de entorno (`.env.local`, ver `.env.example`):
 
 ## Pendiente
 
-- `app/sobre-mi/page.tsx` tiene un placeholder `TODO` para la experiencia profesional
-  real (empresas, cargos, períodos) — no se completó con datos inferidos de repos de
-  GitHub para evitar publicar historial laboral no confirmado.
 - Imágenes reales de los 3 proyectos en `/proyectos` (hoy solo texto).
-- Deploy real en Vercel de este sitio raíz.
+- Deploy real en Vercel de este sitio raíz (recordar configurar `WHATSAPP_NUMBER` y
+  el resto de las env vars ahí).

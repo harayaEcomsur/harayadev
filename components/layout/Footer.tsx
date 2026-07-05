@@ -17,14 +17,16 @@ export function Footer() {
           <a href={`mailto:${site.email}`} className="hover:text-primary">
             {site.email}
           </a>
-          <a
-            href={buildWhatsAppLink(site.whatsapp)}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hover:text-primary"
-          >
-            WhatsApp
-          </a>
+          {site.whatsapp && (
+            <a
+              href={buildWhatsAppLink(site.whatsapp)}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-primary"
+            >
+              WhatsApp
+            </a>
+          )}
           <Link href="/contacto" className="hover:text-primary">
             Contacto
           </Link>

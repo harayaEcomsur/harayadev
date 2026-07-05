@@ -7,6 +7,7 @@ export const site = {
     "Desarrollo web full stack, integraciones con IA y sitios web con IA para pymes chilenas. Panel de proyectos, servicios y contacto de Hector Araya C. / Haraya Ecomsur.",
   locale: "es-CL",
   email: "harayadev@gmail.com",
-  whatsapp: "56977682396",
+  // No se hardcodea en el repo: se define como env var (WHATSAPP_NUMBER) por proyecto Vercel.
+  whatsapp: process.env.WHATSAPP_NUMBER ?? "",
   github: "https://github.com/harayaEcomsur",
 };

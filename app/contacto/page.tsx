@@ -29,17 +29,19 @@ export default function ContactoPage() {
                 {site.email}
               </a>
             </p>
-            <p>
-              WhatsApp:{" "}
-              <a
-                href={buildWhatsAppLink(site.whatsapp, "Hola! Vi tu sitio y quiero conversar sobre un proyecto")}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-primary hover:underline"
-              >
-                +{site.whatsapp}
-              </a>
-            </p>
+            {site.whatsapp && (
+              <p>
+                WhatsApp:{" "}
+                <a
+                  href={buildWhatsAppLink(site.whatsapp, "Hola! Vi tu sitio y quiero conversar sobre un proyecto")}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-primary hover:underline"
+                >
+                  +{site.whatsapp}
+                </a>
+              </p>
+            )}
             <p>
               GitHub:{" "}
               <a href={site.github} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">
