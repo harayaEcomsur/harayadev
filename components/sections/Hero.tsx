@@ -6,7 +6,7 @@ export function Hero() {
   return (
     <section className="bg-primary/5 py-20 sm:py-28">
       <Container className="text-center">
-        <p className="font-medium text-primary">{site.personName} · {site.legalName}</p>
+        <p className="font-medium text-primary">{site.personName} · {site.name}</p>
         <h1 className="mx-auto mt-3 max-w-3xl font-heading text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
           {site.tagline}
         </h1>

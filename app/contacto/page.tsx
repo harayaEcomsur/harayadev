@@ -49,6 +49,7 @@ export default function ContactoPage() {
               </a>
             </p>
           </div>
+          <p className="mt-6 text-sm text-foreground/50">{site.billingNote}</p>
         </div>
         <ContactForm />
       </Container>

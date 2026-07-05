@@ -42,7 +42,8 @@ export function buildPersonOrgJsonLd() {
       {
         "@type": "Organization",
         "@id": `${base}/#organization`,
-        name: site.legalName,
+        name: site.name,
+        legalName: site.legalName,
         url: base,
         founder: { "@id": `${base}/#person` },
       },

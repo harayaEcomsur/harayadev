@@ -6,7 +6,7 @@ import { buildMetadata } from "@/lib/seo";
 export const metadata: Metadata = buildMetadata(
   {
     title: "Sobre mí",
-    description: `${site.personName}, fundador de ${site.legalName}. Stack, trayectoria y forma de trabajar.`,
+    description: `${site.personName}, fundador de ${site.name}. Stack, trayectoria y forma de trabajar.`,
   },
   "/sobre-mi"
 );
@@ -67,7 +67,7 @@ export default function SobreMiPage() {
         <h1 className="font-heading text-4xl font-bold text-foreground">Sobre mí</h1>
         <p className="mt-4 text-lg text-foreground/70">
           Soy {site.personName}, desarrollador full stack y fundador de{" "}
-          <strong className="text-foreground">{site.legalName}</strong>. Más de 6 años
+          <strong className="text-foreground">{site.name}</strong>. Más de 6 años
           construyendo desde e-commerce a gran escala (VTEX IO, Cencosud) hasta paneles de
           administración e integraciones con IA de punta a punta — desde la arquitectura hasta
           el deploy.
@@ -79,6 +79,9 @@ export default function SobreMiPage() {
             proyectos
           </a>
           ).
+        </p>
+        <p className="mt-4 text-sm text-foreground/50">
+          Razón social: {site.legalName}. {site.billingNote}
         </p>
 
         <h2 className="mt-12 font-heading text-2xl font-semibold text-foreground">Stack</h2>
