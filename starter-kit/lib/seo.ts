@@ -12,6 +12,10 @@ export function buildMetadata(config: ClientConfig): Metadata {
     title: config.seo.title,
     description: config.seo.description,
     keywords: config.seo.keywords,
+    // SITE_NOINDEX se define solo en el proyecto Vercel de la demo (datos ficticios):
+    // evita indexar un negocio falso con schema LocalBusiness. Los proyectos de
+    // clientes reales no llevan esta env var y se indexan normalmente.
+    robots: process.env.SITE_NOINDEX ? { index: false, follow: false } : undefined,
     openGraph: {
       title: config.seo.title,
       description: config.seo.description,
