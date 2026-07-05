@@ -29,4 +29,10 @@ export const services: Service[] = [
     description:
       "Paneles con autenticación, generación de cotizaciones/informes/documentos y persistencia real en base de datos — como el panel construido para D&Z Building.",
   },
+  {
+    icon: "ShoppingCart",
+    title: "E-commerce (VTEX IO)",
+    description:
+      "Migración de VTEX Legacy a VTEX IO, portales B2B y micro-frontends de checkout/cuenta, con foco en performance y conversión — experiencia en operaciones de gran escala (Cencosud/EASY.cl).",
+  },
 ];
