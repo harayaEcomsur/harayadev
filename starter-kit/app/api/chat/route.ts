@@ -24,6 +24,13 @@ function buildSystemPrompt(): string {
 }
 
 export async function POST(req: Request) {
+  if (!process.env.ANTHROPIC_API_KEY) {
+    return new Response(
+      JSON.stringify({ error: "El chat no está configurado todavía (falta ANTHROPIC_API_KEY)." }),
+      { status: 501, headers: { "Content-Type": "application/json" } }
+    );
+  }
+
   const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "anonymous";
   const { allowed, retryAfterSeconds } = checkRateLimit(ip);
 
@@ -39,12 +46,24 @@ export async function POST(req: Request) {
 
   const { messages } = await req.json();
 
-  const result = await streamText({
-    model: anthropic(clientConfig.chat.model),
-    system: buildSystemPrompt(),
-    messages,
-    maxTokens: clientConfig.chat.maxTokensPerReply,
-  });
+  try {
+    const result = await streamText({
+      model: anthropic(clientConfig.chat.model),
+      system: buildSystemPrompt(),
+      messages,
+      maxTokens: clientConfig.chat.maxTokensPerReply,
+    });
 
-  return result.toDataStreamResponse();
+    return result.toDataStreamResponse();
+  } catch (err) {
+    console.error("Chat error:", err);
+    return new Response(
+      JSON.stringify({
+        error: `El chat no está disponible en este momento. Escríbenos por WhatsApp${
+          clientConfig.contact.whatsapp ? ` al ${clientConfig.contact.whatsapp}` : ""
+        }.`,
+      }),
+      { status: 502, headers: { "Content-Type": "application/json" } }
+    );
+  }
 }

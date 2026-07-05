@@ -28,12 +28,20 @@ export async function POST(req: Request) {
 
   const { messages } = await req.json();
 
-  const result = await streamText({
-    model: anthropic("claude-haiku-4-5-20251001"),
-    system: buildSystemPrompt(),
-    messages,
-    maxTokens: 300,
-  });
+  try {
+    const result = await streamText({
+      model: anthropic("claude-haiku-4-5-20251001"),
+      system: buildSystemPrompt(),
+      messages,
+      maxTokens: 300,
+    });
 
-  return result.toDataStreamResponse();
+    return result.toDataStreamResponse();
+  } catch (err) {
+    console.error("Chat error:", err);
+    return new Response(
+      JSON.stringify({ error: "El chat no está disponible en este momento. Escríbeme por Contacto." }),
+      { status: 502, headers: { "Content-Type": "application/json" } }
+    );
+  }
 }
