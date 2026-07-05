@@ -1,4 +1,3 @@
-import Image from "next/image";
 import { Container } from "@/components/ui/Container";
 import type { ClientConfig } from "@/config/schema";
 
@@ -9,7 +8,8 @@ export function Header({ config }: { config: ClientConfig }) {
     <header className="sticky top-0 z-30 border-b border-black/5 bg-background/90 backdrop-blur">
       <Container className="flex h-16 items-center justify-between">
         <div className="flex items-center gap-2">
-          <Image
+          {/* eslint-disable-next-line @next/next/no-img-element -- logo is a local SVG; next/image requires dangerouslyAllowSVG for those */}
+          <img
             src={branding.logoUrl}
             alt={meta.businessName}
             width={36}

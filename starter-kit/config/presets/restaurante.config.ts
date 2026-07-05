@@ -9,7 +9,8 @@ const clientConfig = defineClientConfig({
   },
 
   branding: {
-    logoUrl: "/clients/sabores-del-barrio/logo.png",
+    logoUrl: "/clients/sabores-del-barrio/logo.svg",
+    faviconUrl: "/clients/sabores-del-barrio/logo.svg",
     palette: {
       primary: "#D9480F",
       accent: "#F2A65A",

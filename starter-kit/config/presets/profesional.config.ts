@@ -9,7 +9,8 @@ const clientConfig = defineClientConfig({
   },
 
   branding: {
-    logoUrl: "/clients/vidal-asociados/logo.png",
+    logoUrl: "/clients/vidal-asociados/logo.svg",
+    faviconUrl: "/clients/vidal-asociados/logo.svg",
     palette: {
       primary: "#0B3D2E",
       accent: "#B08D57",

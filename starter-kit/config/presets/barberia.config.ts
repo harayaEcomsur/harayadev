@@ -9,7 +9,8 @@ const clientConfig = defineClientConfig({
   },
 
   branding: {
-    logoUrl: "/clients/barberia-don-manuel/logo.png",
+    logoUrl: "/clients/barberia-don-manuel/logo.svg",
+    faviconUrl: "/clients/barberia-don-manuel/logo.svg",
     palette: {
       primary: "#1A1A1A",
       accent: "#C9A227",
