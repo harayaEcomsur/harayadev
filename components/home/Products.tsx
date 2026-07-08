@@ -3,7 +3,7 @@ import { plans } from "@/content/plans";
 
 export function Products() {
   return (
-    <section className="border-t border-line px-4 py-[90px] sm:px-6 lg:px-8">
+    <section className="border-t border-line px-4 py-16 sm:py-[90px] sm:px-6 lg:px-8">
       <div className="mx-auto flex max-w-6xl flex-col gap-11">
         <div className="flex flex-wrap items-end justify-between gap-6">
           <div className="flex flex-col gap-3">

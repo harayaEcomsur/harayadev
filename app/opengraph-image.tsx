@@ -28,7 +28,7 @@ export default function OpengraphImage() {
           {site.personName.toUpperCase()}
         </div>
         <div style={{ display: "flex", fontSize: 84, fontWeight: 900, color: "#EDF0F4" }}>
-          haraya<span style={{ color: "#FF3D3D" }}>dev</span>
+          Haraya<span style={{ color: "#FF3D3D" }}>Dev</span>
         </div>
         <div style={{ display: "flex", fontSize: 40, color: "#98A3B3", maxWidth: 900, lineHeight: 1.3 }}>
           {site.tagline}

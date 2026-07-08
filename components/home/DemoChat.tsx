@@ -18,7 +18,7 @@ export function DemoChat() {
   }, [messages, isLoading]);
 
   return (
-    <section className="relative overflow-hidden border-t border-line px-4 py-[90px] sm:px-6 lg:px-8">
+    <section id="demo" className="relative overflow-hidden border-t border-line px-4 py-16 sm:py-[90px] sm:px-6 lg:px-8 scroll-mt-20">
       <div
         className="pointer-events-none absolute -left-[300px] -top-[200px] h-[800px] w-[800px] rounded-full"
         style={{ background: "radial-gradient(circle, rgba(255,61,61,0.1), transparent 62%)" }}

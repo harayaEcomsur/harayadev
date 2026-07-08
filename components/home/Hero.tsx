@@ -9,7 +9,7 @@ export function Hero() {
     : "/contacto";
 
   return (
-    <header className="relative overflow-hidden px-4 pb-[110px] pt-24 sm:px-6 lg:px-8">
+    <header className="relative overflow-hidden px-4 pb-16 pt-14 sm:pb-[110px] sm:pt-24 sm:px-6 lg:px-8">
       <div
         className="pointer-events-none absolute -right-[200px] -top-[100px] h-[900px] w-[900px] rounded-full"
         style={{ background: "radial-gradient(circle, rgba(255,61,61,0.14), transparent 62%)" }}

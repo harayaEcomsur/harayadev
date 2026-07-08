@@ -33,15 +33,22 @@ Variables de entorno (`.env.local`, ver `.env.example`):
   en el código a propósito; si no está definida, el link/botón de WhatsApp no se muestra.
 - `GEMINI_API_KEY` — requerido para el chat IA (widget flotante en todo el sitio). Si
   falta, el widget muestra un mensaje de error amigable en vez de fallar en silencio.
+- `COMPANY_RUT` y `BANK_*` — datos de la EIRL y de la cuenta bancaria mostrados en el
+  contrato generado por `/contratar` (ver `.env.example`). Con fallbacks elegantes si faltan.
 
 ## Estructura
 
 - `app/` — páginas: home (`/`), `/servicios`, `/proyectos`, `/sobre-mi`, `/contacto`,
-  más `app/api/contact/route.ts`, `app/api/chat/route.ts`, `sitemap.ts` y `robots.ts`.
-- `content/projects.ts` y `content/services.ts` — contenido tipado (no config-driven:
-  esta es una sola marca con contenido fijo, a diferencia del starter-kit). El chat IA
-  arma su system prompt dinámicamente desde estos mismos archivos (`lib/chat-prompt.ts`),
-  así que no hay que mantener el contenido dos veces.
+  `/contratar` (flujo de contratación: plan + forma de pago por transferencia → genera un
+  contrato-borrador imprimible y avisa por email), más `app/api/contact/route.ts`,
+  `app/api/chat/route.ts`, `app/api/contract/route.ts`, `sitemap.ts` y `robots.ts`.
+- `content/projects.ts`, `content/services.ts`, `content/plans.ts` (planes con precio
+  cerrado + mantención/mejora a cotización) y `content/faq.ts` — contenido tipado (no
+  config-driven: esta es una sola marca con contenido fijo, a diferencia del starter-kit).
+  El chat IA arma su system prompt dinámicamente desde estos mismos archivos
+  (`lib/chat-prompt.ts`), así que no hay que mantener el contenido dos veces.
+- `lib/contract.ts` — schema zod del pedido + armado del contrato (número, cláusulas,
+  hitos de pago 100%/50-50/mensual, datos bancarios desde env).
 - `lib/site.ts` — constantes de marca (nombre de fantasía, razón social, tagline, contacto).
 - `lib/seo.ts` — metadata y JSON-LD (`Organization` con `name`/`legalName` separados, + `Person`).
 - `components/` — mismo patrón de UI que `starter-kit/` (Container, Header, Footer,

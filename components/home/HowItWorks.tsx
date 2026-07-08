@@ -21,7 +21,7 @@ const STEPS = [
 
 export function HowItWorks() {
   return (
-    <section className="border-t border-line bg-card px-4 py-[90px] sm:px-6 lg:px-8">
+    <section className="border-t border-line bg-card px-4 py-16 sm:py-[90px] sm:px-6 lg:px-8">
       <div className="mx-auto flex max-w-6xl flex-col gap-11">
         <h2 className="m-0 text-3xl font-black tracking-tight sm:text-[44px]">Cómo funciona</h2>
         <div className="grid gap-[18px] sm:grid-cols-3">

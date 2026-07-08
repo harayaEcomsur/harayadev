@@ -15,7 +15,7 @@ export function ChatWidget() {
   if (pathname === "/") return null;
 
   return (
-    <div className="fixed bottom-4 right-4 z-50 sm:right-6">
+    <div className="fixed bottom-4 right-4 z-50 sm:right-6 print:hidden">
       {open && (
         <div className="mb-3 flex h-[28rem] w-[20rem] flex-col overflow-hidden rounded-2xl border border-line bg-card shadow-2xl sm:w-[22rem]">
           <div className="flex items-center justify-between bg-primary px-4 py-3 text-white">

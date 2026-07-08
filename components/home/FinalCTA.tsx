@@ -4,7 +4,7 @@ import { buildWhatsAppLink } from "@/lib/whatsapp";
 
 export function FinalCTA() {
   return (
-    <section className="relative overflow-hidden border-t border-line px-4 py-[110px] sm:px-6 lg:px-8">
+    <section className="relative overflow-hidden border-t border-line px-4 py-16 sm:py-[110px] sm:px-6 lg:px-8">
       <div
         className="pointer-events-none absolute -top-[300px] left-1/2 h-[800px] w-[1000px] -translate-x-1/2 rounded-full"
         style={{ background: "radial-gradient(circle, rgba(255,61,61,0.13), transparent 62%)" }}
