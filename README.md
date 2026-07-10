@@ -7,7 +7,7 @@ Monorepo con dos partes, cada una desplegada como proyecto Vercel independiente:
   empresa, servicios, portafolio de proyectos, contacto y un chat IA en vivo (el mismo
   producto que se vende, funcionando en el propio sitio). También es el sitio de ventas
   del starter-kit. Deploy en Vercel con Root Directory = raíz.
-  Producción: https://harayadev-harayaecomsurs-projects.vercel.app
+  Producción: https://www.haraya.dev (el apex haraya.dev redirige 308 a www)
 - **`starter-kit/`** — el producto: template Next.js config-driven para generar
   webs con chat IA para pymes chilenas. Ver `starter-kit/README.md` para comandos,
   arquitectura y flujo por cliente. Deploy en Vercel con Root Directory = `starter-kit`.
