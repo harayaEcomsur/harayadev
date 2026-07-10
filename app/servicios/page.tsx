@@ -2,8 +2,9 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { plans, recurringServices } from "@/content/plans";
 import { FaqAccordion } from "@/components/sections/FaqAccordion";
+import { faqs } from "@/content/faq";
 import { site } from "@/lib/site";
-import { buildMetadata } from "@/lib/seo";
+import { buildFaqJsonLd, buildMetadata } from "@/lib/seo";
 import { buildWhatsAppLink } from "@/lib/whatsapp";
 
 export const metadata: Metadata = buildMetadata(
@@ -223,6 +224,10 @@ export default function ServiciosPage() {
           <h2 className="m-0 text-3xl font-black tracking-tight sm:text-[44px]">Preguntas frecuentes</h2>
           <FaqAccordion />
         </div>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(buildFaqJsonLd(faqs)) }}
+        />
       </section>
 
       {/* CTA FINAL */}
