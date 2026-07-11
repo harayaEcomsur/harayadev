@@ -25,3 +25,7 @@ de cada preset, no fotos de stock.
 ## vidal-asociados
 - hero.jpg — pexels.com/photo/modern-office-interior-8606292
 - nosotros.jpg — pexels.com/photo/female-lawyer-and-client-doing-a-handshake-8111895
+
+## bm-abogados
+- hero.jpg — pexels.com/photo/8112199 (estatua dama de la justicia)
+- nosotros.jpg — pexels.com/photo/5669602 (balanza de la justicia)
