@@ -108,6 +108,12 @@ async function main() {
     colorNotes = await ask("Colores preferidos del cliente (ej: 'verde y dorado', enter si no sabe): ");
   }
 
+  // Contexto del negocio: alimenta el copy, el chat y el SEO de la demo. La
+  // cobertura por defecto es todo Chile — solo se acota si el cliente lo dice.
+  const historia = await ask("Contexto del negocio (historia, años, qué lo distingue — 1-2 líneas): ");
+  const serviciosNotas = await ask("Servicios principales (separados por coma, enter = los del preset): ");
+  const cobertura = await ask("Zonas de cobertura (enter = todo Chile; indica base/ciudad si la hay): ", "todo Chile");
+
   rl.close();
 
   // --- config desde el preset ---
@@ -178,6 +184,17 @@ async function main() {
 - **Estilo tipográfico:** ${style || "(el del preset)"}
 - **Logo:** ${logoPath ? `public/clients/${slug}/` : "(pendiente — pedir al cliente; luego correr npm run palette)"}
 ${paletteBlock ? paletteBlock + "\n" : ""}${colorNotes ? `- **Colores preferidos:** ${colorNotes}\n` : ""}
+## Contexto del negocio
+
+- **Historia / diferenciales:** ${historia || "(por completar con el cliente)"}
+- **Servicios principales:** ${serviciosNotas || "(los del preset — validar con el cliente)"}
+- **Cobertura:** ${cobertura}${cobertura === "todo Chile" ? " (default — confirmar si tiene base/zona principal)" : ""}
+
+> Usar este contexto en el copy del hero/nosotros, las FAQ, el prompt del chat
+> (businessDescription y qaPairs) y el SEO. Si la cobertura tiene una base o zona
+> principal, dale jerarquía en el copy (ej: "base en X, especialista en Y, con
+> operación en todo Chile").
+
 ## Inspiración / competencia
 
 ${
@@ -195,6 +212,7 @@ ${
 
 ## Pendientes
 
+- [ ] Volcar el contexto del negocio (historia, servicios, cobertura) al copy, chat y SEO del config
 - [ ] Completar datos reales en config/client.config.ts (contacto, precios, FAQ, chat)
 - [ ] Fotos reales o de stock acordes al rubro en public/clients/${slug}/
 - [ ] ${logoPath ? "Confirmar variante de diseño elegida por el cliente (/variantes)" : "Conseguir el logo y correr: npm run palette -- <logo>"}
