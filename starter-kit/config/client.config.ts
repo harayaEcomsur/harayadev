@@ -21,6 +21,7 @@ export const clientConfig = defineClientConfig({
       foreground: "#171A21",
     },
     fontPairing: "elegante",
+    layout: "corporativo",
   },
 
   hero: {
