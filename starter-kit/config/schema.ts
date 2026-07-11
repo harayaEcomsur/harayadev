@@ -125,6 +125,25 @@ export const clientConfigSchema = z.object({
     systemPromptExtra: z.string().optional(),
   }),
 
+  // Variantes de paleta para mostrar al cliente en /variantes ("¿cuál te gusta
+  // más: A, B o C?"). Opcional: si no se define, /variantes explica cómo usarlas.
+  // `npm run palette -- logo.png` sugiere estas variantes automáticamente.
+  themeVariants: z
+    .array(
+      z.object({
+        id: z.string(),
+        name: z.string(),
+        palette: z.object({
+          primary: z.string(),
+          accent: z.string(),
+          background: z.string(),
+          foreground: z.string(),
+        }),
+      })
+    )
+    .max(6)
+    .optional(),
+
   seo: z.object({
     title: z.string(),
     description: z.string(),

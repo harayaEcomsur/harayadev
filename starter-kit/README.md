@@ -14,7 +14,19 @@ npm run start
 npm run lint
 npm run typecheck
 npm run new-client -- --name "Panadería Rosita" [--preset restaurante|barberia|profesional]
+npm run palette -- ruta/al/logo.svg   # extrae la paleta del logo del cliente (svg/png/jpg)
 ```
+
+### Paleta desde el logo y variantes de diseño
+
+- `npm run palette -- logo.png` extrae los colores dominantes del logo del cliente e
+  imprime el bloque `palette` listo para pegar en `config/client.config.ts`, validando
+  contraste WCAG AA (oscurece automáticamente lo que no cumple y avisa). También sugiere
+  un bloque `themeVariants` con 2 alternativas (acento protagonista y modo oscuro).
+- `themeVariants` en el config habilita **`/variantes`**: una página interna (noindex,
+  fuera del sitemap) que muestra la misma home con cada paleta lado a lado, para que el
+  cliente elija "A, B o C" — útil como parte del gancho de venta de la demo. Cada
+  variante se puede abrir a pantalla completa en `/variantes/<id>`.
 
 Variables de entorno (`.env.local`, ver `.env.example`):
 
