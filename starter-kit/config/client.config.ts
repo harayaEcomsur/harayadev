@@ -7,21 +7,41 @@ export const clientConfig = defineClientConfig({
   meta: {
     slug: "propiedades-rossana-angulo",
     businessName: "Propiedades Rossana Angulo",
-    rubro: "Corretaje de propiedades",
+    rubro: "Gestión inmobiliaria, corretaje y administración",
     locale: "es-CL",
   },
 
   branding: {
-    logoUrl: "/clients/propiedades-rossana-angulo/logo.svg",
-    faviconUrl: "/clients/propiedades-rossana-angulo/logo.svg",
+    // Logo real de la clienta; paleta extraída con `npm run palette` (rojo del
+    // logo, validado WCAG) y curada a mano (negro del logo como acento).
+    logoUrl: "/clients/propiedades-rossana-angulo/logo.jpg",
+    faviconUrl: "/clients/propiedades-rossana-angulo/logo.jpg",
     palette: {
-      primary: "#1E3A5F",
-      accent: "#C9A24B",
-      background: "#FAF9F7",
-      foreground: "#16202C",
+      primary: "#DD3333",
+      accent: "#1F1F1F",
+      background: "#FBF9F9",
+      foreground: "#261717",
     },
     fontPairing: "elegante",
   },
+
+  themeVariants: [
+    {
+      id: "a",
+      name: "Fiel al logo",
+      palette: { primary: "#DD3333", accent: "#1F1F1F", background: "#FBF9F9", foreground: "#261717" },
+    },
+    {
+      id: "b",
+      name: "Negro elegante",
+      palette: { primary: "#1F1F1F", accent: "#DD3333", background: "#FBFAF9", foreground: "#261717" },
+    },
+    {
+      id: "c",
+      name: "Modo oscuro",
+      palette: { primary: "#C52121", accent: "#EEEEDD", background: "#211212", foreground: "#F4F2EF" },
+    },
+  ],
 
   hero: {
     title: "Tu próxima propiedad, con asesoría de verdad",
