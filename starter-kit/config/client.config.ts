@@ -27,7 +27,7 @@ export const clientConfig = defineClientConfig({
   hero: {
     title: "Asesoría legal clara, sin letra chica",
     subtitle:
-      "Estudio jurídico en Santiago especializado en derecho civil, laboral y de familia. Respuestas rápidas, honorarios transparentes y estrategia en cada caso.",
+      "Estudio jurídico con atención en todo Chile, especializado en derecho civil, laboral y de familia. Respuestas rápidas, honorarios transparentes y estrategia en cada caso.",
     ctaLabel: "Agenda tu primera consulta",
     ctaHref: "#contacto",
     backgroundImageUrl: "/clients/bm-abogados/hero.jpg",
@@ -146,11 +146,11 @@ export const clientConfig = defineClientConfig({
   },
 
   seo: {
-    title: "B&M Abogados — Estudio jurídico en Santiago",
+    title: "B&M Abogados — Estudio jurídico, atención en todo Chile",
     description:
       "Abogados en derecho civil, familia, laboral e inmobiliario. Primera consulta gratis, honorarios por escrito y atención en todo Chile.",
     businessType: "LegalService",
     priceRange: "$$",
-    keywords: ["abogados santiago", "abogado de familia", "abogado laboral", "estudio de títulos", "divorcio chile"],
+    keywords: ["abogados chile", "abogado de familia", "abogado laboral", "estudio de títulos", "divorcio chile"],
   },
 });
