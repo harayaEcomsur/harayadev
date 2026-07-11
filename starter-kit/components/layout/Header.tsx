@@ -14,13 +14,17 @@ export function Header({ config }: { config: ClientConfig }) {
           <img
             src={branding.logoUrl}
             alt={meta.businessName}
-            className="h-14 w-auto max-w-[220px] rounded-md object-contain sm:h-[4.5rem] sm:max-w-[280px]"
+            className="h-12 w-auto max-w-[170px] rounded-md object-contain sm:h-[4.5rem] sm:max-w-[280px]"
           />
-          {!branding.logoIncludesName && (
-            <span className="hidden truncate font-heading text-sm font-medium text-foreground/80 md:inline">
-              {meta.businessName}
-            </span>
-          )}
+          {/* En móvil el nombre siempre acompaña al logo (el logo se achica y
+              puede no leerse); en desktop se omite solo si el logo ya lo trae. */}
+          <span
+            className={`truncate font-heading text-sm font-medium text-foreground/80 ${
+              branding.logoIncludesName ? "md:hidden" : ""
+            }`}
+          >
+            {meta.businessName}
+          </span>
         </a>
         <nav className="hidden gap-6 text-sm font-medium text-foreground/70 sm:flex">
           <a href="#servicios" className="hover:text-primary">
