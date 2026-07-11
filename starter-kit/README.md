@@ -51,8 +51,15 @@ Variables de entorno (`.env.local`, ver `.env.example`):
 
 ## Flujo de trabajo por cliente
 
-1. `npm run new-client -- --name "Nombre del cliente" --preset <rubro más parecido>`
-   — crea `config/client.config.ts` a partir del preset y un branch `client/<slug>`.
+**Premisa: ninguna demo genérica.** Cada cliente recibe un toque de personalización:
+layout según su rubro, paleta desde su logo, y referencias de su competencia registradas
+para rescatar 1-2 detalles distintivos al armar la demo.
+
+1. `npm run new-client` — wizard interactivo que pregunta nombre, rubro, logo,
+   sitios de inspiración/competencia y estilo; sugiere layout y preset según el rubro,
+   extrae la paleta del logo (con variantes A/B/C para `/variantes`), y deja todo
+   registrado en un `BRIEF.md` dentro del branch `client/<slug>` que crea.
+   (Modo no interactivo: `npm run new-client -- --name "..." --preset <p> --logo <ruta>`.)
 2. Completa los datos reales del cliente en `config/client.config.ts` (identidad,
    servicios, horarios, preguntas frecuentes del chat, etc.) y sube sus imágenes a
    `public/clients/<slug>/`.
