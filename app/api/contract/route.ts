@@ -40,7 +40,7 @@ export async function POST(req: Request) {
         method: "POST",
         headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
         body: JSON.stringify({
-          from: "Sitio web <onboarding@resend.dev>",
+          from: process.env.EMAIL_FROM || "Sitio web <onboarding@resend.dev>",
           to: process.env.CONTACT_TO_EMAIL || site.email,
           reply_to: contract.client.email,
           subject: `Nueva solicitud de contrato ${contract.number} — ${contract.service.name} (${contract.client.businessName})`,
