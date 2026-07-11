@@ -49,7 +49,7 @@ export const clientConfig = defineClientConfig({
   hero: {
     title: "Tu próxima propiedad, con asesoría de verdad",
     subtitle:
-      "Compra, venta y arriendo de propiedades en todo Chile con acompañamiento personal en todo el proceso: desde la tasación hasta la entrega de llaves.",
+      "Corredora con base en Viña del Mar, especialista en la V Región, con operación en Santiago, el sur y todo Chile. Acompañamiento personal desde la tasación hasta la entrega de llaves.",
     ctaLabel: "Agenda una visita",
     ctaHref: "#contacto",
     backgroundImageUrl: "/clients/propiedades-rossana-angulo/hero.jpg",
@@ -65,6 +65,11 @@ export const clientConfig = defineClientConfig({
       icon: "KeyRound",
       title: "Arriendo",
       description: "Búsqueda y evaluación de arrendatarios con informe comercial, contrato de arriendo y acta de entrega.",
+    },
+    {
+      icon: "CalendarDays",
+      title: "Arriendos temporales",
+      description: "Administración de propiedades para arriendo por temporada en el litoral: publicación, reservas, entrega y recepción.",
     },
     {
       icon: "TrendingUp",
@@ -90,7 +95,7 @@ export const clientConfig = defineClientConfig({
 
   about: {
     title: "Quién te asesora",
-    body: "Rossanna Angulo es corredora de propiedades con años de experiencia y operación en todo Chile. Su sello es el acompañamiento personal en cada etapa del proceso — tasación, publicación, visitas, negociación y firma — con comunicación clara, sin letra chica y siempre con contrato por escrito.",
+    body: "Rossanna Angulo es corredora de propiedades con base en Viña del Mar y años de experiencia en la V Región, con operación en Santiago, el sur y todo Chile. Su sello es el acompañamiento personal en cada etapa del proceso — tasación, publicación, visitas, negociación y firma — con comunicación clara, sin letra chica y siempre con contrato por escrito.",
     imageUrl: "/clients/propiedades-rossana-angulo/nosotros.jpg",
   },
 
@@ -106,8 +111,8 @@ export const clientConfig = defineClientConfig({
     whatsapp: "56987654321",
     whatsappPrefilledMessage: "Hola Rossanna! Vi tu sitio web y quiero consultar por una propiedad",
     email: "contacto@propiedadesrossanaangulo.cl",
-    address: "Providencia, Santiago",
-    mapQuery: "Providencia, Santiago, Chile",
+    address: "Viña del Mar, Región de Valparaíso",
+    mapQuery: "Viña del Mar, Chile",
     hours: [
       { day: "Lunes a viernes", open: "09:30", close: "19:00" },
       { day: "Sábado", open: "10:00", close: "14:00" },
@@ -139,7 +144,8 @@ export const clientConfig = defineClientConfig({
     { q: "¿Cuánto demora venderse una propiedad?", a: "Depende del sector y del precio, pero una propiedad bien tasada y con buenas fotos se vende en general entre 2 y 4 meses." },
     { q: "¿Qué documentos necesito para vender?", a: "Escritura, certificado de dominio vigente, certificado de hipotecas y gravámenes, y contribuciones al día. Te ayudo a reunirlos todos." },
     { q: "¿Trabajas con compradores con crédito hipotecario?", a: "Sí, la mayoría de las ventas son con crédito. Coordino directamente con el banco y la notaría los plazos de la operación." },
-    { q: "¿En qué zonas trabajas?", a: "En todo Chile. La tasación, publicación, difusión y gestión documental se hacen de forma remota, y las visitas se coordinan según la región de la propiedad." },
+    { q: "¿En qué zonas trabajas?", a: "Mi base es Viña del Mar y la mayoría de mis propiedades están en la V Región, pero opero también en Santiago, el sur y todo Chile: la gestión y publicación es remota y las visitas se coordinan según la zona." },
+    { q: "¿Administras arriendos por temporada?", a: "Sí — administro propiedades para arriendo temporal, especialmente departamentos de veraneo en el litoral: publicación, reservas, entrega y recepción. Las condiciones se acuerdan según cada propiedad." },
   ],
 
   pricing: [
@@ -163,12 +169,13 @@ export const clientConfig = defineClientConfig({
 
   chat: {
     businessDescription:
-      "Propiedades Rossanna Angulo es una corredora de propiedades independiente en Santiago de Chile. Ofrece venta, arriendo, tasación, estudio de títulos, marketing inmobiliario y asesoría a compradores en todo Chile. Atiende con acompañamiento personal en todo el proceso.",
+      "Propiedades Rossanna Angulo es una corredora de propiedades independiente con base en Viña del Mar, especialista en la V Región y con operación en Santiago, el sur y todo Chile. Ofrece venta, arriendo, arriendos temporales (administración de propiedades de temporada en el litoral), tasación, estudio de títulos, marketing inmobiliario y asesoría a compradores. Atiende con acompañamiento personal en todo el proceso.",
     qaPairs: [
       { q: "¿Cuánto cobra por vender una propiedad?", a: "2% + IVA del valor de venta, solo si el negocio se concreta. Incluye tasación, publicación, visitas y acompañamiento hasta la firma." },
       { q: "¿Cuánto cobra por arrendar?", a: "El 50% + IVA del primer mes de arriendo, con informe comercial del arrendatario y contrato incluido." },
       { q: "¿Hace tasaciones?", a: "Sí, la tasación con informe escrito cuesta $60.000 y se descuenta de la comisión si luego vendes con ella." },
-      { q: "¿En qué zonas trabaja?", a: "En todo Chile: la gestión y publicación es remota y las visitas se coordinan según la región de la propiedad." },
+      { q: "¿En qué zonas trabaja?", a: "Base en Viña del Mar y especialidad en la V Región; opera también en Santiago, el sur y todo Chile — la gestión es remota y las visitas se coordinan según la zona." },
+      { q: "¿Administra arriendos por temporada?", a: "Sí, administra propiedades para arriendo temporal en el litoral (departamentos de veraneo): publicación, reservas, entrega y recepción. Las condiciones se conversan según cada propiedad." },
       { q: "¿Cuál es el horario de atención?", a: "Lunes a viernes de 9:30 a 19:00 y sábados de 10:00 a 14:00. Las visitas se coordinan según disponibilidad." },
       { q: "¿Cómo agendo una visita?", a: "Por WhatsApp o el formulario de contacto de esta página, indicando la propiedad o el tipo de propiedad que buscas." },
       { q: "¿Trabaja con crédito hipotecario?", a: "Sí, coordina directamente con el banco y la notaría los plazos de la operación." },
@@ -177,11 +184,11 @@ export const clientConfig = defineClientConfig({
   },
 
   seo: {
-    title: "Propiedades Rossanna Angulo — Corretaje de propiedades en todo Chile",
+    title: "Propiedades Rossanna Angulo — Corretaje de propiedades en Viña del Mar y todo Chile",
     description:
-      "Venta, arriendo y tasación de propiedades en todo Chile. Asesoría personal de principio a fin, con contrato claro.",
+      "Venta, arriendo, arriendos temporales y tasación de propiedades. Base en Viña del Mar, especialista en la V Región, operación en todo Chile.",
     businessType: "RealEstateAgent",
     priceRange: "$$",
-    keywords: ["corredora de propiedades chile", "venta de propiedades", "arriendo de propiedades", "tasación de propiedades"],
+    keywords: ["corredora de propiedades viña del mar", "propiedades quinta región", "arriendos temporales viña del mar", "corredora de propiedades chile", "tasación de propiedades"],
   },
 });
