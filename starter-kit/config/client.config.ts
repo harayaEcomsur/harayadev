@@ -1,12 +1,12 @@
 import { defineClientConfig } from "@/config/schema";
 
-// Demo para Propiedades Rossana Angulo. Los datos de contacto, comisiones y
+// Demo para Propiedades Rossanna Angulo. Los datos de contacto, comisiones y
 // trayectoria son placeholders razonables del rubro — reemplazar con los datos
 // reales de la clienta antes de pasar a producción.
 export const clientConfig = defineClientConfig({
   meta: {
     slug: "propiedades-rossana-angulo",
-    businessName: "Propiedades Rossana Angulo",
+    businessName: "Propiedades Rossanna Angulo",
     rubro: "Gestión inmobiliaria, corretaje y administración",
     locale: "es-CL",
   },
@@ -23,6 +23,9 @@ export const clientConfig = defineClientConfig({
       foreground: "#261717",
     },
     fontPairing: "elegante",
+    // El logo trae el nombre escrito en cursiva — no repetirlo en texto.
+    logoIncludesName: true,
+    layout: "inmobiliaria",
   },
 
   themeVariants: [
@@ -87,7 +90,7 @@ export const clientConfig = defineClientConfig({
 
   about: {
     title: "Quién te asesora",
-    body: "Rossana Angulo es corredora de propiedades con años de experiencia en la Región Metropolitana. Su sello es el acompañamiento personal en cada etapa del proceso — tasación, publicación, visitas, negociación y firma — con comunicación clara, sin letra chica y siempre con contrato por escrito.",
+    body: "Rossanna Angulo es corredora de propiedades con años de experiencia en la Región Metropolitana. Su sello es el acompañamiento personal en cada etapa del proceso — tasación, publicación, visitas, negociación y firma — con comunicación clara, sin letra chica y siempre con contrato por escrito.",
     imageUrl: "/clients/propiedades-rossana-angulo/nosotros.jpg",
   },
 
@@ -101,7 +104,7 @@ export const clientConfig = defineClientConfig({
   contact: {
     phone: "+56 9 8765 4321",
     whatsapp: "56987654321",
-    whatsappPrefilledMessage: "Hola Rossana! Vi tu sitio web y quiero consultar por una propiedad",
+    whatsappPrefilledMessage: "Hola Rossanna! Vi tu sitio web y quiero consultar por una propiedad",
     email: "contacto@propiedadesrossanaangulo.cl",
     address: "Providencia, Santiago",
     mapQuery: "Providencia, Santiago, Chile",
@@ -125,7 +128,7 @@ export const clientConfig = defineClientConfig({
   },
 
   testimonials: [
-    { name: "Familia Contreras", quote: "Rossana vendió nuestro departamento en cinco semanas y nos acompañó hasta la firma en notaría.", rating: 5 },
+    { name: "Familia Contreras", quote: "Rossanna vendió nuestro departamento en cinco semanas y nos acompañó hasta la firma en notaría.", rating: 5 },
     { name: "Jorge M.", quote: "Me consiguió arrendatario en una semana, con informe comercial y contrato claro. Cero problemas desde entonces.", rating: 5 },
     { name: "Carolina R.", quote: "Como compradora primeriza, me explicó cada paso del crédito y la escritura. Se agradece la paciencia.", rating: 5 },
   ],
@@ -160,7 +163,7 @@ export const clientConfig = defineClientConfig({
 
   chat: {
     businessDescription:
-      "Propiedades Rossana Angulo es una corredora de propiedades independiente en Santiago de Chile. Ofrece venta, arriendo, tasación, estudio de títulos, marketing inmobiliario y asesoría a compradores, principalmente en Providencia, Ñuñoa, Las Condes, La Reina y Santiago Centro. Atiende con acompañamiento personal en todo el proceso.",
+      "Propiedades Rossanna Angulo es una corredora de propiedades independiente en Santiago de Chile. Ofrece venta, arriendo, tasación, estudio de títulos, marketing inmobiliario y asesoría a compradores, principalmente en Providencia, Ñuñoa, Las Condes, La Reina y Santiago Centro. Atiende con acompañamiento personal en todo el proceso.",
     qaPairs: [
       { q: "¿Cuánto cobra por vender una propiedad?", a: "2% + IVA del valor de venta, solo si el negocio se concreta. Incluye tasación, publicación, visitas y acompañamiento hasta la firma." },
       { q: "¿Cuánto cobra por arrendar?", a: "El 50% + IVA del primer mes de arriendo, con informe comercial del arrendatario y contrato incluido." },
@@ -174,7 +177,7 @@ export const clientConfig = defineClientConfig({
   },
 
   seo: {
-    title: "Propiedades Rossana Angulo — Corretaje de propiedades en Santiago",
+    title: "Propiedades Rossanna Angulo — Corretaje de propiedades en Santiago",
     description:
       "Venta, arriendo y tasación de propiedades en Providencia, Ñuñoa, Las Condes y Santiago. Asesoría personal de principio a fin, con contrato claro.",
     businessType: "RealEstateAgent",
