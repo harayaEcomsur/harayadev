@@ -25,3 +25,11 @@ de cada preset, no fotos de stock.
 ## vidal-asociados
 - hero.jpg — pexels.com/photo/modern-office-interior-8606292
 - nosotros.jpg — pexels.com/photo/female-lawyer-and-client-doing-a-handshake-8111895
+
+## propiedades-rossana-angulo
+- hero.jpg — pexels.com/photo/106399 (casa al atardecer)
+- nosotros.jpg — pexels.com/photo/7641842 (firma de contrato)
+- galeria-1.jpg — pexels.com/photo/1396122 (casa con antejardín)
+- galeria-2.jpg — pexels.com/photo/1571460 (living moderno)
+- galeria-3.jpg — pexels.com/photo/1643383 (departamento)
+- galeria-4.jpg — pexels.com/photo/323780 (casas mediterráneas)
