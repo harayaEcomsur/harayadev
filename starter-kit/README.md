@@ -17,6 +17,21 @@ npm run new-client -- --name "Panadería Rosita" [--preset restaurante|barberia|
 npm run palette -- ruta/al/logo.svg   # extrae la paleta del logo del cliente (svg/png/jpg)
 ```
 
+### Layouts por rubro
+
+`branding.layout` cambia la estructura de la home para que dos clientes de rubros
+distintos no se vean como el mismo sitio con otra paleta:
+
+- `clasico` (default) — cards centradas, el layout original. Sirve para cualquier rubro.
+- `inmobiliaria` — hero full-screen con la propiedad como protagonista, servicios como
+  lista aireada sin cards y galería tipo "Propiedades destacadas" (inspirado en
+  corretajes premium como Property Partners y Engel & Völkers).
+- `corporativo` — banda oscura sobria, áreas de práctica numeradas (01, 02…) y
+  tipografía en mayúsculas con tracking (inspirado en grandes estudios jurídicos).
+
+Además `branding.logoIncludesName: true` oculta el nombre en texto del header cuando el
+archivo del logo ya lo trae escrito — el logo va grande (es la marca del cliente).
+
 ### Paleta desde el logo y variantes de diseño
 
 - `npm run palette -- logo.png` extrae los colores dominantes del logo del cliente e

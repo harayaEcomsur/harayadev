@@ -33,6 +33,15 @@ export const clientConfigSchema = z.object({
       foreground: z.string().default("#111111"),
     }),
     fontPairing: z.enum(["modern", "elegante", "amigable"]),
+    // true cuando el archivo del logo ya trae el nombre del negocio escrito —
+    // el header muestra solo el logo, sin repetir el nombre en texto al lado.
+    logoIncludesName: z.boolean().default(false),
+    // Layout de la home según el rubro, para que no todos los sitios se vean
+    // iguales: "clasico" (cards centradas, el original), "inmobiliaria" (hero
+    // full-screen con la propiedad como protagonista, estilo corretaje premium)
+    // y "corporativo" (banda sobria, áreas numeradas, estilo estudio de
+    // abogados/consultora).
+    layout: z.enum(["clasico", "inmobiliaria", "corporativo"]).default("clasico"),
   }),
 
   hero: z.object({
