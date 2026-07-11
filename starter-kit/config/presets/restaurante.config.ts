@@ -98,6 +98,24 @@ const clientConfig = defineClientConfig({
     fallbackToWhatsapp: true,
   },
 
+  themeVariants: [
+    {
+      id: "a",
+      name: "Cálida (actual)",
+      palette: { primary: "#D9480F", accent: "#F2A65A", background: "#FFFBF5", foreground: "#2B1B12" },
+    },
+    {
+      id: "b",
+      name: "Verde parrilla",
+      palette: { primary: "#2F5D3A", accent: "#E8A13C", background: "#FAFBF7", foreground: "#1C2419" },
+    },
+    {
+      id: "c",
+      name: "Nocturna",
+      palette: { primary: "#E05A1A", accent: "#F2A65A", background: "#1F1209", foreground: "#F6EFE8" },
+    },
+  ],
+
   seo: {
     title: "Sabores del Barrio — Comida callejera chilena en Providencia",
     description: "Empanadas, choripanes y completos preparados al momento. Food truck disponible para eventos en Santiago.",
