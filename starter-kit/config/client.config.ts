@@ -27,7 +27,7 @@ export const clientConfig = defineClientConfig({
   hero: {
     title: "Asesoría legal clara, sin letra chica",
     subtitle:
-      "Estudio jurídico con atención en todo Chile, especializado en derecho civil, laboral y de familia. Respuestas rápidas, honorarios transparentes y estrategia en cada caso.",
+      "Estudio jurídico con base en Viña del Mar y Valparaíso, atención en la V Región y todo Chile. Derecho civil, laboral y de familia con honorarios transparentes y estrategia en cada caso.",
     ctaLabel: "Agenda tu primera consulta",
     ctaHref: "#contacto",
     backgroundImageUrl: "/clients/bm-abogados/hero.jpg",
@@ -68,7 +68,7 @@ export const clientConfig = defineClientConfig({
 
   about: {
     title: "Un estudio cercano y directo",
-    body: "B&M Abogados nace con una convicción simple: el cliente merece saber siempre en qué está su causa, cuánto va a costar y cuáles son sus opciones reales. Trabajas directo con el abogado a cargo de tu caso — sin intermediarios — con informes de avance periódicos y honorarios acordados por escrito antes de empezar.",
+    body: "B&M Abogados nace con una convicción simple: el cliente merece saber siempre en qué está su causa, cuánto va a costar y cuáles son sus opciones reales. Trabajas directo con el abogado a cargo de tu caso — sin intermediarios — con informes de avance periódicos y honorarios acordados por escrito antes de empezar. Nuestra base está en Viña del Mar y Valparaíso; atendemos la V Región y, gracias a la tramitación electrónica, causas en todo Chile.",
     imageUrl: "/clients/bm-abogados/nosotros.jpg",
   },
 
@@ -77,8 +77,8 @@ export const clientConfig = defineClientConfig({
     whatsapp: "56998765432",
     whatsappPrefilledMessage: "Hola! Vengo del sitio web de B&M Abogados y quiero hacer una consulta",
     email: "contacto@bymabogados.cl",
-    address: "Santiago Centro, Región Metropolitana",
-    mapQuery: "Santiago Centro, Chile",
+    address: "Viña del Mar, Región de Valparaíso",
+    mapQuery: "Viña del Mar, Chile",
     hours: [
       { day: "Lunes a viernes", open: "09:00", close: "18:00" },
       { day: "Sábado y domingo", closed: true },
@@ -106,7 +106,7 @@ export const clientConfig = defineClientConfig({
   faq: [
     { q: "¿La primera consulta tiene costo?", a: "La primera reunión de orientación de 30 minutos es sin costo, presencial o por videollamada. Ahí evaluamos tu caso y te damos opciones concretas con honorarios claros." },
     { q: "¿Cómo se pagan los honorarios?", a: "Siempre por escrito y antes de empezar. Según el caso puede ser un monto fijo, por etapas del juicio, o una parte fija más un porcentaje del resultado." },
-    { q: "¿Atienden fuera de Santiago?", a: "Sí. La mayoría de las gestiones y audiencias hoy son electrónicas, así que atendemos causas en todo Chile, con reuniones por videollamada." },
+    { q: "¿Atienden fuera de la V Región?", a: "Sí. Nuestra base es la V Región (Viña del Mar y Valparaíso), pero la mayoría de las gestiones y audiencias hoy son electrónicas, así que atendemos causas en todo Chile, con reuniones por videollamada." },
     { q: "¿Cuánto demora un juicio?", a: "Depende del tipo de causa: un divorcio de común acuerdo puede tomar 2 a 3 meses; un juicio laboral, 4 a 8 meses; un juicio civil, más de un año. Te damos una estimación realista en la primera consulta." },
     { q: "¿Puedo saber cómo va mi causa?", a: "Sí, enviamos informes de avance periódicos y puedes escribirnos por WhatsApp — respondemos dentro del día hábil." },
   ],
@@ -132,13 +132,13 @@ export const clientConfig = defineClientConfig({
 
   chat: {
     businessDescription:
-      "B&M Abogados es un estudio jurídico en Santiago de Chile especializado en derecho civil, de familia, laboral e inmobiliario, además de contratos, sociedades y litigios. Atiende causas en todo Chile (tramitación electrónica y videollamadas). Su sello: honorarios transparentes acordados por escrito e informes de avance periódicos.",
+      "B&M Abogados es un estudio jurídico con base en Viña del Mar y Valparaíso (V Región) especializado en derecho civil, de familia, laboral e inmobiliario, además de contratos, sociedades y litigios. Atiende causas en todo Chile (tramitación electrónica y videollamadas). Su sello: honorarios transparentes acordados por escrito e informes de avance periódicos.",
     qaPairs: [
       { q: "¿La primera consulta tiene costo?", a: "No, la primera reunión de orientación de 30 minutos es gratuita, presencial o por videollamada." },
       { q: "¿Qué áreas cubren?", a: "Derecho civil, familia (divorcios, alimentos), laboral (despidos, tutela), inmobiliario (estudios de títulos, escrituración), contratos, sociedades y litigios." },
       { q: "¿Cuánto cuesta una consulta extendida?", a: "$40.000 por una hora con abogado, con revisión de documentos e informe escrito con recomendaciones." },
       { q: "¿Cómo se pagan los honorarios de un juicio?", a: "Se acuerdan por escrito antes de empezar: monto fijo, pago por etapas, o una parte fija más porcentaje del resultado, según el caso." },
-      { q: "¿Atienden fuera de Santiago?", a: "Sí, atienden causas en todo Chile: la tramitación judicial es electrónica y las reuniones pueden ser por videollamada." },
+      { q: "¿Atienden fuera de la V Región?", a: "Sí: su base es Viña del Mar y Valparaíso, y atienden causas en todo Chile — la tramitación judicial es electrónica y las reuniones pueden ser por videollamada." },
       { q: "¿Cuál es el horario de atención?", a: "Lunes a viernes de 9:00 a 18:00. Por WhatsApp responden dentro del día hábil." },
       { q: "¿Cuánto demora un divorcio?", a: "De común acuerdo, entre 2 y 3 meses aproximadamente. Contencioso, bastante más — en la primera consulta dan una estimación realista para cada caso." },
     ],
@@ -146,11 +146,11 @@ export const clientConfig = defineClientConfig({
   },
 
   seo: {
-    title: "B&M Abogados — Estudio jurídico, atención en todo Chile",
+    title: "B&M Abogados — Estudio jurídico en Viña del Mar y Valparaíso",
     description:
-      "Abogados en derecho civil, familia, laboral e inmobiliario. Primera consulta gratis, honorarios por escrito y atención en todo Chile.",
+      "Abogados en derecho civil, familia, laboral e inmobiliario. Base en Viña del Mar y Valparaíso (V Región), primera consulta gratis y atención en todo Chile.",
     businessType: "LegalService",
     priceRange: "$$",
-    keywords: ["abogados chile", "abogado de familia", "abogado laboral", "estudio de títulos", "divorcio chile"],
+    keywords: ["abogados viña del mar", "abogados valparaíso", "abogado de familia quinta región", "abogado laboral", "divorcio chile"],
   },
 });
