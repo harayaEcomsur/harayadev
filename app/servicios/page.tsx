@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { plans, recurringServices } from "@/content/plans";
+import { plans, recurringServices, verticalPlans, addons } from "@/content/plans";
 import { FaqAccordion } from "@/components/sections/FaqAccordion";
 import { faqs } from "@/content/faq";
 import { site } from "@/lib/site";
@@ -154,6 +154,72 @@ export default function ServiciosPage() {
               </div>
             </div>
           ))}
+        </div>
+      </section>
+
+      {/* VERTICALES + MÓDULOS */}
+      <section className="border-t border-line px-4 py-16 sm:px-6 sm:py-[70px] lg:px-8">
+        <div className="mx-auto flex max-w-6xl flex-col gap-3.5 pb-8">
+          <span className="font-mono text-sm tracking-[0.14em] text-primary">MÁS QUE UNA WEB INFORMATIVA</span>
+          <h2 className="m-0 text-3xl font-black tracking-tight sm:text-[44px]">Verticales y módulos</h2>
+          <p className="m-0 max-w-[640px] text-lg leading-[1.6] text-soft">
+            Para negocios donde el contenido vive y cambia — propiedades, cartas, catálogos,
+            vehículos — armamos tu web como un sistema: inventario dinámico, portales y redes
+            sincronizados. Precios &quot;desde&quot;: el valor final se cierra en la cotización, antes de partir.
+          </p>
+        </div>
+
+        {verticalPlans.map((plan) => (
+          <div
+            key={plan.id}
+            className="mx-auto mb-[18px] flex max-w-6xl flex-col gap-8 rounded-2xl border border-primary bg-card p-7 sm:p-10 lg:flex-row lg:items-center lg:gap-12"
+          >
+            <div className="flex flex-1 flex-col gap-3.5">
+              <span className="font-mono text-[13px] tracking-[0.12em] text-primary">{plan.tag}</span>
+              <h3 className="m-0 text-2xl font-black tracking-tight sm:text-[34px]">{plan.name}</h3>
+              <p className="m-0 max-w-[560px] text-base leading-[1.6] text-soft sm:text-[17px]">{plan.longDescription}</p>
+              <div className="flex flex-wrap gap-2.5">
+                {plan.includes.map((item) => (
+                  <span key={item} className="rounded-full border border-line bg-background px-3.5 py-2 text-sm text-soft">
+                    ✓ {item}
+                  </span>
+                ))}
+              </div>
+            </div>
+            <div className="flex shrink-0 flex-col items-start gap-2.5 lg:items-end lg:text-right">
+              <span className="text-[38px] font-black tracking-tight text-primary sm:text-[44px]">{plan.price}</span>
+              <span className="font-mono text-xs tracking-[0.1em] text-soft/60">IVA INCLUIDO · ENTREGA {plan.delivery}</span>
+              <Link
+                href={`/contratar?plan=${plan.id}`}
+                className="mt-1 whitespace-nowrap rounded-[10px] bg-primary px-5 py-3 text-[15px] font-extrabold text-white transition-colors hover:bg-primary-hover"
+              >
+                Cotizar y contratar
+              </Link>
+            </div>
+          </div>
+        ))}
+
+        <div className="mx-auto grid max-w-6xl gap-[18px] sm:grid-cols-2">
+          {addons.map((addon) => (
+            <div key={addon.name} className="flex flex-col gap-3 rounded-[14px] border border-line bg-card p-7">
+              <div className="flex items-baseline justify-between gap-3">
+                <span className="text-[20px] font-extrabold">{addon.name}</span>
+                <span className="shrink-0 font-mono text-sm font-bold tracking-[0.04em] text-primary">{addon.priceFrom}</span>
+              </div>
+              <span className="text-[15px] leading-[1.55] text-soft">{addon.description}</span>
+            </div>
+          ))}
+          <div className="flex flex-wrap items-center justify-between gap-5 rounded-[14px] border border-dashed border-line bg-background px-7 py-[22px] sm:col-span-2">
+            <span className="text-base text-soft">
+              ¿Tu rubro necesita su propio vertical (gastronomía, automotora, clínica)? Lo armamos igual que el inmobiliario.
+            </span>
+            <Link
+              href="/contacto"
+              className="whitespace-nowrap rounded-[10px] border-[1.5px] border-primary px-6 py-3 text-[15px] font-bold text-primary transition-colors hover:bg-primary/10"
+            >
+              Conversemos tu vertical →
+            </Link>
+          </div>
         </div>
       </section>
 

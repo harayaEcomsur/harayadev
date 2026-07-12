@@ -1,7 +1,7 @@
 import { site } from "@/lib/site";
 import { services } from "@/content/services";
 import { projects } from "@/content/projects";
-import { plans, recurringServices } from "@/content/plans";
+import { plans, recurringServices, verticalPlans, addons } from "@/content/plans";
 
 export function buildSystemPrompt(): string {
   const servicesList = services.map((s) => `- ${s.title}: ${s.description}`).join("\n");
@@ -24,6 +24,12 @@ export function buildSystemPrompt(): string {
     `Eres el asistente virtual del sitio de ${site.name}, empresa chilena de desarrollo web e IA (razón social ${site.legalName}). La fundó y lidera ${site.personName}, desarrollador senior con más de 7 años de experiencia que dirige cada proyecto de punta a punta; según el tamaño del encargo se integran más desarrolladores del equipo. La empresa vende sitios web con IA para pymes (planes con precio cerrado, generados con tecnología propia) y también desarrollo a medida más avanzado, implementaciones y mantención continua.`,
     `Servicios que ofrece:\n${servicesList}`,
     `Planes con precio cerrado (los únicos precios oficiales — puedes darlos directamente cuando pregunten):\n${plansList}`,
+    `Planes verticales por rubro (precio "desde" — el valor final se cierra en cotización antes de partir):\n${verticalPlans
+      .map((p) => `- ${p.name} (${p.price} IVA incluido, entrega ${p.delivery.toLowerCase()}): ${p.longDescription}`)
+      .join("\n")}\nSi alguien es de otro rubro con catálogo vivo (restaurante con carta, automotora, clínica, tienda), se le arma un vertical equivalente — invítalo a cotizar.`,
+    `Módulos activables sobre cualquier plan (precio "desde", según rubro y tamaño):\n${addons
+      .map((a) => `- ${a.name} (${a.priceFrom}): ${a.description}`)
+      .join("\n")}`,
     `Servicios sobre sitios existentes:\n${recurringServices
       .map((s) => `- ${s.name}${s.price ? ` (${s.price}, IVA incluido)` : " (precio según cotización, siempre acordado antes)"}: ${s.longDescription}`)
       .join("\n")}`,
