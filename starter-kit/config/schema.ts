@@ -97,7 +97,50 @@ export const clientConfigSchema = z.object({
     faq: z.boolean().default(false),
     pricing: z.boolean().default(false),
     chat: z.boolean().default(true),
+    // Módulo CMS de propiedades (vertical inmobiliario): páginas /propiedades con
+    // búsqueda y filtros, ficha por propiedad con galería y video, y el chat IA
+    // respondiendo sobre el inventario. Se activa/desactiva por cliente.
+    propiedades: z.boolean().default(false),
   }),
+
+  // Inventario de propiedades (requiere modules.propiedades). En la demo/MVP vive
+  // en el config; en producción se administra desde el panel (fase CMS con DB) o
+  // vía mantención mensual — el resto del sitio no cambia.
+  properties: z
+    .array(
+      z.object({
+        slug: z.string(),
+        title: z.string(),
+        operation: z.enum(["venta", "arriendo", "arriendo_temporada"]),
+        type: z.enum(["casa", "departamento", "oficina", "local", "terreno", "parcela"]),
+        comuna: z.string(),
+        // Texto libre para soportar UF y CLP: "UF 4.500", "$650.000/mes".
+        price: z.string(),
+        bedrooms: z.number().optional(),
+        bathrooms: z.number().optional(),
+        area: z.number().optional(),
+        parking: z.number().optional(),
+        description: z.string(),
+        images: z.array(z.string()).min(1),
+        // URL de YouTube (watch o youtu.be); se embebe en la ficha.
+        video: z.string().optional(),
+        featured: z.boolean().default(false),
+      })
+    )
+    .max(200)
+    .optional(),
+
+  // Servicios de sindicación activables por cliente. En la demo se muestran como
+  // sello en cada ficha ("se publica también en…"); la integración real (API de
+  // MercadoLibre para Portalinmobiliario, Graph API para Instagram, Content
+  // Posting API para TikTok) se habilita por cliente en la implementación.
+  syndication: z
+    .object({
+      portalinmobiliario: z.boolean().default(false),
+      instagram: z.boolean().default(false),
+      tiktok: z.boolean().default(false),
+    })
+    .optional(),
 
   testimonials: z
     .array(

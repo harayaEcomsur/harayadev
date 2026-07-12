@@ -27,18 +27,23 @@ export function Header({ config }: { config: ClientConfig }) {
           </span>
         </a>
         <nav className="hidden gap-6 text-sm font-medium text-foreground/70 sm:flex">
-          <a href="#servicios" className="hover:text-primary">
+          {modules.propiedades && (
+            <a href="/propiedades" className="hover:text-primary">
+              Propiedades
+            </a>
+          )}
+          <a href="/#servicios" className="hover:text-primary">
             Servicios
           </a>
-          <a href="#nosotros" className="hover:text-primary">
+          <a href="/#nosotros" className="hover:text-primary">
             Nosotros
           </a>
           {modules.pricing && (
-            <a href="#precios" className="hover:text-primary">
+            <a href="/#precios" className="hover:text-primary">
               Precios
             </a>
           )}
-          <a href="#contacto" className="hover:text-primary">
+          <a href="/#contacto" className="hover:text-primary">
             Contacto
           </a>
         </nav>

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { Container } from "@/components/ui/Container";
 import { site } from "@/lib/site";
 import { buildMetadata } from "@/lib/seo";
@@ -64,8 +65,19 @@ export default function SobreMiPage() {
   return (
     <main className="py-16 sm:py-24">
       <Container className="max-w-3xl">
-        <h1 className="font-heading text-4xl font-bold text-foreground">Sobre mí</h1>
-        <p className="mt-4 text-lg text-foreground/70">
+        <div className="flex flex-col items-start gap-8 sm:flex-row sm:items-center">
+          <div className="relative h-[180px] w-[158px] shrink-0 overflow-hidden rounded-2xl border border-line">
+            <Image
+              src="/hector.jpg"
+              alt={`${site.personName}, fundador de ${site.name}`}
+              fill
+              sizes="158px"
+              className="object-cover"
+            />
+          </div>
+          <h1 className="font-heading text-4xl font-bold text-foreground">Sobre mí</h1>
+        </div>
+        <p className="mt-8 text-lg text-foreground/70">
           Soy {site.personName}, desarrollador senior y fundador de{" "}
           <strong className="text-foreground">{site.name}</strong>, empresa chilena de
           desarrollo web e IA. Más de 7 años construyendo desde e-commerce a gran escala
