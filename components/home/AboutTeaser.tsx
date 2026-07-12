@@ -13,9 +13,9 @@ export function AboutTeaser() {
           <span className="font-mono text-sm tracking-[0.14em] text-primary">QUIÉN ESTÁ DETRÁS</span>
           <h2 className="m-0 text-3xl font-black tracking-tight sm:text-[40px]">{site.personName}</h2>
           <p className="m-0 max-w-[620px] text-lg leading-[1.65] text-soft">
-            Desarrollador senior y fundador de {site.name}. Lidero cada proyecto de punta a punta —
+            Desarrollador senior con 7+ años de experiencia, fundador de {site.name}. Lidero cada proyecto de punta a punta —
             sitios, paneles administrativos, integraciones con IA — y según el tamaño del encargo se
-            suman desarrolladores junior del equipo. La misma experiencia que respalda operaciones a
+            suman más desarrolladores del equipo. La misma experiencia que respalda operaciones a
             gran escala, empaquetada a precio pyme, siempre con un responsable directo: yo.
           </p>
           <div className="flex flex-wrap gap-6 font-mono text-[13px] tracking-[0.06em] text-soft">
