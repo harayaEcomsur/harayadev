@@ -1,5 +1,7 @@
 "use client";
 
+import { trackEvent } from "@/lib/analytics";
+
 import { useChat } from "ai/react";
 import { useEffect, useRef } from "react";
 import { site } from "@/lib/site";
@@ -86,7 +88,7 @@ export function DemoChat() {
               </div>
             )}
           </div>
-          <form onSubmit={handleSubmit} className="flex gap-2.5 border-t border-line p-4">
+          <form onSubmit={(e) => { if (input.trim()) trackEvent("chat_usado", { origen: "home" }); handleSubmit(e); }} className="flex gap-2.5 border-t border-line p-4">
             <input
               value={input}
               onChange={handleInputChange}

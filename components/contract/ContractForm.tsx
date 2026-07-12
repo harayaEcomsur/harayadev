@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useSearchParams } from "next/navigation";
+import { trackEvent } from "@/lib/analytics";
 import { allContractablePlans } from "@/content/plans";
 import type { Contract } from "@/lib/contract";
 import { ContractView } from "./ContractView";
@@ -88,6 +89,7 @@ export function ContractForm() {
         setErrorMsg(responseData.error ?? "Ocurrió un error generando el contrato.");
         return;
       }
+      trackEvent("contrato_generado", { plan: planId, pago: effectivePayment });
       setResult(responseData);
       window.scrollTo({ top: 0 });
     } catch {

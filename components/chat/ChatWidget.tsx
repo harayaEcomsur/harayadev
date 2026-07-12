@@ -1,5 +1,7 @@
 "use client";
 
+import { trackEvent } from "@/lib/analytics";
+
 import { useChat } from "ai/react";
 import { useState } from "react";
 import { usePathname } from "next/navigation";
@@ -52,7 +54,7 @@ export function ChatWidget() {
               </p>
             )}
           </div>
-          <form onSubmit={handleSubmit} className="flex items-center gap-2 border-t border-line p-2">
+          <form onSubmit={(e) => { if (input.trim()) trackEvent("chat_usado", { origen: "widget" }); handleSubmit(e); }} className="flex items-center gap-2 border-t border-line p-2">
             <input
               value={input}
               onChange={handleInputChange}
