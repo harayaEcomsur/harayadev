@@ -18,11 +18,82 @@ export const contractRequestSchema = z.object({
     brief: z.string().min(4).max(1500),
   }),
   existingSiteUrl: z.string().max(300).optional(),
-  // Monto ya acordado (solo mantención/mejora), en CLP, ej. "120000".
+  // Monto ya acordado (planes cotizados/verticales), en CLP, ej. "120000".
   agreedAmount: z.string().max(20).optional(),
+  // Modificaciones acordadas tras probar la demo, cada una con su valor (vacío =
+  // incluida sin costo). El valor final del contrato = plan base + suma de estas.
+  modifications: z
+    .array(
+      z.object({
+        description: z.string().min(3).max(300),
+        amount: z.string().max(20).optional(),
+      })
+    )
+    .max(20)
+    .optional(),
 });
 
 export type ContractRequest = z.infer<typeof contractRequestSchema>;
+
+// --- Pre-contrato de demo: el D0 iniciado por el cliente ---
+export const demoRequestSchema = z.object({
+  planId: z.string().refine((id) => allContractablePlans.some((p) => p.id === id), {
+    message: "Plan desconocido",
+  }),
+  applicant: z.object({
+    name: z.string().min(2).max(120),
+    businessName: z.string().min(2).max(120),
+    rubro: z.string().min(2).max(120),
+    phone: z.string().min(6).max(20),
+    email: z.string().email(),
+    brief: z.string().min(10).max(1500),
+  }),
+  currentSiteUrl: z.string().max(300).optional(),
+});
+
+export type DemoRequest = z.infer<typeof demoRequestSchema>;
+
+export interface PreContract {
+  number: string;
+  date: string;
+  provider: Contract["provider"];
+  applicant: DemoRequest["applicant"] & { currentSiteUrl?: string };
+  plan: { name: string; priceLabel: string; delivery: string };
+  terms: string[];
+}
+
+export function buildPreContract(request: DemoRequest): PreContract {
+  const plan = allContractablePlans.find((p) => p.id === request.planId)!;
+  const now = new Date();
+  const number = `PRE-${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, "0")}${String(
+    now.getDate()
+  ).padStart(2, "0")}-${Math.random().toString(36).slice(2, 6).toUpperCase()}`;
+
+  return {
+    number,
+    date: now.toLocaleDateString("es-CL", { day: "numeric", month: "long", year: "numeric" }),
+    provider: {
+      legalName: site.legalName,
+      rut: process.env.COMPANY_RUT ?? "[RUT por completar]",
+      representative: site.personName,
+      email: site.email,
+      phone: site.whatsapp ? `+${site.whatsapp}` : "[teléfono]",
+    },
+    applicant: { ...request.applicant, currentSiteUrl: request.currentSiteUrl },
+    plan: {
+      name: plan.name,
+      priceLabel: plan.price ? `${plan.price} IVA incluido` : "según cotización",
+      delivery: plan.delivery,
+    },
+    terms: [
+      `${site.name} construirá una demo funcional del sitio de ${request.applicant.businessName}, con su marca y datos públicos, dentro de 24 a 48 horas hábiles, sin costo ni compromiso para el solicitante.`,
+      "La demo es un borrador con contenido de referencia: los datos definitivos (fotos, textos, precios, catálogo) se completan junto al cliente si decide avanzar.",
+      `El plan de referencia es "${plan.name}" (${plan.price ? `${plan.price} IVA incluido` : "según cotización"}). Este valor es referencial: tras probar la demo, las modificaciones que el cliente requiera se valorizan una a una y el precio final queda estipulado en el contrato final.`,
+      "Probada la demo y acordadas las modificaciones, se genera el contrato final con el detalle de cada modificación, su valor y el valor total — nada se paga antes de ese contrato.",
+      "Si el solicitante no responde, la demo se despublica a los 30 días y sus datos se eliminan.",
+    ],
+  };
+}
 
 export interface BankInfo {
   bankName: string;
@@ -77,8 +148,14 @@ function getBankInfo(): BankInfo | null {
   };
 }
 
+function modsTotal(request: ContractRequest): number {
+  return (request.modifications ?? []).reduce((sum, m) => sum + (m.amount ? parseClp(m.amount) : 0), 0);
+}
+
 function buildPaymentTerms(plan: Plan, request: ContractRequest): { priceLabel: string; terms: string[] } {
-  const agreed = request.agreedAmount ? parseClp(request.agreedAmount) : null;
+  const extra = modsTotal(request);
+  const agreedBase = request.agreedAmount ? parseClp(request.agreedAmount) : null;
+  const agreed = agreedBase != null ? agreedBase + extra : null;
 
   if (plan.quoted) {
     const amountLabel = agreed
@@ -115,20 +192,23 @@ function buildPaymentTerms(plan: Plan, request: ContractRequest): { priceLabel: 
     };
   }
 
-  // Planes con precio cerrado publicado.
-  const total = parseClp(plan.price!);
+  // Planes con precio cerrado publicado: total = plan base + modificaciones.
+  const total = parseClp(plan.price!) + extra;
+  const baseLabel =
+    extra > 0 ? `${formatClp(total)} (plan ${plan.price} + modificaciones ${formatClp(extra)})` : `${plan.price}`;
   if (request.paymentPlan === "monthly") {
     return {
-      priceLabel: `${plan.price} IVA incluido`,
+      priceLabel: `${baseLabel} IVA incluido`,
       terms: [
-        `Pago mensual por transferencia bancaria, por ${formatClp(total)} (IVA incluido), dentro de los primeros 5 días de cada mes.`,
+        `Pago mensual por transferencia bancaria, por ${formatClp(parseClp(plan.price!))} (IVA incluido), dentro de los primeros 5 días de cada mes.`,
+        ...(extra > 0 ? [`Modificaciones acordadas por ${formatClp(extra)} (IVA incluido), como pago único junto al primer mes.`] : []),
         "El servicio puede terminarse por cualquiera de las partes avisando con 30 días de anticipación, sin multas.",
       ],
     };
   }
   if (request.paymentPlan === "split") {
     return {
-      priceLabel: `${plan.price} IVA incluido`,
+      priceLabel: `${baseLabel} IVA incluido`,
       terms: [
         `50% al aprobar la demo y aceptar este contrato: ${formatClp(Math.ceil(total / 2))}, por transferencia bancaria.`,
         `50% contra entrega conforme del sitio publicado: ${formatClp(Math.floor(total / 2))}, por transferencia bancaria.`,
@@ -136,9 +216,9 @@ function buildPaymentTerms(plan: Plan, request: ContractRequest): { priceLabel: 
     };
   }
   return {
-    priceLabel: `${plan.price} IVA incluido`,
+    priceLabel: `${baseLabel} IVA incluido`,
     terms: [
-      `Pago único de ${plan.price} (IVA incluido) por transferencia bancaria, al aprobar la demo gratuita y aceptar este contrato.`,
+      `Pago único de ${formatClp(total)} (IVA incluido) por transferencia bancaria, al aprobar la demo gratuita y aceptar este contrato.`,
     ],
   };
 }
@@ -162,6 +242,16 @@ export function buildContract(request: ContractRequest): Contract {
         request.existingSiteUrl ? ` El servicio se prestará sobre el sitio existente: ${request.existingSiteUrl}.` : ""
       }`,
     },
+    ...(request.modifications?.length
+      ? [
+          {
+            title: "Modificaciones acordadas a la demo",
+            body: `Tras la revisión de la demo, las partes acuerdan las siguientes modificaciones, cuyos valores forman parte del precio final: ${request.modifications
+              .map((m) => `${m.description} (${m.amount ? `${formatClp(parseClp(m.amount))} IVA incluido` : "incluida sin costo adicional"})`)
+              .join("; ")}.`,
+          },
+        ]
+      : []),
     {
       title: "Precio",
       body: `El precio del servicio es ${priceLabel}. Los montos indicados incluyen IVA. El Prestador emitirá factura o boleta según corresponda.`,

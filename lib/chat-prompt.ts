@@ -33,7 +33,7 @@ export function buildSystemPrompt(): string {
     `Servicios sobre sitios existentes:\n${recurringServices
       .map((s) => `- ${s.name}${s.price ? ` (${s.price}, IVA incluido)` : " (precio según cotización, siempre acordado antes)"}: ${s.longDescription}`)
       .join("\n")}`,
-    `Cómo funciona: 1) el cliente cuenta de su negocio por WhatsApp y en 24 horas ve una demo funcionando con su marca, gratis y sin compromiso; 2) si le convence, paga el precio cerrado del plan (incluye IVA, dominio y puesta en marcha); 3) la web queda publicada con el asistente IA entrenado con la información de su negocio.`,
+    `Cómo funciona: 1) el cliente pide su demo gratis en la página /demo (o por WhatsApp) contando de su negocio — eso genera un pre-contrato sin ningún compromiso de pago; 2) en 24-48 horas hábiles recibe el link de su demo funcionando con su marca; 3) la prueba y pide las modificaciones que quiera, cada una se valoriza; 4) se genera el contrato final en /contratar con las modificaciones estipuladas, sus valores y el valor total — recién ahí se paga. Si alguien quiere "ver una demo" o "probar", mándalo a /demo.`,
     `Forma de pago: transferencia bancaria, en dos alternativas — 100% al aprobar la demo, o 50% al inicio y 50% contra entrega. En la página /contratar se elige plan y forma de pago y se genera un contrato simple para revisar antes de transferir (es un borrador: si el cliente necesita otra alternativa de pago, se ajusta antes de firmar). La mantención se paga como cargo mensual.`,
     `Proyectos destacados de portafolio:\n${projectsList}`,
     `Datos de facturación: ${site.billingNote}`,

@@ -33,6 +33,7 @@ export function ContractForm() {
     : "landing";
 
   const [planId, setPlanId] = useState(initialPlan);
+  const [modifications, setModifications] = useState<{ description: string; amount: string }[]>([]);
   const [paymentPlan, setPaymentPlan] = useState<"full" | "split" | "monthly">("full");
   const [status, setStatus] = useState<"idle" | "sending" | "error">("idle");
   const [errorMsg, setErrorMsg] = useState("");
@@ -74,6 +75,9 @@ export function ContractForm() {
         brief: String(data.get("brief") ?? ""),
       },
       existingSiteUrl: String(data.get("existingSiteUrl") ?? "") || undefined,
+      modifications: modifications
+        .filter((m) => m.description.trim().length >= 3)
+        .map((m) => ({ description: m.description.trim(), amount: m.amount.trim() || undefined })),
       agreedAmount: String(data.get("agreedAmount") ?? "") || undefined,
     };
 
@@ -208,6 +212,52 @@ export function ContractForm() {
           className={`${inputClass} resize-y`}
         />
       </Field>
+
+      {/* Modificaciones acordadas a la demo */}
+      <div className="flex flex-col gap-2">
+        <span className={labelClass}>MODIFICACIONES ACORDADAS A LA DEMO (OPCIONAL)</span>
+        <p className="m-0 text-sm text-soft">
+          Si ya probaste tu demo y acordamos cambios, agrégalos con su valor — quedan
+          estipulados en el contrato y suman al valor final. Valor vacío = incluido sin costo.
+        </p>
+        {modifications.map((mod, i) => (
+          <div key={i} className="flex gap-2">
+            <input
+              value={mod.description}
+              onChange={(e) =>
+                setModifications((mods) => mods.map((m, j) => (j === i ? { ...m, description: e.target.value } : m)))
+              }
+              maxLength={300}
+              className={inputClass}
+              placeholder="Ej: agregar sección de convenios"
+            />
+            <input
+              value={mod.amount}
+              onChange={(e) =>
+                setModifications((mods) => mods.map((m, j) => (j === i ? { ...m, amount: e.target.value } : m)))
+              }
+              maxLength={20}
+              className={`${inputClass} w-36 shrink-0`}
+              placeholder="$ (opcional)"
+            />
+            <button
+              type="button"
+              aria-label="Quitar modificación"
+              onClick={() => setModifications((mods) => mods.filter((_, j) => j !== i))}
+              className="shrink-0 rounded-[10px] border border-line px-3 text-soft hover:border-primary hover:text-primary"
+            >
+              ✕
+            </button>
+          </div>
+        ))}
+        <button
+          type="button"
+          onClick={() => setModifications((mods) => [...mods, { description: "", amount: "" }])}
+          className="self-start rounded-[10px] border-[1.5px] border-dashed border-line px-4 py-2.5 text-sm font-bold text-soft transition-colors hover:border-primary hover:text-primary"
+        >
+          + Agregar modificación
+        </button>
+      </div>
 
       <button
         type="submit"

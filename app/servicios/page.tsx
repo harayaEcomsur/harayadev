@@ -135,15 +135,12 @@ export default function ServiciosPage() {
                   IVA INCLUIDO · ENTREGA {plan.delivery}
                 </span>
                 <div className="mt-1 flex flex-wrap gap-2.5">
-                  {plan.demoHref && (
-                    <a
-                      href={plan.demoHref}
-                      {...(plan.demoHref.startsWith("http") ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-                      className="whitespace-nowrap rounded-[10px] border-[1.5px] border-line px-5 py-3 text-[15px] font-bold text-foreground transition-colors hover:border-soft"
-                    >
-                      Probar la demo
-                    </a>
-                  )}
+                  <Link
+                    href={`/demo?plan=${plan.id}`}
+                    className="whitespace-nowrap rounded-[10px] border-[1.5px] border-line px-5 py-3 text-[15px] font-bold text-foreground transition-colors hover:border-soft"
+                  >
+                    Pide tu demo gratis
+                  </Link>
                   <Link
                     href={`/contratar?plan=${plan.id}`}
                     className="whitespace-nowrap rounded-[10px] bg-primary px-5 py-3 text-[15px] font-extrabold text-white transition-colors hover:bg-primary-hover"
@@ -189,12 +186,20 @@ export default function ServiciosPage() {
             <div className="flex shrink-0 flex-col items-start gap-2.5 lg:items-end lg:text-right">
               <span className="text-[38px] font-black tracking-tight text-primary sm:text-[44px]">{plan.price}</span>
               <span className="font-mono text-xs tracking-[0.1em] text-soft/60">IVA INCLUIDO · ENTREGA {plan.delivery}</span>
-              <Link
-                href={`/contratar?plan=${plan.id}`}
-                className="mt-1 whitespace-nowrap rounded-[10px] bg-primary px-5 py-3 text-[15px] font-extrabold text-white transition-colors hover:bg-primary-hover"
-              >
-                Cotizar y contratar
-              </Link>
+              <div className="mt-1 flex flex-wrap gap-2.5">
+                <Link
+                  href={`/demo?plan=${plan.id}`}
+                  className="whitespace-nowrap rounded-[10px] border-[1.5px] border-line px-5 py-3 text-[15px] font-bold text-foreground transition-colors hover:border-soft"
+                >
+                  Pide tu demo gratis
+                </Link>
+                <Link
+                  href={`/contratar?plan=${plan.id}`}
+                  className="whitespace-nowrap rounded-[10px] bg-primary px-5 py-3 text-[15px] font-extrabold text-white transition-colors hover:bg-primary-hover"
+                >
+                  Cotizar y contratar
+                </Link>
+              </div>
             </div>
           </div>
         ))}
