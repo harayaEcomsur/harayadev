@@ -117,6 +117,15 @@ function buildPaymentTerms(plan: Plan, request: ContractRequest): { priceLabel: 
 
   // Planes con precio cerrado publicado.
   const total = parseClp(plan.price!);
+  if (request.paymentPlan === "monthly") {
+    return {
+      priceLabel: `${plan.price} IVA incluido`,
+      terms: [
+        `Pago mensual por transferencia bancaria, por ${formatClp(total)} (IVA incluido), dentro de los primeros 5 días de cada mes.`,
+        "El servicio puede terminarse por cualquiera de las partes avisando con 30 días de anticipación, sin multas.",
+      ],
+    };
+  }
   if (request.paymentPlan === "split") {
     return {
       priceLabel: `${plan.price} IVA incluido`,

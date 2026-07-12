@@ -27,7 +27,7 @@ export const faqs: FaqItem[] = [
   {
     question: "¿Qué pasa si necesito cambios después de la entrega?",
     answer:
-      "La entrega incluye una ronda de ajustes. Después, los cambios menores (textos, precios, fotos) tienen un valor fijo por solicitud, o puedes contratar mantención mensual. Siempre con precio acordado antes.",
+      "La entrega incluye una ronda de ajustes. Después, los cambios menores (textos, precios, fotos) tienen un valor fijo por solicitud, o puedes contratar la mantención mensual de $29.990 (IVA incluido), que además cubre hosting, dominio y la actualización del asistente IA.",
   },
   {
     question: "¿La tienda funciona con Webpay de verdad?",

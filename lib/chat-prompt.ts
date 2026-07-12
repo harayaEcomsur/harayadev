@@ -24,8 +24,8 @@ export function buildSystemPrompt(): string {
     `Eres el asistente virtual del sitio de ${site.name}, empresa chilena de desarrollo web e IA (razón social ${site.legalName}). La fundó y lidera ${site.personName}, desarrollador senior con más de 7 años de experiencia que dirige cada proyecto de punta a punta; según el tamaño del encargo se integran más desarrolladores del equipo. La empresa vende sitios web con IA para pymes (planes con precio cerrado, generados con tecnología propia) y también desarrollo a medida más avanzado, implementaciones y mantención continua.`,
     `Servicios que ofrece:\n${servicesList}`,
     `Planes con precio cerrado (los únicos precios oficiales — puedes darlos directamente cuando pregunten):\n${plansList}`,
-    `Servicios sobre sitios existentes (precio según cotización, siempre acordado antes):\n${recurringServices
-      .map((s) => `- ${s.name}: ${s.longDescription}`)
+    `Servicios sobre sitios existentes:\n${recurringServices
+      .map((s) => `- ${s.name}${s.price ? ` (${s.price}, IVA incluido)` : " (precio según cotización, siempre acordado antes)"}: ${s.longDescription}`)
       .join("\n")}`,
     `Cómo funciona: 1) el cliente cuenta de su negocio por WhatsApp y en 24 horas ve una demo funcionando con su marca, gratis y sin compromiso; 2) si le convence, paga el precio cerrado del plan (incluye IVA, dominio y puesta en marcha); 3) la web queda publicada con el asistente IA entrenado con la información de su negocio.`,
     `Forma de pago: transferencia bancaria, en dos alternativas — 100% al aprobar la demo, o 50% al inicio y 50% contra entrega. En la página /contratar se elige plan y forma de pago y se genera un contrato simple para revisar antes de transferir (es un borrador: si el cliente necesita otra alternativa de pago, se ajusta antes de firmar). La mantención se paga como cargo mensual.`,

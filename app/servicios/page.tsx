@@ -163,8 +163,8 @@ export default function ServiciosPage() {
           <span className="font-mono text-sm tracking-[0.14em] text-primary">¿YA TIENES SITIO?</span>
           <h2 className="m-0 text-3xl font-black tracking-tight sm:text-[44px]">Mantención y mejoras</h2>
           <p className="m-0 max-w-[640px] text-lg leading-[1.6] text-soft">
-            También trabajo sobre sitios existentes: mantención mensual o una mejora puntual, con
-            cotización previa y precio cerrado igual que los planes.
+            También trabajamos sobre sitios existentes: mantención mensual con precio fijo, o una
+            mejora puntual con cotización previa y precio cerrado igual que los planes.
           </p>
         </div>
         <div className="mx-auto grid max-w-6xl gap-[18px] sm:grid-cols-2">
@@ -185,7 +185,14 @@ export default function ServiciosPage() {
               </div>
               <div className="mt-2 flex flex-wrap items-center justify-between gap-3">
                 <span className="font-mono text-xs tracking-[0.1em] text-soft/60">
-                  PRECIO SEGÚN COTIZACIÓN · {service.delivery}
+                  {service.price ? (
+                    <>
+                      <span className="text-lg font-black tracking-normal text-foreground">{service.price}</span>{" "}
+                      IVA INCL. · {service.delivery}
+                    </>
+                  ) : (
+                    <>PRECIO SEGÚN COTIZACIÓN · {service.delivery}</>
+                  )}
                 </span>
                 <Link
                   href={`/contratar?plan=${service.id}`}

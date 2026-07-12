@@ -81,10 +81,10 @@ export const recurringServices: Plan[] = [
     name: "Mantención mensual",
     description: "Tu sitio siempre al día: cambios de textos, precios, fotos y soporte.",
     longDescription:
-      "Cambios de textos, precios, fotos y contenido, actualización del asistente IA cuando tu información cambie, y soporte prioritario. Precio mensual acordado según el tamaño de tu sitio, antes de partir.",
-    includes: ["Cambios de contenido", "Asistente IA actualizado", "Soporte prioritario", "Precio acordado antes"],
+      "Hosting, dominio y sitio siempre al día: cambios de textos, precios, fotos y contenido, actualización del asistente IA cuando tu información cambie, reporte mensual y soporte prioritario. Sin permanencia: se cancela avisando con 30 días.",
+    includes: ["Hosting y dominio incluidos", "Cambios de contenido", "Asistente IA actualizado", "Reporte mensual", "Sin permanencia"],
+    price: "$29.990/mes",
     delivery: "SERVICIO MENSUAL",
-    quoted: true,
   },
   {
     id: "mejora",
