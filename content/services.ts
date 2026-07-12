@@ -30,6 +30,12 @@ export const services: Service[] = [
       "Paneles con autenticación, generación de cotizaciones/informes/documentos y persistencia real en base de datos — como el panel construido para D&Z Building.",
   },
   {
+    icon: "Wrench",
+    title: "Implementaciones y mantención continua",
+    description:
+      "Integración con sistemas existentes (pagos, facturación, CRM), evolución de sitios ya publicados y mantención mensual con soporte — para que la web siga funcionando después del lanzamiento.",
+  },
+  {
     icon: "ShoppingCart",
     title: "E-commerce (VTEX IO)",
     description:

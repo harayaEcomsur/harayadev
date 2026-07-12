@@ -9,16 +9,28 @@ export function ProjectCard({ project }: { project: Project }) {
           <h2 className="font-heading text-xl font-semibold text-foreground sm:text-2xl">{project.title}</h2>
           <p className="mt-1 text-sm text-foreground/60">{project.client}</p>
         </div>
-        {project.links?.repo && (
-          <a
-            href={project.links.repo}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-1 rounded-full border border-primary/30 px-4 py-2 text-sm font-medium text-primary transition-colors hover:bg-primary/5"
-          >
-            Ver repo <ExternalLink size={14} />
-          </a>
-        )}
+        <div className="flex flex-wrap gap-2">
+          {project.links?.live && (
+            <a
+              href={project.links.live.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1 rounded-full bg-primary px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-primary-hover"
+            >
+              {project.links.live.label} <ExternalLink size={14} />
+            </a>
+          )}
+          {project.links?.repo && (
+            <a
+              href={project.links.repo}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1 rounded-full border border-primary/30 px-4 py-2 text-sm font-medium text-primary transition-colors hover:bg-primary/5"
+            >
+              Ver repo <ExternalLink size={14} />
+            </a>
+          )}
+        </div>
       </div>
 
       <p className="mt-4 text-foreground/80">{project.summary}</p>

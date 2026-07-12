@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { Container } from "@/components/ui/Container";
 import { site } from "@/lib/site";
 import { buildMetadata } from "@/lib/seo";
@@ -64,17 +65,30 @@ export default function SobreMiPage() {
   return (
     <main className="py-16 sm:py-24">
       <Container className="max-w-3xl">
-        <h1 className="font-heading text-4xl font-bold text-foreground">Sobre mí</h1>
-        <p className="mt-4 text-lg text-foreground/70">
-          Soy {site.personName}, desarrollador full stack y fundador de{" "}
-          <strong className="text-foreground">{site.name}</strong>. Más de 6 años
-          construyendo desde e-commerce a gran escala (VTEX IO, Cencosud) hasta paneles de
-          administración e integraciones con IA de punta a punta — desde la arquitectura hasta
-          el deploy.
+        <div className="flex flex-col items-start gap-8 sm:flex-row sm:items-center">
+          <div className="relative h-[180px] w-[158px] shrink-0 overflow-hidden rounded-2xl border border-line">
+            <Image
+              src="/hector.jpg"
+              alt={`${site.personName}, fundador de ${site.name}`}
+              fill
+              sizes="158px"
+              className="object-cover"
+            />
+          </div>
+          <h1 className="font-heading text-4xl font-bold text-foreground">Sobre mí</h1>
+        </div>
+        <p className="mt-8 text-lg text-foreground/70">
+          Soy {site.personName}, desarrollador senior y fundador de{" "}
+          <strong className="text-foreground">{site.name}</strong>, empresa chilena de
+          desarrollo web e IA. Más de 7 años construyendo desde e-commerce a gran escala
+          (VTEX IO, Cencosud) hasta paneles de administración e integraciones con IA de punta
+          a punta. En {site.name} lidero cada proyecto y, según el tamaño del encargo, se
+          suman más desarrolladores del equipo.
         </p>
         <p className="mt-4 text-foreground/70">
-          Hoy el foco principal es un producto propio: un starter kit para lanzar sitios web con
-          chat IA a pymes chilenas en horas, no semanas (ver{" "}
+          Hoy la empresa combina dos frentes: los productos (sitios web con chat IA para pymes
+          chilenas, generados con tecnología propia en horas, no semanas) y los encargos a
+          medida — desarrollos avanzados, implementaciones y mantención (ver{" "}
           <a href="/proyectos" className="text-primary hover:underline">
             proyectos
           </a>

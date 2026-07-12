@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import { Archivo, JetBrains_Mono } from "next/font/google";
+import { GoogleAnalytics } from "@next/third-parties/google";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { ChatWidget } from "@/components/chat/ChatWidget";
+import { WhatsAppClickTracker } from "@/components/analytics/WhatsAppClickTracker";
 import { buildMetadata, buildPersonOrgJsonLd } from "@/lib/seo";
 import "./globals.css";
 
@@ -31,6 +33,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           // eslint-disable-next-line react/no-danger
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
+        {/* GA4 se activa solo cuando NEXT_PUBLIC_GA_ID está definida (producción). */}
+        {process.env.NEXT_PUBLIC_GA_ID && (
+          <>
+            <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID} />
+            <WhatsAppClickTracker />
+          </>
+        )}
       </body>
     </html>
   );

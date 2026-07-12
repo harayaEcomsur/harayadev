@@ -11,6 +11,7 @@ import { HeroInmobiliaria } from "@/components/layouts/inmobiliaria/HeroInmobili
 import { ServicesInmobiliaria } from "@/components/layouts/inmobiliaria/ServicesInmobiliaria";
 import { GalleryInmobiliaria } from "@/components/layouts/inmobiliaria/GalleryInmobiliaria";
 import { HeroCorporativo } from "@/components/layouts/corporativo/HeroCorporativo";
+import { FeaturedProperties } from "@/components/properties/FeaturedProperties";
 import { ServicesCorporativo } from "@/components/layouts/corporativo/ServicesCorporativo";
 import { Testimonials } from "@/components/sections/Testimonials";
 import { FAQ } from "@/components/sections/FAQ";
@@ -46,7 +47,11 @@ export function HomeContent() {
       <Services services={clientConfig.services} />
     );
 
-  const gallerySection = !gallery.length ? null : layout === "inmobiliaria" ? (
+  // Con el módulo de propiedades activo, el inventario real reemplaza a la galería.
+  const hasProperties = modules.propiedades && (clientConfig.properties?.length ?? 0) > 0;
+  const gallerySection = hasProperties ? (
+    <FeaturedProperties properties={clientConfig.properties!} />
+  ) : !gallery.length ? null : layout === "inmobiliaria" ? (
     <GalleryInmobiliaria images={gallery} />
   ) : (
     <Gallery images={gallery} />

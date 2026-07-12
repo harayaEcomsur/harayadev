@@ -4,7 +4,7 @@ export const site = {
   personName: "Hector Araya C.",
   tagline: "Desarrollo web y soluciones con IA para pymes chilenas",
   description:
-    "Desarrollo web full stack, integraciones con IA y sitios web con IA para pymes chilenas. Panel de proyectos, servicios y contacto de Hector Araya C. / HarayaDev.",
+    "HarayaDev: empresa chilena de desarrollo web e IA. Sitios web con IA para pymes, desarrollo a medida, implementaciones y mantención. Fundada y liderada por Hector Araya C.",
   billingNote: "Emitimos factura y boleta de honorarios.",
   locale: "es-CL",
   email: "harayadev@gmail.com",

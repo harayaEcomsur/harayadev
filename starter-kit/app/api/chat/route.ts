@@ -6,7 +6,7 @@ import { checkRateLimit } from "@/lib/rate-limit";
 export const runtime = "edge";
 
 function buildSystemPrompt(): string {
-  const { chat, meta, contact } = clientConfig;
+  const { chat, meta, contact, modules, properties } = clientConfig;
   const qa = chat.qaPairs.map((p, i) => `${i + 1}. P: ${p.q}\n   R: ${p.a}`).join("\n");
 
   const contactLine = [
@@ -21,6 +21,14 @@ function buildSystemPrompt(): string {
   return [
     `Eres el asistente virtual de "${meta.businessName}" (${meta.rubro}).`,
     chat.businessDescription,
+    modules.propiedades && properties?.length
+      ? `Propiedades disponibles hoy (recomiéndalas según lo que busque el cliente; cada una tiene su ficha en /propiedades/<slug>):\n${properties
+          .map(
+            (p) =>
+              `- ${p.title} (${p.operation.replace("_", " ")}, ${p.type}, ${p.comuna}): ${p.price}${p.bedrooms != null ? `, ${p.bedrooms}D` : ""}${p.bathrooms != null ? `/${p.bathrooms}B` : ""}${p.area != null ? `, ${p.area} m²` : ""} — ficha: /propiedades/${p.slug}`
+          )
+          .join("\n")}`
+      : "",
     qa ? `Preguntas frecuentes y sus respuestas oficiales:\n${qa}` : "",
     contactLine
       ? `Datos de contacto: ${contactLine}. Si preguntan cómo contactar o piden alguno de estos datos, dalos directamente en tu respuesta.`
