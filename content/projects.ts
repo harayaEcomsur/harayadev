@@ -8,13 +8,14 @@ export interface Project {
   highlights: string[];
   links?: {
     repo?: string;
+    live?: { url: string; label: string };
   };
 }
 
 export const projects: Project[] = [
   {
     slug: "dz-building",
-    title: "D&Z Building — sitio web + panel de administración",
+    title: "D&Z Building — sitio web + panel de administración (en producción)",
     client: "D&Z Building (climatización y refrigeración, Chile)",
     summary:
       "Sitio público más panel de administración completo para una empresa chilena de climatización y refrigeración: generación de cotizaciones, membretes e informes, firma de email y kit de marca, con persistencia real en base de datos.",
@@ -29,11 +30,12 @@ export const projects: Project[] = [
     ],
     links: {
       repo: "https://github.com/harayaEcomsur/dyzbuilding",
+      live: { url: "https://www.dyzbuilding.cl", label: "Ver en producción" },
     },
   },
   {
     slug: "demo-franquicias",
-    title: "Demo de asistente IA para franquicias",
+    title: "Asesor gastronómico con IA para franquicias (demo)",
     client: "Herramienta de venta propia (demo para reuniones comerciales)",
     summary:
       "Demo funcional de un asistente con IA que responde preguntas de franquiciados usando la base de conocimiento de la marca, editable en vivo durante la misma reunión para demostrar el concepto en minutos.",
@@ -46,24 +48,7 @@ export const projects: Project[] = [
     ],
     links: {
       repo: "https://github.com/harayaEcomsur/demo-franquicias",
-    },
-  },
-  {
-    slug: "starter-kit",
-    title: "Starter kit: sitios web con IA para pymes chilenas",
-    client: "Producto propio (HarayaDev)",
-    summary:
-      "Template config-driven en Next.js para generar sitios web personalizados con chat IA en minutos: un solo archivo de configuración define identidad, contenido y módulos activables, sin tocar código.",
-    stack: ["Next.js 14", "TypeScript", "Tailwind CSS", "Zod", "Vercel AI SDK + Google Gemini", "Resend"],
-    role: "Arquitectura y desarrollo full stack",
-    highlights: [
-      "Un archivo `client.config.ts` validado con Zod define todo el sitio",
-      "Chat IA con streaming y system prompt dinámico armado desde hasta 40 preguntas frecuentes por cliente",
-      "CLI `new-client` que clona un preset, crea el branch y deja instrucciones de deploy",
-      "3 presets de ejemplo (restaurante, barbería, servicios profesionales) con datos e imágenes reales",
-    ],
-    links: {
-      repo: "https://github.com/harayaEcomsur/harayadev/tree/main/starter-kit",
+      live: { url: "https://demo-franquicias-2.vercel.app", label: "Ver demo" },
     },
   },
 ];
