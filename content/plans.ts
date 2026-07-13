@@ -162,6 +162,13 @@ export const addons: Addon[] = [
       "El mismo asistente de tu web respondiendo tu WhatsApp de negocio 24/7: precios, horarios, catálogo, propiedades. Tú sigues usando tu app normal (mismo número, en paralelo) y el bot atiende lo repetitivo. Las respuestas a tus clientes no tienen costo de Meta hasta 1.000 conversaciones al mes.",
   },
   {
+    icon: "CalendarCheck",
+    name: "Agenda online con abono",
+    priceFrom: "desde $99.990",
+    description:
+      "Tus clientes reservan hora solos (servicio, día y hora) y la reserva queda pendiente hasta el abono. Tú recibes aviso al instante, confirmas desde tu panel y bloqueas los días u horas en que no atiendes. Ideal para salones, barberías, clínicas y consultas.",
+  },
+  {
     icon: "DatabaseZap",
     name: "Mantención con inventario",
     priceFrom: "desde $49.990/mes",
