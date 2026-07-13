@@ -9,6 +9,7 @@ import {
   toggleBlocked,
   getNotify,
   setNotify,
+  consumeNotifyQuota,
 } from "@/lib/booking-store";
 
 // API del módulo agenda. GET público entrega disponibilidad; con clave de admin
@@ -139,9 +140,12 @@ export async function POST(req: Request) {
     ``,
     `Confírmala en el panel: /agenda/admin`,
   ].join("\n");
+  const quotaOk = consumeNotifyQuota();
   const [emailSent, whatsappSent] = await Promise.all([
-    notifyByEmail(`📅 Nueva reserva ${result.id} — ${result.service} (${clientConfig.meta.businessName})`, summary, targets.email),
-    targets.whatsapp ? notifyByWhatsApp(targets.whatsapp, summary) : Promise.resolve(false),
+    quotaOk
+      ? notifyByEmail(`📅 Nueva reserva ${result.id} — ${result.service} (${clientConfig.meta.businessName})`, summary, targets.email)
+      : Promise.resolve(false),
+    quotaOk && targets.whatsapp ? notifyByWhatsApp(targets.whatsapp, summary) : Promise.resolve(false),
   ]);
 
   return Response.json({
@@ -182,9 +186,12 @@ export async function PATCH(req: Request) {
   if (parsed.data.action === "testNotify") {
     const targets = notifyTargets();
     const text = `Aviso de prueba de la agenda de ${clientConfig.meta.businessName} — así te llegará cada reserva nueva ✅`;
+    const quotaOk = consumeNotifyQuota();
     const [emailSent, whatsappSent] = await Promise.all([
-      notifyByEmail(`🔔 Prueba de avisos — ${clientConfig.meta.businessName}`, text, targets.email),
-      targets.whatsapp ? notifyByWhatsApp(targets.whatsapp, text) : Promise.resolve(false),
+      quotaOk
+        ? notifyByEmail(`🔔 Prueba de avisos — ${clientConfig.meta.businessName}`, text, targets.email)
+        : Promise.resolve(false),
+      quotaOk && targets.whatsapp ? notifyByWhatsApp(targets.whatsapp, text) : Promise.resolve(false),
     ]);
     return Response.json({ ok: true, emailSent, whatsappSent });
   }
