@@ -155,6 +155,13 @@ export const addons: Addon[] = [
       "Publica una vez en tu sitio y se sincroniza automático donde ya te buscan: Portalinmobiliario (propiedades), MercadoLibre (productos), Chileautos (vehículos). Se acabó la doble digitación.",
   },
   {
+    icon: "MessageCircle",
+    name: "Asistente IA en tu WhatsApp",
+    priceFrom: "desde $129.990",
+    description:
+      "El mismo asistente de tu web respondiendo tu WhatsApp de negocio 24/7: precios, horarios, catálogo, propiedades. Tú sigues usando tu app normal (mismo número, en paralelo) y el bot atiende lo repetitivo. Las respuestas a tus clientes no tienen costo de Meta hasta 1.000 conversaciones al mes.",
+  },
+  {
     icon: "DatabaseZap",
     name: "Mantención con inventario",
     priceFrom: "desde $49.990/mes",
