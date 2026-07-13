@@ -101,7 +101,26 @@ export const clientConfigSchema = z.object({
     // búsqueda y filtros, ficha por propiedad con galería y video, y el chat IA
     // respondiendo sobre el inventario. Se activa/desactiva por cliente.
     propiedades: z.boolean().default(false),
+    // Módulo agenda online: /agenda para que el cliente final reserve hora (queda
+    // "pendiente de abono"), panel del dueño en /agenda/admin (confirmar, revisar,
+    // bloquear días/horas) y aviso por email de cada reserva nueva.
+    agenda: z.boolean().default(false),
   }),
+
+  // Configuración del módulo agenda (requiere modules.agenda).
+  booking: z
+    .object({
+      // Duración de cada bloque reservable, en minutos. Los horarios disponibles
+      // se derivan de contact.hours — no se configuran dos veces.
+      slotMinutes: z.number().default(60),
+      // Cuántos días hacia adelante se puede reservar.
+      daysAhead: z.number().default(14),
+      // Texto del abono obligatorio que ve el cliente al reservar.
+      depositNote: z
+        .string()
+        .default("Para confirmar tu hora se solicita un abono. Te contactaremos con los datos de transferencia."),
+    })
+    .optional(),
 
   // Inventario de propiedades (requiere modules.propiedades). En la demo/MVP vive
   // en el config; en producción se administra desde el panel (fase CMS con DB) o

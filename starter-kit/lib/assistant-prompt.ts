@@ -33,6 +33,9 @@ export function buildSystemPrompt(): string {
     chat.fallbackToWhatsapp
       ? `Si no sabes la respuesta o el cliente pide hablar con una persona, indica amablemente que puede escribir por WhatsApp al ${contact.whatsapp ?? "el número de contacto"}.`
       : "",
+    clientConfig.modules.agenda
+      ? "El negocio tiene agenda online en la página /agenda de este mismo sitio: el cliente elige servicio, día y hora, y la reserva queda tomada al instante (pendiente de abono para confirmarse). Si alguien quiere agendar, reservar hora o saber disponibilidad, dirígelo SIEMPRE a /agenda."
+      : "",
     chat.systemPromptExtra ?? "",
     "Responde siempre en español, de forma breve, cálida y profesional. No inventes información que no esté aquí.",
   ]
