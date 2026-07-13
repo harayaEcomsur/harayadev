@@ -26,6 +26,7 @@ interface Store {
   // Destinos de aviso configurables desde el panel (para la demo en vivo y para
   // que el negocio los cambie sin tocar variables de entorno).
   notify: { email?: string; whatsapp?: string };
+  notifyQuota?: { date: string; sent: number };
   seeded: boolean;
 }
 
@@ -133,6 +134,18 @@ export function setNotify(data: { email?: string; whatsapp?: string }): void {
   const n = store().notify;
   if (data.email !== undefined) n.email = data.email || undefined;
   if (data.whatsapp !== undefined) n.whatsapp = data.whatsapp || undefined;
+}
+
+// Tope diario de avisos automáticos. Mantiene el envío dentro de la capa
+// gratuita de Resend (100/día) aunque un prospecto pruebe la demo sin parar:
+// pasado el tope la reserva se crea igual, solo se omite el aviso.
+export function consumeNotifyQuota(maxPerDay = 20): boolean {
+  const s = store();
+  const today = new Date().toISOString().slice(0, 10);
+  if (!s.notifyQuota || s.notifyQuota.date !== today) s.notifyQuota = { date: today, sent: 0 };
+  if (s.notifyQuota.sent >= maxPerDay) return false;
+  s.notifyQuota.sent++;
+  return true;
 }
 
 export function toggleBlocked(key: string): { blocked: boolean } {

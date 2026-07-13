@@ -9,9 +9,29 @@ const STATUS_STYLE: Record<Booking["status"], string> = {
   cancelada: "bg-foreground/10 text-foreground/50 border-foreground/20",
 };
 
+// Link wa.me con el mensaje listo para el cliente final: coordinar el abono si
+// está pendiente, o avisar la confirmación. Gratis — abre el WhatsApp del dueño,
+// no usa la API de Meta.
+function waHref(b: Booking, businessName: string): string {
+  const fecha = new Date(b.date + "T12:00:00").toLocaleDateString("es-CL", { weekday: "long", day: "numeric", month: "long" });
+  const msg =
+    b.status === "confirmada"
+      ? `Hola ${b.name}! Tu hora en ${businessName} quedó confirmada: ${b.service}, ${fecha} a las ${b.time} hrs. ¡Te esperamos! 😊`
+      : `Hola ${b.name}! Te escribimos de ${businessName}. Tu reserva ${b.id} (${b.service}, ${fecha} a las ${b.time} hrs) está pendiente de abono — te enviamos los datos para transferir y dejarla confirmada 😊`;
+  return `https://wa.me/${b.phone.replace(/\D/g, "")}?text=${encodeURIComponent(msg)}`;
+}
+
 // Panel del dueño: revisar reservas, confirmarlas (tras recibir el abono),
 // cancelarlas y bloquear días u horas en que no puede recibir agenda.
-export function AdminAgenda({ adminKey, notifyEmail }: { adminKey: string; notifyEmail: string | null }) {
+export function AdminAgenda({
+  adminKey,
+  notifyEmail,
+  businessName,
+}: {
+  adminKey: string;
+  notifyEmail: string | null;
+  businessName: string;
+}) {
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [blocked, setBlocked] = useState<string[]>([]);
   const [blockDate, setBlockDate] = useState("");
@@ -139,6 +159,16 @@ export function AdminAgenda({ adminKey, notifyEmail }: { adminKey: string; notif
                   >
                     ✓ Abono recibido — confirmar
                   </button>
+                )}
+                {b.status !== "cancelada" && b.phone.replace(/\D/g, "").length >= 8 && (
+                  <a
+                    href={waHref(b, businessName)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="rounded-lg border border-emerald-500/40 bg-emerald-500/10 px-4 py-2 text-xs font-bold uppercase tracking-wider text-emerald-600 hover:bg-emerald-500/20"
+                  >
+                    💬 WhatsApp
+                  </a>
                 )}
                 {b.status !== "cancelada" && (
                   <button

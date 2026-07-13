@@ -34,7 +34,11 @@ export default function AgendaAdminPage({ searchParams }: { searchParams: { clav
             </div>
           ) : (
             <div className="mt-8">
-              <AdminAgenda adminKey={adminKey!} notifyEmail={process.env.BOOKINGS_NOTIFY_EMAIL ?? null} />
+              <AdminAgenda
+                adminKey={adminKey!}
+                notifyEmail={process.env.BOOKINGS_NOTIFY_EMAIL ?? null}
+                businessName={clientConfig.meta.businessName}
+              />
             </div>
           )}
         </div>
