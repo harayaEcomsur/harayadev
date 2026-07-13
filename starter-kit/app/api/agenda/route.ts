@@ -7,6 +7,8 @@ import {
   setBookingStatus,
   listBlocked,
   toggleBlocked,
+  getNotify,
+  setNotify,
 } from "@/lib/booking-store";
 
 // API del módulo agenda. GET público entrega disponibilidad; con clave de admin
@@ -26,7 +28,16 @@ export async function GET(req: Request) {
   const date = url.searchParams.get("date");
 
   if (isAdmin(req)) {
-    return Response.json({ bookings: listBookings(), blocked: listBlocked() });
+    const n = getNotify();
+    return Response.json({
+      bookings: listBookings(),
+      blocked: listBlocked(),
+      notify: {
+        email: n.email ?? process.env.BOOKINGS_NOTIFY_EMAIL ?? null,
+        whatsapp: n.whatsapp ?? null,
+        whatsappReady: Boolean(process.env.NOTIFY_WA_TOKEN && process.env.NOTIFY_WA_PHONE_ID),
+      },
+    });
   }
   if (date && /^\d{4}-\d{2}-\d{2}$/.test(date)) {
     return Response.json({ date, slots: slotsForDate(date) });
@@ -42,9 +53,9 @@ const createSchema = z.object({
   phone: z.string().min(6).max(20),
 });
 
-async function notifyByEmail(subject: string, text: string) {
+async function notifyByEmail(subject: string, text: string, toOverride?: string) {
   const apiKey = process.env.RESEND_API_KEY;
-  const to = process.env.BOOKINGS_NOTIFY_EMAIL;
+  const to = toOverride ?? process.env.BOOKINGS_NOTIFY_EMAIL;
   if (!apiKey || !to) return false;
   try {
     const res = await fetch("https://api.resend.com/emails", {
@@ -63,6 +74,51 @@ async function notifyByEmail(subject: string, text: string) {
   }
 }
 
+// Aviso por WhatsApp AL DUEÑO, enviado desde el número de HarayaDev (Cloud API).
+// Requiere NOTIFY_WA_TOKEN + NOTIFY_WA_PHONE_ID (la app de Meta de HarayaDev) y,
+// fuera de la ventana de 24h, una plantilla utility aprobada (NOTIFY_WA_TEMPLATE).
+async function notifyByWhatsApp(to: string, text: string): Promise<boolean> {
+  const token = process.env.NOTIFY_WA_TOKEN;
+  const phoneId = process.env.NOTIFY_WA_PHONE_ID;
+  if (!token || !phoneId || !to) return false;
+  try {
+    const template = process.env.NOTIFY_WA_TEMPLATE;
+    const body = template
+      ? {
+          messaging_product: "whatsapp",
+          to: to.replace(/[^\d]/g, ""),
+          type: "template",
+          template: {
+            name: template,
+            language: { code: "es" },
+            components: [{ type: "body", parameters: [{ type: "text", text }] }],
+          },
+        }
+      : {
+          messaging_product: "whatsapp",
+          to: to.replace(/[^\d]/g, ""),
+          type: "text",
+          text: { body: text },
+        };
+    const res = await fetch(`https://graph.facebook.com/v21.0/${phoneId}/messages`, {
+      method: "POST",
+      headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    });
+    return res.ok;
+  } catch {
+    return false;
+  }
+}
+
+function notifyTargets(): { email?: string; whatsapp?: string } {
+  const n = getNotify();
+  return {
+    email: n.email ?? process.env.BOOKINGS_NOTIFY_EMAIL,
+    whatsapp: n.whatsapp,
+  };
+}
+
 export async function POST(req: Request) {
   if (!clientConfig.modules.agenda) return Response.json({ error: "Agenda no habilitada" }, { status: 404 });
   const body = await req.json().catch(() => null);
@@ -72,25 +128,27 @@ export async function POST(req: Request) {
   const result = createBooking(parsed.data);
   if ("error" in result) return Response.json({ error: result.error }, { status: 409 });
 
-  // Aviso al dueño — email real si está configurado; WhatsApp se suma cuando el
-  // negocio activa el módulo "Asistente IA en tu WhatsApp" (misma Cloud API).
-  const emailSent = await notifyByEmail(
-    `📅 Nueva reserva ${result.id} — ${result.service} (${clientConfig.meta.businessName})`,
-    [
-      `Reserva PENDIENTE DE ABONO en ${clientConfig.meta.businessName}:`,
-      ``,
-      `Servicio: ${result.service}`,
-      `Fecha: ${result.date} a las ${result.time}`,
-      `Cliente: ${result.name} · ${result.phone}`,
-      ``,
-      `Confírmala en el panel: /agenda/admin`,
-    ].join("\n")
-  );
+  // Aviso al dueño por email y (si está habilitada la app de Meta) por WhatsApp.
+  const targets = notifyTargets();
+  const summary = [
+    `Reserva PENDIENTE DE ABONO en ${clientConfig.meta.businessName}:`,
+    ``,
+    `Servicio: ${result.service}`,
+    `Fecha: ${result.date} a las ${result.time}`,
+    `Cliente: ${result.name} · ${result.phone}`,
+    ``,
+    `Confírmala en el panel: /agenda/admin`,
+  ].join("\n");
+  const [emailSent, whatsappSent] = await Promise.all([
+    notifyByEmail(`📅 Nueva reserva ${result.id} — ${result.service} (${clientConfig.meta.businessName})`, summary, targets.email),
+    targets.whatsapp ? notifyByWhatsApp(targets.whatsapp, summary) : Promise.resolve(false),
+  ]);
 
   return Response.json({
     ok: true,
     booking: result,
     emailSent,
+    whatsappSent,
     depositNote: clientConfig.booking?.depositNote,
   });
 }
@@ -98,6 +156,12 @@ export async function POST(req: Request) {
 const patchSchema = z.union([
   z.object({ action: z.literal("status"), id: z.string(), status: z.enum(["confirmada", "cancelada", "pendiente"]) }),
   z.object({ action: z.literal("toggleBlock"), key: z.string().min(10).max(16) }),
+  z.object({
+    action: z.literal("setNotify"),
+    email: z.string().email().or(z.literal("")).optional(),
+    whatsapp: z.string().max(20).optional(),
+  }),
+  z.object({ action: z.literal("testNotify") }),
 ]);
 
 export async function PATCH(req: Request) {
@@ -110,6 +174,19 @@ export async function PATCH(req: Request) {
   if (parsed.data.action === "status") {
     const ok = setBookingStatus(parsed.data.id, parsed.data.status);
     return Response.json({ ok });
+  }
+  if (parsed.data.action === "setNotify") {
+    setNotify({ email: parsed.data.email, whatsapp: parsed.data.whatsapp });
+    return Response.json({ ok: true });
+  }
+  if (parsed.data.action === "testNotify") {
+    const targets = notifyTargets();
+    const text = `Aviso de prueba de la agenda de ${clientConfig.meta.businessName} — así te llegará cada reserva nueva ✅`;
+    const [emailSent, whatsappSent] = await Promise.all([
+      notifyByEmail(`🔔 Prueba de avisos — ${clientConfig.meta.businessName}`, text, targets.email),
+      targets.whatsapp ? notifyByWhatsApp(targets.whatsapp, text) : Promise.resolve(false),
+    ]);
+    return Response.json({ ok: true, emailSent, whatsappSent });
   }
   return Response.json({ ok: true, ...toggleBlocked(parsed.data.key) });
 }

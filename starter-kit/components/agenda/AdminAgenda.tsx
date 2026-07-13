@@ -17,11 +17,20 @@ export function AdminAgenda({ adminKey, notifyEmail }: { adminKey: string; notif
   const [blockDate, setBlockDate] = useState("");
   const [blockTime, setBlockTime] = useState("");
   const [loading, setLoading] = useState(true);
+  const [email, setEmail] = useState("");
+  const [whatsapp, setWhatsapp] = useState("");
+  const [waReady, setWaReady] = useState(false);
+  const [testResult, setTestResult] = useState<string>("");
 
   const refresh = useCallback(async () => {
     const d = await fetch("/api/agenda", { headers: { "x-agenda-key": adminKey } }).then((r) => r.json());
     setBookings(d.bookings ?? []);
     setBlocked(d.blocked ?? []);
+    if (d.notify) {
+      setEmail(d.notify.email ?? "");
+      setWhatsapp(d.notify.whatsapp ?? "");
+      setWaReady(Boolean(d.notify.whatsappReady));
+    }
     setLoading(false);
   }, [adminKey]);
 
@@ -44,13 +53,53 @@ export function AdminAgenda({ adminKey, notifyEmail }: { adminKey: string; notif
     <div className="flex flex-col gap-10">
       {/* Notificaciones */}
       <div className="rounded-xl border border-foreground/15 bg-foreground/[0.03] p-5 text-sm text-foreground/70">
-        <p className="font-semibold text-foreground">🔔 Notificaciones de reservas nuevas</p>
-        <p className="mt-1">
-          Email: {notifyEmail ? <strong className="text-foreground">{notifyEmail}</strong> : "no configurado"} — cada
-          reserva llega al instante con los datos del cliente.
-        </p>
-        <p className="mt-1 opacity-80">
-          WhatsApp: disponible al activar el módulo &quot;Asistente IA en tu WhatsApp&quot; (mismo número del negocio).
+        <p className="font-semibold text-foreground">🔔 ¿Dónde te avisamos cada reserva nueva?</p>
+        <div className="mt-3 flex flex-wrap items-end gap-3">
+          <label className="flex min-w-[220px] flex-1 flex-col gap-1 text-xs font-semibold uppercase tracking-wider text-foreground/60">
+            Tu correo
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder={notifyEmail ?? "tucorreo@gmail.com"}
+              className="rounded-lg border border-foreground/20 bg-background px-3 py-2.5 text-sm normal-case tracking-normal text-foreground"
+            />
+          </label>
+          <label className="flex min-w-[180px] flex-col gap-1 text-xs font-semibold uppercase tracking-wider text-foreground/60">
+            Tu WhatsApp {!waReady && <span className="normal-case opacity-60">(próximamente)</span>}
+            <input
+              value={whatsapp}
+              onChange={(e) => setWhatsapp(e.target.value)}
+              placeholder="+56 9 …"
+              disabled={!waReady}
+              className="rounded-lg border border-foreground/20 bg-background px-3 py-2.5 text-sm tracking-normal text-foreground disabled:opacity-50"
+            />
+          </label>
+          <button
+            onClick={async () => {
+              setTestResult("…");
+              await patch({ action: "setNotify", email, whatsapp });
+              const r = await fetch("/api/agenda", {
+                method: "PATCH",
+                headers: { "Content-Type": "application/json", "x-agenda-key": adminKey },
+                body: JSON.stringify({ action: "testNotify" }),
+              }).then((x) => x.json());
+              setTestResult(
+                r.emailSent || r.whatsappSent
+                  ? `✅ Enviado${r.emailSent ? " al correo" : ""}${r.whatsappSent ? " y al WhatsApp" : ""} — revísalo`
+                  : "No se pudo enviar — revisa el correo ingresado"
+              );
+            }}
+            className="rounded-lg bg-primary px-5 py-2.5 text-xs font-bold uppercase tracking-wider text-white hover:opacity-90"
+          >
+            Guardar y enviar prueba
+          </button>
+        </div>
+        {testResult && <p className="mt-2 text-sm font-semibold text-foreground">{testResult}</p>}
+        <p className="mt-3 opacity-80">
+          {waReady
+            ? "El aviso por WhatsApp llega desde el número de HarayaDev."
+            : "El aviso por WhatsApp se habilita con el módulo \u201cAsistente IA en tu WhatsApp\u201d."}
         </p>
       </div>
 

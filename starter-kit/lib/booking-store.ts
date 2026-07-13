@@ -23,6 +23,9 @@ interface Store {
   bookings: Booking[];
   // "YYYY-MM-DD" bloquea el día completo; "YYYY-MM-DD HH:mm" bloquea una hora.
   blocked: string[];
+  // Destinos de aviso configurables desde el panel (para la demo en vivo y para
+  // que el negocio los cambie sin tocar variables de entorno).
+  notify: { email?: string; whatsapp?: string };
   seeded: boolean;
 }
 
@@ -30,7 +33,7 @@ const g = globalThis as unknown as { __bookingStore?: Store };
 
 function store(): Store {
   if (!g.__bookingStore) {
-    g.__bookingStore = { bookings: [], blocked: [], seeded: false };
+    g.__bookingStore = { bookings: [], blocked: [], notify: {}, seeded: false };
     seed(g.__bookingStore);
   }
   return g.__bookingStore;
@@ -120,6 +123,16 @@ export function setBookingStatus(id: string, status: Booking["status"]): boolean
 
 export function listBlocked(): string[] {
   return [...store().blocked].sort();
+}
+
+export function getNotify(): { email?: string; whatsapp?: string } {
+  return { ...store().notify };
+}
+
+export function setNotify(data: { email?: string; whatsapp?: string }): void {
+  const n = store().notify;
+  if (data.email !== undefined) n.email = data.email || undefined;
+  if (data.whatsapp !== undefined) n.whatsapp = data.whatsapp || undefined;
 }
 
 export function toggleBlocked(key: string): { blocked: boolean } {
