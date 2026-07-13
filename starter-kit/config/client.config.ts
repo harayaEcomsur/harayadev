@@ -83,8 +83,8 @@ export const clientConfig = defineClientConfig({
   ],
 
   contact: {
-    phone: "+56 9 3174 6767",
-    whatsapp: "56931746767",
+    phone: "+56 9 8426 1009",
+    whatsapp: "56984261009",
     whatsappPrefilledMessage: "Hola! Vi el sitio de Vasca Propiedades y quiero consultar por una propiedad",
     email: "info@vascapropiedades.cl",
     address: "Miramar 50, Viña del Mar",
@@ -219,7 +219,7 @@ export const clientConfig = defineClientConfig({
       { q: "¿En qué zonas trabajan?", a: "Viña del Mar, Reñaca y Concón principalmente — más de 20 años en el borde costero de la V Región." },
       { q: "¿Hacen arriendos por temporada?", a: "Sí, es una especialidad de la casa: administración completa de departamentos de temporada (publicación, reservas, entrega y recepción)." },
       { q: "¿Qué incluye la administración de propiedades?", a: "Cobro de arriendos, mantenciones, relación con arrendatarios y rendición mensual al propietario." },
-      { q: "¿Cómo puedo publicar mi propiedad?", a: "Por WhatsApp al +56 9 3174 6767 o el formulario de contacto: se coordina visita, tasación y publicación. Solo se cobra si el negocio se concreta." },
+      { q: "¿Cómo puedo publicar mi propiedad?", a: "Por WhatsApp al +56 9 8426 1009 o el formulario de contacto: se coordina visita, tasación y publicación. Solo se cobra si el negocio se concreta." },
       { q: "¿Dónde están ubicados?", a: "Miramar 50, Viña del Mar. Atienden lunes a viernes de 9:30 a 18:30 y sábados de 10:00 a 13:30." },
       { q: "¿Cuánto cobran de comisión?", a: "Las condiciones se conversan directamente según el servicio (venta, arriendo o administración) — escríbeles por WhatsApp y te responden al tiro." },
     ],
