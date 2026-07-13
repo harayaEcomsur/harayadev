@@ -32,6 +32,24 @@ distintos no se vean como el mismo sitio con otra paleta:
 Además `branding.logoIncludesName: true` oculta el nombre en texto del header cuando el
 archivo del logo ya lo trae escrito — el logo va grande (es la marca del cliente).
 
+### Asistente en WhatsApp (módulo "Asistente IA en tu WhatsApp")
+
+El webhook `app/api/whatsapp/route.ts` conecta el MISMO asistente del sitio (mismo
+system prompt config-driven, mismo inventario) al WhatsApp del negocio vía la
+Cloud API de Meta. Con Coexistence el cliente sigue usando su app normal.
+
+Setup por cliente (~1 hora + verificación de Meta Business):
+1. Cliente necesita: número WhatsApp Business + Meta Business verificado.
+2. En developers.facebook.com: app de HarayaDev → agregar producto WhatsApp →
+   registrar el número del cliente (flujo Coexistence para conservar la app).
+3. Crear System User token permanente con permisos whatsapp_business_messaging.
+4. En Vercel (proyecto del cliente): WHATSAPP_VERIFY_TOKEN (inventado),
+   WHATSAPP_TOKEN y WHATSAPP_PHONE_NUMBER_ID.
+5. En el panel de Meta, registrar el webhook: https://<sitio>/api/whatsapp con el
+   verify token, y suscribir el campo "messages".
+6. Probar: escribir al número → responde el asistente. Conversaciones de servicio:
+   1.000/mes gratis de Meta.
+
 ### Paleta desde el logo y variantes de diseño
 
 - `npm run palette -- logo.png` extrae los colores dominantes del logo del cliente e
