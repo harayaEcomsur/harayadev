@@ -31,7 +31,7 @@ export const clientConfig = defineClientConfig({
     subtitle:
       "Esmaltado permanente, uñas esculpidas y extensiones de pestañas en Villa Alemana. Agenda tu hora y llega a relajarte: del diseño nos encargamos nosotras.",
     ctaLabel: "Agendar mi hora",
-    ctaHref: "#contacto",
+    ctaHref: "/agenda",
     backgroundImageUrl: "/clients/nails-color/hero.jpg",
   },
 
@@ -97,7 +97,10 @@ export const clientConfig = defineClientConfig({
       { day: "Domingo", closed: true },
     ],
     socials: [{ platform: "instagram", url: "https://www.instagram.com/nailscolor.va/" }],
-    extraLinks: [{ label: "Agenda tu hora por Instagram", url: "https://www.instagram.com/nailscolor.va/" }],
+    extraLinks: [
+      { label: "Agenda tu hora online", url: "/agenda" },
+      { label: "Instagram @nailscolor.va", url: "https://www.instagram.com/nailscolor.va/" },
+    ],
   },
 
   modules: {
@@ -107,10 +110,18 @@ export const clientConfig = defineClientConfig({
     faq: true,
     pricing: false,
     chat: true,
+    agenda: true,
+  },
+
+  booking: {
+    slotMinutes: 60,
+    daysAhead: 14,
+    depositNote:
+      "Para confirmar tu hora se solicita un abono de $5.000 (se descuenta del valor del servicio). Te contactaremos por WhatsApp con los datos de transferencia.",
   },
 
   faq: [
-    { q: "¿Cómo agendo una hora?", a: "Por Instagram (@nailscolor.va) — escríbenos por DM con el servicio que quieres y coordinamos día y hora." },
+    { q: "¿Cómo agendo una hora?", a: "Directo en esta página: en Agendar eliges servicio, día y hora, y tu reserva queda tomada al instante (se confirma con un abono de $5.000 que se descuenta del servicio). También puedes escribirnos por Instagram @nailscolor.va." },
     { q: "¿Dónde están ubicadas?", a: "En Pasaje Brasilia 150, Villa Alemana. Te enviamos la referencia exacta al confirmar tu hora." },
     { q: "¿Cuánto dura el esmaltado permanente?", a: "Entre 3 y 4 semanas con el cuidado adecuado. Te damos los tips al terminar tu atención." },
     { q: "¿Las extensiones de pestañas dañan las pestañas naturales?", a: "No, aplicadas correctamente no las dañan: usamos técnica pelo a pelo respetando tu pestaña natural, con mantenciones cada 3 semanas." },
@@ -121,7 +132,7 @@ export const clientConfig = defineClientConfig({
     businessDescription:
       "Nails Color es un salón de uñas y pestañas en Villa Alemana (Pasaje Brasilia 150, V Región, Chile). Servicios: esmaltado permanente, uñas esculpidas acrílicas y polygel, manicure tradicional, pedicure completa, extensiones de pestañas clásicas y con volumen, y lifting de pestañas. Se atiende solo con hora agendada. Las horas se agendan por Instagram @nailscolor.va.",
     qaPairs: [
-      { q: "¿Cómo agendo?", a: "Por Instagram: escribe un DM a @nailscolor.va con el servicio que quieres y te confirman día y hora." },
+      { q: "¿Cómo agendo?", a: "En la página /agenda de este sitio: eliges servicio, día y hora y la reserva queda tomada al instante — se confirma con un abono de $5.000 que se descuenta del servicio. Alternativa: DM a @nailscolor.va." },
       { q: "¿Cuánto cuesta el esmaltado permanente?", a: "Desde $14.000 — el valor exacto depende del diseño. Confirma el detalle al agendar por Instagram." },
       { q: "¿Cuánto cuestan las uñas acrílicas?", a: "Las uñas esculpidas (acrílicas o polygel) van desde $25.000 según largo y diseño." },
       { q: "¿Dónde están?", a: "Pasaje Brasilia 150, Villa Alemana. Al confirmar tu hora te envían la referencia exacta." },
@@ -130,7 +141,7 @@ export const clientConfig = defineClientConfig({
     ],
     fallbackToWhatsapp: false,
     systemPromptExtra:
-      "Si no sabes la respuesta o la clienta quiere agendar, deriva siempre a Instagram: que escriba un DM a @nailscolor.va. Los precios son referenciales ('desde') — el valor final se confirma al agendar.",
+      "Si la clienta quiere agendar, dirígela a la página /agenda de este sitio (reserva al instante, se confirma con abono de $5.000 que se descuenta del servicio). Si prefiere hablar con una persona, que escriba DM a @nailscolor.va. Los precios son referenciales ('desde') — el valor final se confirma al agendar.",
   },
 
   seo: {
