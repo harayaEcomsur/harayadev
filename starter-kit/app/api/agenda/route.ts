@@ -11,6 +11,7 @@ import {
   setNotify,
   consumeNotifyQuota,
 } from "@/lib/booking-store";
+import { buildBookingClientWaLink, buildWhatsAppLink } from "@/lib/whatsapp";
 
 // API del módulo agenda. GET público entrega disponibilidad; con clave de admin
 // entrega además las reservas. POST crea una reserva (queda "pendiente" hasta el
@@ -34,9 +35,10 @@ export async function GET(req: Request) {
       bookings: listBookings(),
       blocked: listBlocked(),
       notify: {
-        email: n.email ?? process.env.BOOKINGS_NOTIFY_EMAIL ?? null,
-        whatsapp: n.whatsapp ?? null,
+        email: n.email ?? clientConfig.booking?.ownerNotifyEmail ?? process.env.BOOKINGS_NOTIFY_EMAIL ?? null,
+        whatsapp: n.whatsapp ?? defaultOwnerWhatsapp() ?? null,
         whatsappReady: Boolean(process.env.NOTIFY_WA_TOKEN && process.env.NOTIFY_WA_PHONE_ID),
+        whatsappMode: process.env.NOTIFY_WA_TOKEN && process.env.NOTIFY_WA_PHONE_ID ? "api" : "wame",
       },
     });
   }
@@ -112,12 +114,53 @@ async function notifyByWhatsApp(to: string, text: string): Promise<boolean> {
   }
 }
 
+function defaultOwnerWhatsapp(): string | undefined {
+  const digits = (n?: string) => (n ? n.replace(/\D/g, "") : "");
+  const fromConfig = clientConfig.booking?.ownerNotifyWhatsapp ?? clientConfig.contact.whatsapp;
+  return digits(fromConfig).length >= 8 ? fromConfig : undefined;
+}
+
 function notifyTargets(): { email?: string; whatsapp?: string } {
   const n = getNotify();
+  const whatsapp = n.whatsapp ?? defaultOwnerWhatsapp();
   return {
-    email: n.email ?? process.env.BOOKINGS_NOTIFY_EMAIL,
-    whatsapp: n.whatsapp,
+    email: n.email ?? clientConfig.booking?.ownerNotifyEmail ?? process.env.BOOKINGS_NOTIFY_EMAIL,
+    whatsapp,
   };
+}
+
+function bookingSummary(booking: { id: string; service: string; date: string; time: string; name: string; phone: string }) {
+  return [
+    `Reserva PENDIENTE DE ABONO en ${clientConfig.meta.businessName}:`,
+    ``,
+    `Servicio: ${booking.service}`,
+    `Fecha: ${booking.date} a las ${booking.time}`,
+    `Cliente: ${booking.name} · ${booking.phone}`,
+    ``,
+    `Confírmala en el panel: /agenda/admin`,
+  ].join("\n");
+}
+
+function emailWithWaLinks(
+  summary: string,
+  booking: { id: string; service: string; date: string; time: string; name: string; phone: string; status: string },
+  targets: { email?: string; whatsapp?: string }
+): string {
+  const lines = [summary, ""];
+  if (targets.whatsapp && targets.whatsapp.replace(/\D/g, "").length >= 8) {
+    lines.push(
+      `📱 Abrir aviso en tu WhatsApp (gratis, wa.me):`,
+      buildWhatsAppLink(targets.whatsapp, summary),
+      ""
+    );
+  }
+  if (booking.phone.replace(/\D/g, "").length >= 8) {
+    lines.push(
+      `💬 Escribir a la clienta por WhatsApp:`,
+      buildBookingClientWaLink(booking, clientConfig.meta.businessName)
+    );
+  }
+  return lines.join("\n");
 }
 
 export async function POST(req: Request) {
@@ -129,23 +172,18 @@ export async function POST(req: Request) {
   const result = createBooking(parsed.data);
   if ("error" in result) return Response.json({ error: result.error }, { status: 409 });
 
-  // Aviso al dueño por email y (si está habilitada la app de Meta) por WhatsApp.
+  // Aviso al dueño: correo (gratis) con enlaces wa.me, y push por API solo si está activo.
   const targets = notifyTargets();
-  const summary = [
-    `Reserva PENDIENTE DE ABONO en ${clientConfig.meta.businessName}:`,
-    ``,
-    `Servicio: ${result.service}`,
-    `Fecha: ${result.date} a las ${result.time}`,
-    `Cliente: ${result.name} · ${result.phone}`,
-    ``,
-    `Confírmala en el panel: /agenda/admin`,
-  ].join("\n");
+  const summary = bookingSummary(result);
+  const emailBody = emailWithWaLinks(summary, result, targets);
   const quotaOk = consumeNotifyQuota();
   const [emailSent, whatsappSent] = await Promise.all([
     quotaOk
-      ? notifyByEmail(`📅 Nueva reserva ${result.id} — ${result.service} (${clientConfig.meta.businessName})`, summary, targets.email)
+      ? notifyByEmail(`📅 Nueva reserva ${result.id} — ${result.service} (${clientConfig.meta.businessName})`, emailBody, targets.email)
       : Promise.resolve(false),
-    quotaOk && targets.whatsapp ? notifyByWhatsApp(targets.whatsapp, summary) : Promise.resolve(false),
+    quotaOk && targets.whatsapp && process.env.NOTIFY_WA_TOKEN
+      ? notifyByWhatsApp(targets.whatsapp, summary)
+      : Promise.resolve(false),
   ]);
 
   return Response.json({
@@ -153,6 +191,10 @@ export async function POST(req: Request) {
     booking: result,
     emailSent,
     whatsappSent,
+    waNotifyUrl:
+      targets.whatsapp && targets.whatsapp.replace(/\D/g, "").length >= 8
+        ? buildWhatsAppLink(targets.whatsapp, summary)
+        : null,
     depositNote: clientConfig.booking?.depositNote,
   });
 }
@@ -187,13 +229,35 @@ export async function PATCH(req: Request) {
     const targets = notifyTargets();
     const text = `Aviso de prueba de la agenda de ${clientConfig.meta.businessName} — así te llegará cada reserva nueva ✅`;
     const quotaOk = consumeNotifyQuota();
+    const waMeUrl =
+      targets.whatsapp && targets.whatsapp.replace(/\D/g, "").length >= 8
+        ? buildWhatsAppLink(targets.whatsapp, text)
+        : null;
     const [emailSent, whatsappSent] = await Promise.all([
       quotaOk
-        ? notifyByEmail(`🔔 Prueba de avisos — ${clientConfig.meta.businessName}`, text, targets.email)
+        ? notifyByEmail(
+            `🔔 Prueba de avisos — ${clientConfig.meta.businessName}`,
+            emailWithWaLinks(
+              text,
+              {
+                id: "DEMO",
+                service: clientConfig.services[0]?.title ?? "Servicio",
+                date: new Date().toISOString().slice(0, 10),
+                time: "11:00",
+                name: "Camila R.",
+                phone: "+56 9 5555 1111",
+                status: "pendiente",
+              },
+              targets
+            ),
+            targets.email
+          )
         : Promise.resolve(false),
-      quotaOk && targets.whatsapp ? notifyByWhatsApp(targets.whatsapp, text) : Promise.resolve(false),
+      quotaOk && targets.whatsapp && process.env.NOTIFY_WA_TOKEN
+        ? notifyByWhatsApp(targets.whatsapp, text)
+        : Promise.resolve(false),
     ]);
-    return Response.json({ ok: true, emailSent, whatsappSent });
+    return Response.json({ ok: true, emailSent, whatsappSent, waMeUrl });
   }
   return Response.json({ ok: true, ...toggleBlocked(parsed.data.key) });
 }

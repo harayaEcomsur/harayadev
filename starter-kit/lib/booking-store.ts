@@ -56,6 +56,12 @@ function seed(s: Store) {
     { id: "demo-3", service: svc(4), date: d(2), time: "10:00", name: "Valentina S.", phone: "+56 9 5555 3333", status: "confirmada", createdAt: new Date().toISOString() }
   );
   s.blocked.push(d(3)); // un día bloqueado de ejemplo
+  if (clientConfig.booking?.ownerNotifyWhatsapp) {
+    s.notify.whatsapp = clientConfig.booking.ownerNotifyWhatsapp;
+  }
+  if (clientConfig.booking?.ownerNotifyEmail) {
+    s.notify.email = clientConfig.booking.ownerNotifyEmail;
+  }
   s.seeded = true;
 }
 

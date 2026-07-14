@@ -119,6 +119,11 @@ export const clientConfigSchema = z.object({
       depositNote: z
         .string()
         .default("Para confirmar tu hora se solicita un abono. Te contactaremos con los datos de transferencia."),
+      // WhatsApp del negocio para avisos gratuitos (wa.me en correos / panel).
+      // No requiere API de Meta: al llegar una reserva, el correo incluye un enlace
+      // wa.me que abre WhatsApp con el resumen listo para enviar.
+      ownerNotifyWhatsapp: z.string().optional(),
+      ownerNotifyEmail: z.string().email().optional(),
     })
     .optional(),
 
