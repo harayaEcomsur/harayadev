@@ -118,6 +118,8 @@ export const clientConfig = defineClientConfig({
     daysAhead: 14,
     depositNote:
       "Para confirmar tu hora se solicita un abono de $5.000 (se descuenta del valor del servicio). Te contactaremos por WhatsApp con los datos de transferencia.",
+    // Demo: reemplazar con el WhatsApp real de Nails Color para avisos wa.me gratuitos.
+    ownerNotifyWhatsapp: "+56 9 •••• ••••",
   },
 
   faq: [

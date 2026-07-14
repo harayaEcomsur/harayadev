@@ -28,8 +28,13 @@ export default function AgendaAdminPage({ searchParams }: { searchParams: { clav
           {!authorized ? (
             <div className="mt-8 rounded-xl border border-foreground/15 p-6">
               <p className="text-foreground/70">
-                Acceso solo para el negocio. Ingresa con tu link de administración
-                (<code className="rounded bg-foreground/10 px-1.5 py-0.5 text-sm">/agenda/admin?clave=…</code>).
+                La <strong>clave</strong> protege tu panel de reservas (confirmar, cancelar, bloquear horarios) — no
+                es un módulo de pago. Los avisos por WhatsApp con wa.me son <strong>gratuitos</strong> y no dependen de
+                esta clave: llegan al correo/WhatsApp que configures aquí dentro.
+              </p>
+              <p className="mt-3 text-foreground/70">
+                Ingresa con tu link de administración{" "}
+                <code className="rounded bg-foreground/10 px-1.5 py-0.5 text-sm">/agenda/admin?clave=…</code>.
               </p>
             </div>
           ) : (
