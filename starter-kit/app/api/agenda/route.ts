@@ -241,7 +241,7 @@ export async function PATCH(req: Request) {
               text,
               {
                 id: "DEMO",
-                service: "Esmaltado permanente",
+                service: clientConfig.services[0]?.title ?? "Servicio",
                 date: new Date().toISOString().slice(0, 10),
                 time: "11:00",
                 name: "Camila R.",
