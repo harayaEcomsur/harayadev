@@ -4,14 +4,14 @@ import { plans, recurringServices, verticalPlans, addons } from "@/content/plans
 import { FaqAccordion } from "@/components/sections/FaqAccordion";
 import { faqs } from "@/content/faq";
 import { site } from "@/lib/site";
-import { buildFaqJsonLd, buildMetadata } from "@/lib/seo";
+import { buildFaqJsonLd, buildMetadata, buildServicesJsonLd } from "@/lib/seo";
 import { buildWhatsAppLink } from "@/lib/whatsapp";
 
 export const metadata: Metadata = buildMetadata(
   {
-    title: "Servicios",
+    title: "Página web con IA para tu pyme: planes y precios",
     description:
-      "Tu web con IA en 72 horas: 4 planes con precio cerrado e IVA incluido, más desarrollo a medida, mantención y mejora de sitios existentes.",
+      "Tu web con IA en 72 horas: 4 planes con precio cerrado e IVA incluido, más desarrollo a medida, mantención y mejora de sitios existentes. Chile y Latinoamérica.",
   },
   "/servicios"
 );
@@ -305,6 +305,10 @@ export default function ServiciosPage() {
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(buildFaqJsonLd(faqs)) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(buildServicesJsonLd(plans)) }}
         />
       </section>
 

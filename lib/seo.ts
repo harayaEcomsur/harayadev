@@ -57,6 +57,32 @@ export function buildFaqJsonLd(faqs: { question: string; answer: string }[]) {
   };
 }
 
+// Schema de servicios con precios públicos (rareza en el rubro — candidato a
+// resultados enriquecidos). Precios en CLP, IVA incluido.
+export function buildServicesJsonLd(plans: { name: string; price?: string; description: string }[]) {
+  const base = getSiteUrl();
+  return {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    name: "Desarrollo web con IA para pymes",
+    provider: { "@id": `${base}/#organization` },
+    areaServed: ["CL", "Latin America"],
+    hasOfferCatalog: {
+      "@type": "OfferCatalog",
+      name: "Planes",
+      itemListElement: plans
+        .filter((p) => p.price)
+        .map((p) => ({
+          "@type": "Offer",
+          name: p.name,
+          description: p.description,
+          price: (p.price ?? "").replace(/[^\d]/g, ""),
+          priceCurrency: "CLP",
+        })),
+    },
+  };
+}
+
 export function buildPersonOrgJsonLd() {
   const base = getSiteUrl();
 
@@ -69,7 +95,20 @@ export function buildPersonOrgJsonLd() {
         name: site.name,
         legalName: site.legalName,
         url: base,
+        logo: `${base}/icon.svg`,
+        email: site.email,
         founder: { "@id": `${base}/#person` },
+        address: { "@type": "PostalAddress", addressCountry: "CL" },
+        // Chile es el mercado principal; atendemos todo LatAm de forma remota.
+        areaServed: ["CL", "Latin America"],
+        knowsLanguage: ["es"],
+        sameAs: ["https://www.instagram.com/harayadev/", site.github],
+        contactPoint: {
+          "@type": "ContactPoint",
+          contactType: "sales",
+          email: site.email,
+          availableLanguage: ["es"],
+        },
       },
       {
         "@type": "Person",

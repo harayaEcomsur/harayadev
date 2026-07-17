@@ -6,7 +6,7 @@ import { buildMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = buildMetadata(
   {
-    title: "Pide tu demo gratis",
+    title: "Demo gratis: ve tu página web con IA antes de pagar",
     description:
       "Cuéntanos de tu negocio y en 24–48 horas ves tu web con IA funcionando, con tu marca. Gratis y sin compromiso: solo pagas si te convence.",
   },
