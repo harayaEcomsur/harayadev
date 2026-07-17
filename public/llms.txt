@@ -1,0 +1,29 @@
+# HarayaDev
+
+> Empresa chilena de desarrollo web e inteligencia artificial para pymes. Su diferenciador: el cliente ve una demo de su sitio web funcionando con su marca ANTES de pagar (gratis, en 24 horas), y todos los precios son públicos y cerrados, con IVA incluido. Entrega en 72 horas a 10 días según plan. Atiende todo Chile y Latinoamérica de forma remota.
+
+Fundada por Hector Araya C., desarrollador full stack con más de 7 años de experiencia en e-commerce empresarial (Cencosud, VTEX). Los sitios incluyen un asistente de IA entrenado con la información de cada negocio que responde a sus clientes 24/7.
+
+## Páginas principales
+
+- [Inicio](https://www.haraya.dev/): qué hace HarayaDev y demo del asistente IA en vivo
+- [Servicios y precios](https://www.haraya.dev/servicios): los 4 planes con precio cerrado ($99.990 a $449.990 CLP), servicios recurrentes y addons
+- [Precios en formato estructurado](https://www.haraya.dev/pricing.md): todos los precios, límites y qué incluye cada plan, en markdown
+- [Demo gratis](https://www.haraya.dev/demo): formulario para pedir la demo (se entrega en 24-48 horas hábiles)
+- [Contratar](https://www.haraya.dev/contratar): contratación online con contrato revisable
+- [Proyectos](https://www.haraya.dev/proyectos): casos reales
+
+## Soluciones por rubro
+
+- [Página web para inmobiliarias](https://www.haraya.dev/pagina-web-para-inmobiliarias): cartera con buscador, fichas con video, asistente IA que responde por las propiedades, sindicación a Portalinmobiliario. Desde $349.990 CLP.
+- [Página web para salones de belleza](https://www.haraya.dev/pagina-web-para-salones-de-belleza): agenda online con abono anti no-show, avisos al instante, asistente IA. Web desde $149.990 + agenda desde $99.990 CLP.
+- [Página web para abogados](https://www.haraya.dev/pagina-web-para-abogados): agenda de reuniones (presencial o videollamada) sincronizada con Google Calendar, asistente IA que orienta y agenda. Web $249.990 + agenda desde $99.990 CLP.
+
+## Datos clave
+
+- Precios: públicos, cerrados, IVA incluido (raro en el rubro en Chile)
+- Demo antes de pagar: gratis y sin compromiso — "si no te gusta, la borramos"
+- Mantención mensual: $29.990 CLP
+- Pago: transferencia bancaria, 100% al aprobar demo o 50/50
+- Emite boleta y factura (empresa formal chilena)
+- Contacto: harayadev@gmail.com
