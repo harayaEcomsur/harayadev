@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import type { Booking } from "@/lib/booking-store";
 import { buildBookingClientWaLink } from "@/lib/whatsapp";
+import { buildGoogleCalendarUrl } from "@/lib/calendar";
 
 const STATUS_STYLE: Record<Booking["status"], string> = {
   pendiente: "bg-amber-500/15 text-amber-600 border-amber-500/40",
@@ -30,6 +31,12 @@ export function AdminAgenda({
   const [whatsapp, setWhatsapp] = useState("");
   const [waMode, setWaMode] = useState<"wame" | "api">("wame");
   const [testResult, setTestResult] = useState<string>("");
+  const [calCopied, setCalCopied] = useState(false);
+  // Absoluta recién en el cliente para no diferir del HTML del servidor (hidratación).
+  const [calendarUrl, setCalendarUrl] = useState(`/api/agenda/calendario?clave=${adminKey}`);
+  useEffect(() => {
+    setCalendarUrl(`${window.location.origin}/api/agenda/calendario?clave=${adminKey}`);
+  }, [adminKey]);
 
   const refresh = useCallback(async () => {
     const d = await fetch("/api/agenda", { headers: { "x-agenda-key": adminKey } }).then((r) => r.json());
@@ -156,6 +163,35 @@ export function AdminAgenda({
         )}
       </div>
 
+      {/* Sincronización con calendario (Google / Outlook / Apple) */}
+      <div className="rounded-xl border border-sky-500/30 bg-sky-500/5 p-5 text-sm text-foreground/70">
+        <p className="font-semibold text-foreground">📅 Tus reservas, en tu calendario de siempre</p>
+        <p className="mt-2 leading-relaxed">
+          Suscríbete una sola vez y tus reservas aparecen y se actualizan solas en Google Calendar,
+          Outlook o el calendario del iPhone. Además, cada correo de aviso trae un botón
+          {" “"}Agregar a Google Calendar{"”"} para anotar esa hora al instante.
+        </p>
+        <div className="mt-3 flex flex-wrap items-center gap-3">
+          <code className="max-w-full overflow-x-auto rounded-lg border border-foreground/15 bg-background px-3 py-2.5 text-xs text-foreground">
+            {calendarUrl}
+          </code>
+          <button
+            onClick={() => {
+              navigator.clipboard?.writeText(calendarUrl);
+              setCalCopied(true);
+              setTimeout(() => setCalCopied(false), 2500);
+            }}
+            className="rounded-lg border border-sky-500/40 bg-sky-500/10 px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-sky-600 hover:bg-sky-500/20"
+          >
+            {calCopied ? "✓ Copiado" : "Copiar enlace"}
+          </button>
+        </div>
+        <p className="mt-3 text-xs opacity-80">
+          En Google Calendar: Otros calendarios → + → Desde URL → pega el enlace. Google lo refresca
+          automáticamente cada algunas horas.
+        </p>
+      </div>
+
       {/* Reservas */}
       <section>
         <div className="flex items-baseline justify-between">
@@ -201,6 +237,16 @@ export function AdminAgenda({
                     className="rounded-lg border border-emerald-500/40 bg-emerald-500/10 px-4 py-2 text-xs font-bold uppercase tracking-wider text-emerald-600 hover:bg-emerald-500/20"
                   >
                     💬 WhatsApp
+                  </a>
+                )}
+                {b.status !== "cancelada" && (
+                  <a
+                    href={buildGoogleCalendarUrl(b)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="rounded-lg border border-sky-500/40 bg-sky-500/10 px-4 py-2 text-xs font-bold uppercase tracking-wider text-sky-600 hover:bg-sky-500/20"
+                  >
+                    📅 Calendario
                   </a>
                 )}
                 {b.status !== "cancelada" && (
