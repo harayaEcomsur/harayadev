@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Archivo, JetBrains_Mono } from "next/font/google";
-import { GoogleAnalytics } from "@next/third-parties/google";
+import { GoogleAnalyticsLazy } from "@/components/analytics/GoogleAnalyticsLazy";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { ChatWidget } from "@/components/chat/ChatWidget";
@@ -36,7 +36,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {/* GA4 se activa solo cuando NEXT_PUBLIC_GA_ID está definida (producción). */}
         {process.env.NEXT_PUBLIC_GA_ID && (
           <>
-            <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID} />
+            <GoogleAnalyticsLazy gaId={process.env.NEXT_PUBLIC_GA_ID} />
             <WhatsAppClickTracker />
           </>
         )}
