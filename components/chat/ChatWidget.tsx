@@ -19,7 +19,7 @@ export function ChatWidget() {
   return (
     <div className="fixed bottom-4 right-4 z-50 sm:right-6 print:hidden">
       {open && (
-        <div className="mb-3 flex h-[28rem] w-[20rem] flex-col overflow-hidden rounded-2xl border border-line bg-card shadow-2xl sm:w-[22rem]">
+        <div className="anim-pop-in mb-3 flex h-[28rem] w-[20rem] flex-col overflow-hidden rounded-2xl border border-line bg-card shadow-2xl sm:w-[22rem]">
           <div className="flex items-center justify-between bg-primary px-4 py-3 text-white">
             <span className="font-heading text-sm font-semibold">{site.name}</span>
             <button onClick={() => setOpen(false)} aria-label="Cerrar chat">
@@ -71,7 +71,7 @@ export function ChatWidget() {
       <button
         onClick={() => setOpen((v) => !v)}
         aria-label={open ? "Cerrar chat" : "Abrir chat"}
-        className="flex h-14 w-14 items-center justify-center rounded-full bg-primary text-white shadow-lg transition-transform hover:scale-105"
+        className="flex h-14 w-14 items-center justify-center rounded-full bg-primary text-white shadow-lg transition-transform hover:scale-105 active:scale-95"
       >
         {open ? <X size={24} /> : <MessageCircle size={24} />}
       </button>

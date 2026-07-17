@@ -12,6 +12,7 @@ import {
   consumeNotifyQuota,
 } from "@/lib/booking-store";
 import { buildBookingClientWaLink, buildWhatsAppLink } from "@/lib/whatsapp";
+import { buildGoogleCalendarUrl } from "@/lib/calendar";
 
 // API del módulo agenda. GET público entrega disponibilidad; con clave de admin
 // entrega además las reservas. POST crea una reserva (queda "pendiente" hasta el
@@ -143,7 +144,7 @@ function bookingSummary(booking: { id: string; service: string; date: string; ti
 
 function emailWithWaLinks(
   summary: string,
-  booking: { id: string; service: string; date: string; time: string; name: string; phone: string; status: string },
+  booking: { id: string; service: string; date: string; time: string; name: string; phone: string; status: "pendiente" | "confirmada" | "cancelada" },
   targets: { email?: string; whatsapp?: string }
 ): string {
   const lines = [summary, ""];
@@ -157,9 +158,11 @@ function emailWithWaLinks(
   if (booking.phone.replace(/\D/g, "").length >= 8) {
     lines.push(
       `💬 Escribir a la clienta por WhatsApp:`,
-      buildBookingClientWaLink(booking, clientConfig.meta.businessName)
+      buildBookingClientWaLink(booking, clientConfig.meta.businessName),
+      ""
     );
   }
+  lines.push(`📅 Agregar a tu Google Calendar:`, buildGoogleCalendarUrl(booking));
   return lines.join("\n");
 }
 

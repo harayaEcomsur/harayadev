@@ -51,3 +51,38 @@ h6 {
     padding: 0 !important;
   }
 }
+
+/* Micro-animaciones del sitio: entradas suaves (transform+opacity solamente).
+   Con prefers-reduced-motion se degradan a fade puro, no a cero. */
+@keyframes anim-fade {
+  from { opacity: 0; }
+}
+@keyframes anim-pop {
+  from { opacity: 0; transform: scale(0.95); }
+}
+@keyframes anim-drop {
+  from { opacity: 0; transform: translateY(-4px); }
+}
+@keyframes anim-success {
+  from { opacity: 0; transform: scale(0.96); }
+}
+.anim-pop-in {
+  animation: anim-pop 200ms cubic-bezier(0.23, 1, 0.32, 1);
+  transform-origin: bottom right;
+}
+.anim-menu-in {
+  animation: anim-drop 180ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+.anim-success-in {
+  animation: anim-success 300ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+@media (prefers-reduced-motion: reduce) {
+  .anim-pop-in,
+  .anim-menu-in,
+  .anim-success-in {
+    animation: anim-fade 150ms ease-out;
+  }
+  .faq-body {
+    transition-property: opacity;
+  }
+}

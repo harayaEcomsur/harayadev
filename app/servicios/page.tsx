@@ -4,14 +4,14 @@ import { plans, recurringServices, verticalPlans, addons } from "@/content/plans
 import { FaqAccordion } from "@/components/sections/FaqAccordion";
 import { faqs } from "@/content/faq";
 import { site } from "@/lib/site";
-import { buildFaqJsonLd, buildMetadata } from "@/lib/seo";
+import { buildFaqJsonLd, buildMetadata, buildServicesJsonLd } from "@/lib/seo";
 import { buildWhatsAppLink } from "@/lib/whatsapp";
 
 export const metadata: Metadata = buildMetadata(
   {
-    title: "Servicios",
+    title: "Página web con IA para tu pyme: planes y precios",
     description:
-      "Tu web con IA en 72 horas: 4 planes con precio cerrado e IVA incluido, más desarrollo a medida, mantención y mejora de sitios existentes.",
+      "Tu web con IA en 72 horas: 4 planes con precio cerrado e IVA incluido, más desarrollo a medida, mantención y mejora de sitios existentes. Chile y Latinoamérica.",
   },
   "/servicios"
 );
@@ -175,6 +175,11 @@ export default function ServiciosPage() {
               <span className="font-mono text-[13px] tracking-[0.12em] text-primary">{plan.tag}</span>
               <h3 className="m-0 text-2xl font-black tracking-tight sm:text-[34px]">{plan.name}</h3>
               <p className="m-0 max-w-[560px] text-base leading-[1.6] text-soft sm:text-[17px]">{plan.longDescription}</p>
+              {plan.id === "inmobiliaria" && (
+                <Link href="/pagina-web-para-inmobiliarias" className="text-[15px] font-bold text-primary hover:underline">
+                  Todo sobre la página web para inmobiliarias →
+                </Link>
+              )}
               <div className="flex flex-wrap gap-2.5">
                 {plan.includes.map((item) => (
                   <span key={item} className="rounded-full border border-line bg-background px-3.5 py-2 text-sm text-soft">
@@ -212,6 +217,11 @@ export default function ServiciosPage() {
                 <span className="shrink-0 font-mono text-sm font-bold tracking-[0.04em] text-primary">{addon.priceFrom}</span>
               </div>
               <span className="text-[15px] leading-[1.55] text-soft">{addon.description}</span>
+              {addon.name.toLowerCase().includes("agenda") && (
+                <Link href="/pagina-web-para-salones-de-belleza" className="text-[15px] font-bold text-primary hover:underline">
+                  Todo sobre la web con agenda para salones →
+                </Link>
+              )}
             </div>
           ))}
           <div className="flex flex-wrap items-center justify-between gap-5 rounded-[14px] border border-dashed border-line bg-background px-7 py-[22px] sm:col-span-2">
@@ -305,6 +315,10 @@ export default function ServiciosPage() {
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(buildFaqJsonLd(faqs)) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(buildServicesJsonLd(plans)) }}
         />
       </section>
 
