@@ -1,6 +1,15 @@
 import type { MetadataRoute } from "next";
 
-const ROUTES = ["", "/servicios", "/demo", "/proyectos", "/sobre-mi", "/contacto", "/pagina-web-para-inmobiliarias"];
+const ROUTES = [
+  "",
+  "/servicios",
+  "/demo",
+  "/proyectos",
+  "/sobre-mi",
+  "/contacto",
+  "/pagina-web-para-inmobiliarias",
+  "/pagina-web-para-salones-de-belleza",
+];
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const base = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";

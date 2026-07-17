@@ -26,6 +26,9 @@ export function Footer() {
           <Link href="/pagina-web-para-inmobiliarias" className="transition-colors hover:text-foreground">
             Web para inmobiliarias
           </Link>
+          <Link href="/pagina-web-para-salones-de-belleza" className="transition-colors hover:text-foreground">
+            Web para salones
+          </Link>
         </div>
         <span className="text-[13px] text-soft/60">
           © {new Date().getFullYear()} {site.legalName}

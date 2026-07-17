@@ -217,6 +217,11 @@ export default function ServiciosPage() {
                 <span className="shrink-0 font-mono text-sm font-bold tracking-[0.04em] text-primary">{addon.priceFrom}</span>
               </div>
               <span className="text-[15px] leading-[1.55] text-soft">{addon.description}</span>
+              {addon.name.toLowerCase().includes("agenda") && (
+                <Link href="/pagina-web-para-salones-de-belleza" className="text-[15px] font-bold text-primary hover:underline">
+                  Todo sobre la web con agenda para salones →
+                </Link>
+              )}
             </div>
           ))}
           <div className="flex flex-wrap items-center justify-between gap-5 rounded-[14px] border border-dashed border-line bg-background px-7 py-[22px] sm:col-span-2">
