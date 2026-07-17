@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
 import { site } from "@/lib/site";
 import { buildWhatsAppLink } from "@/lib/whatsapp";
+import { Logo } from "@/components/layout/Logo";
 
 const NAV_LINKS = [
   { href: "/", label: "Inicio" },
@@ -24,9 +25,7 @@ export function Header() {
   return (
     <nav className="sticky top-0 z-50 border-b border-line bg-background/90 backdrop-blur-md print:hidden">
       <div className="mx-auto flex h-[68px] max-w-6xl items-center justify-between px-4 sm:h-[76px] sm:px-6 lg:px-8">
-        <Link href="/" className="text-2xl font-black tracking-tight text-foreground" onClick={() => setOpen(false)}>
-          Haraya<span className="text-primary">Dev</span>
-        </Link>
+        <Logo chipSize={34} textClassName="text-2xl" onClick={() => setOpen(false)} />
         <div className="flex items-center gap-4 text-[15px] font-semibold sm:gap-8">
           <div className="hidden items-center gap-8 sm:flex">
             {NAV_LINKS.map((link) => (
