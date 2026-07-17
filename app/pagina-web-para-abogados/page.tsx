@@ -13,7 +13,7 @@ export const metadata: Metadata = buildMetadata(
   {
     title: "Página web para abogados con agenda de reuniones",
     description:
-      "Sitio serio para tu estudio jurídico: áreas de práctica, agenda de reuniones online (presencial o videollamada) sincronizada con tu Google Calendar, y un asistente IA que orienta a tus clientes y agenda por ti. Demo gratis en 24 horas.",
+      "Sitio serio para tu estudio: agenda de reuniones (presencial o videollamada) sincronizada con Google Calendar y asistente IA que agenda por ti. Demo gratis en 24h.",
   },
   "/pagina-web-para-abogados"
 );

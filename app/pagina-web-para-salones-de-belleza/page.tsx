@@ -12,7 +12,7 @@ export const metadata: Metadata = buildMetadata(
   {
     title: "Página web para salones de belleza con agenda online",
     description:
-      "Tus clientas reservan hora solas, con abono para que nadie te deje plantada: agenda online 24/7, avisos al instante y un asistente IA que responde por ti. Para salones, barberías, uñas y pestañas. Demo gratis en 24 horas.",
+      "Tus clientas reservan solas, con abono anti no-show: agenda online 24/7, avisos al instante y asistente IA. Salones, barberías y uñas. Demo gratis en 24 horas.",
   },
   "/pagina-web-para-salones-de-belleza"
 );

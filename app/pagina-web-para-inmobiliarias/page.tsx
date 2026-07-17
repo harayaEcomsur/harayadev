@@ -13,7 +13,7 @@ export const metadata: Metadata = buildMetadata(
   {
     title: "Página web para inmobiliarias con buscador y asistente IA",
     description:
-      "Sitio propio para tu corredora: cartera con buscador y filtros, fichas con galería y video, y un asistente IA que responde por tus propiedades 24/7. Desde $349.990 IVA incluido. Demo gratis con TUS propiedades en 24 horas.",
+      "Sitio propio para tu corredora: buscador con filtros, fichas con video y un asistente IA que vende tu cartera 24/7. Desde $349.990. Demo gratis en 24 horas.",
   },
   "/pagina-web-para-inmobiliarias"
 );
