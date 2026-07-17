@@ -23,6 +23,9 @@ export function Footer() {
           <Link href="/sobre-mi" className="transition-colors hover:text-foreground">
             Sobre mí
           </Link>
+          <Link href="/pagina-web-para-inmobiliarias" className="transition-colors hover:text-foreground">
+            Web para inmobiliarias
+          </Link>
         </div>
         <span className="text-[13px] text-soft/60">
           © {new Date().getFullYear()} {site.legalName}

@@ -3,12 +3,12 @@
 import { useState } from "react";
 import { faqs } from "@/content/faq";
 
-export function FaqAccordion() {
+export function FaqAccordion({ items = faqs }: { items?: { question: string; answer: string }[] }) {
   const [openIndex, setOpenIndex] = useState(0);
 
   return (
     <div className="flex flex-col gap-3">
-      {faqs.map((faq, i) => {
+      {items.map((faq, i) => {
         const open = openIndex === i;
         return (
           <div

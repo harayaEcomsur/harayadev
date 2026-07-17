@@ -175,6 +175,11 @@ export default function ServiciosPage() {
               <span className="font-mono text-[13px] tracking-[0.12em] text-primary">{plan.tag}</span>
               <h3 className="m-0 text-2xl font-black tracking-tight sm:text-[34px]">{plan.name}</h3>
               <p className="m-0 max-w-[560px] text-base leading-[1.6] text-soft sm:text-[17px]">{plan.longDescription}</p>
+              {plan.id === "inmobiliaria" && (
+                <Link href="/pagina-web-para-inmobiliarias" className="text-[15px] font-bold text-primary hover:underline">
+                  Todo sobre la página web para inmobiliarias →
+                </Link>
+              )}
               <div className="flex flex-wrap gap-2.5">
                 {plan.includes.map((item) => (
                   <span key={item} className="rounded-full border border-line bg-background px-3.5 py-2 text-sm text-soft">
