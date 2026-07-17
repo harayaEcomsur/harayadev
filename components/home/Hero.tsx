@@ -28,13 +28,13 @@ export function Hero() {
             <a
               href={demoHref}
               {...(site.whatsapp ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-              className="rounded-[10px] bg-primary px-[30px] py-4 text-[17px] font-extrabold text-white transition-colors hover:bg-primary-hover"
+              className="rounded-[10px] bg-primary px-[30px] py-4 text-[17px] font-extrabold text-white transition-[background-color,transform] duration-150 hover:bg-primary-hover active:scale-[0.98]"
             >
               Pide tu demo gratis →
             </a>
             <Link
               href="/servicios"
-              className="rounded-[10px] border-[1.5px] border-line px-[30px] py-4 text-[17px] font-bold text-foreground transition-colors hover:border-soft"
+              className="rounded-[10px] border-[1.5px] border-line px-[30px] py-4 text-[17px] font-bold text-foreground transition-[border-color,transform] duration-150 hover:border-soft active:scale-[0.98]"
             >
               Ver planes y precios
             </Link>

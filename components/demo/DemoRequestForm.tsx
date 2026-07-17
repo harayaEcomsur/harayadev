@@ -77,7 +77,7 @@ export function DemoRequestForm() {
 
     return (
       <div className="flex flex-col gap-6">
-        <div className="flex flex-wrap items-center justify-between gap-4 rounded-xl border border-primary/40 bg-primary/5 px-5 py-4 print:hidden">
+        <div className="anim-success-in flex flex-wrap items-center justify-between gap-4 rounded-xl border border-primary/40 bg-primary/5 px-5 py-4 print:hidden">
           <p className="m-0 text-sm text-foreground">
             ✅ Solicitud <strong>{result.number}</strong> recibida — tu demo estará lista en 24–48 horas hábiles.
           </p>

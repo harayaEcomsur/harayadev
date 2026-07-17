@@ -23,11 +23,18 @@ export function FaqAccordion() {
               <span>{faq.question}</span>
               <span className="shrink-0 text-[22px] text-primary">{open ? "−" : "+"}</span>
             </button>
-            {open && (
-              <p className="m-0 px-5 pb-5 text-[15px] leading-[1.65] text-soft sm:px-[26px] sm:pb-6 sm:text-base">
-                {faq.answer}
-              </p>
-            )}
+            <div
+              aria-hidden={!open}
+              className={`faq-body grid transition-[grid-template-rows,opacity] duration-200 ease-out ${
+                open ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
+              }`}
+            >
+              <div className="overflow-hidden">
+                <p className="m-0 px-5 pb-5 text-[15px] leading-[1.65] text-soft sm:px-[26px] sm:pb-6 sm:text-base">
+                  {faq.answer}
+                </p>
+              </div>
+            </div>
           </div>
         );
       })}

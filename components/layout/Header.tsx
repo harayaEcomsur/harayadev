@@ -43,7 +43,7 @@ export function Header() {
           <a
             href={demoHref}
             {...(site.whatsapp ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-            className="rounded-lg bg-primary px-3.5 py-2.5 text-[13px] font-bold text-white transition-colors hover:bg-primary-hover sm:px-5 sm:py-[11px] sm:text-sm"
+            className="rounded-lg bg-primary px-3.5 py-2.5 text-[13px] font-bold text-white transition-[background-color,transform] duration-150 hover:bg-primary-hover active:scale-[0.98] sm:px-5 sm:py-[11px] sm:text-sm"
           >
             <span className="sm:hidden">Demo gratis</span>
             <span className="hidden sm:inline">Pide tu demo gratis</span>
@@ -59,7 +59,7 @@ export function Header() {
         </div>
       </div>
       {open && (
-        <div className="border-t border-line bg-background px-4 py-3 sm:hidden">
+        <div className="anim-menu-in border-t border-line bg-background px-4 py-3 sm:hidden">
           <div className="flex flex-col">
             {NAV_LINKS.map((link) => (
               <Link
