@@ -9,6 +9,7 @@ const ROUTES = [
   "/contacto",
   "/pagina-web-para-inmobiliarias",
   "/pagina-web-para-salones-de-belleza",
+  "/pagina-web-para-abogados",
 ];
 
 export default function sitemap(): MetadataRoute.Sitemap {

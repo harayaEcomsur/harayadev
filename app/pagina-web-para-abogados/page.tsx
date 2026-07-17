@@ -6,105 +6,101 @@ import { site } from "@/lib/site";
 import { buildFaqJsonLd, buildMetadata, buildServicesJsonLd } from "@/lib/seo";
 import { buildWhatsAppLink } from "@/lib/whatsapp";
 
-// Página de captura por rubro (SEO): "página web para salón de belleza /
-// barbería / uñas" — el gancho es la agenda online con abono (anti no-show).
+// Página de captura por rubro (SEO): "página web para abogados / estudio
+// jurídico". Gancho: presencia seria + agenda de reuniones (presencial o
+// videollamada) sincronizada con el calendario del abogado.
 export const metadata: Metadata = buildMetadata(
   {
-    title: "Página web para salones de belleza con agenda online",
+    title: "Página web para abogados con agenda de reuniones",
     description:
-      "Tus clientas reservan hora solas, con abono para que nadie te deje plantada: agenda online 24/7, avisos al instante y un asistente IA que responde por ti. Para salones, barberías, uñas y pestañas. Demo gratis en 24 horas.",
+      "Sitio serio para tu estudio jurídico: áreas de práctica, agenda de reuniones online (presencial o videollamada) sincronizada con tu Google Calendar, y un asistente IA que orienta a tus clientes y agenda por ti. Demo gratis en 24 horas.",
   },
-  "/pagina-web-para-salones-de-belleza"
+  "/pagina-web-para-abogados"
 );
 
 const FEATURES = [
   {
-    tag: "AGENDA 24/7",
-    title: "Reservan solas, a cualquier hora",
+    tag: "PRESENCIA",
+    title: "Un sitio a la altura del estudio",
     description:
-      "Tu clienta elige servicio, día y hora desde el celular — a las 11 de la noche si quiere. Solo ve los horarios que realmente tienes libres, según tu horario de atención.",
+      "Diseño sobrio y profesional: áreas de práctica, trayectoria y equipo. La primera búsqueda en Google que hace un cliente antes de confiarte su caso — resuelta.",
   },
   {
-    tag: "ANTI NO-SHOW",
-    title: "Abono para que nadie te deje plantada",
+    tag: "AGENDA",
+    title: "Reuniones que se agendan solas",
     description:
-      "Cada reserva queda “pendiente de abono” hasta que la clienta transfiere. La hora que te reservan es una hora que te pagan — se acabó el sillón vacío a las 4 de la tarde.",
+      "Tu cliente elige el tipo de reunión — primera consulta, presencial o videollamada — y el horario disponible. Sin llamadas ni ida y vuelta de correos para cuadrar una hora.",
   },
   {
-    tag: "AVISOS",
-    title: "Te enteras al instante",
+    tag: "TU CALENDARIO",
+    title: "Sincronizada con Google Calendar",
     description:
-      "Cada reserva nueva te llega al correo al tiro, con un enlace que abre tu WhatsApp con el mensaje listo para coordinar el abono. Confirmas con un click desde tu panel.",
-  },
-  {
-    tag: "TU HORARIO",
-    title: "Bloqueas los días que no atiendes",
-    description:
-      "¿Vacaciones, hora médica, un sábado libre? Lo bloqueas desde el panel y desaparece de la agenda pública al instante. Tu agenda manda, no al revés.",
+      "Cada reunión aparece y se actualiza sola en tu Google Calendar u Outlook, y cada aviso trae un botón para anotarla al instante. Tu agenda de siempre, sin doble registro.",
   },
   {
     tag: "ASISTENTE IA",
-    title: "Responde precios y horarios por ti",
+    title: "Filtra y orienta, no improvisa",
     description:
-      "“¿Cuánto sale el esmaltado permanente?” “¿Atienden los sábados?” El asistente responde las 24 horas con TU información y guía a la clienta a agendar — tú no tocas el teléfono.",
+      "El asistente responde por tus áreas de práctica, honorarios de consulta y disponibilidad, y guía a agendar. No da consejo legal — ese es tu trabajo; el suyo es que la consulta llegue ordenada.",
   },
   {
-    tag: "VITRINA",
-    title: "Tu trabajo, en tu propio sitio",
+    tag: "CONTROL",
+    title: "Tu disponibilidad manda",
     description:
-      "Galería con tus trabajos, servicios con precios y tu marca — no solo un feed de Instagram. Tu bio de IG apunta a un sitio que agenda y vende por ti.",
+      "¿Audiencia, alegato, vacaciones? Bloqueas el día o la hora desde tu panel y desaparece de la agenda pública al instante. La consulta puede requerir abono — tú decides.",
+  },
+  {
+    tag: "CONFIANZA",
+    title: "Todo lo que da seriedad",
+    description:
+      "Dominio propio .cl, correo profesional, formulario de contacto y presencia en Google. Con mantención mensual para que siempre esté al día.",
   },
 ];
 
 const RUBRO_FAQS = [
   {
-    question: "¿Cómo evita la agenda online los no-shows?",
+    question: "¿Cómo agendan reuniones mis clientes?",
     answer:
-      "Con abono obligatorio: cuando una clienta reserva, la hora queda “pendiente de abono” y tú recibes el aviso. Ella te transfiere el abono (que se descuenta del valor del servicio), tú confirmas con un click y recién ahí la hora queda tomada. Quien no abona, no bloquea tu agenda.",
+      "Desde tu sitio: eligen el tipo de reunión que definas (por ejemplo primera consulta, reunión presencial o videollamada), ven solo tus horarios disponibles y reservan. Tú recibes el aviso al instante y confirmas desde tu panel.",
   },
   {
-    question: "¿Cuánto cuesta una página web para un salón de belleza?",
+    question: "¿Las reuniones llegan a mi Google Calendar u Outlook?",
     answer:
-      "La web con asistente IA parte en $149.990 y la agenda online con abono se agrega desde $99.990 — ambos precios con IVA incluido y sin costos ocultos. Antes de pagar, ves una demo funcionando con tu marca, gratis.",
+      "Sí. Te suscribes una sola vez y tus reuniones aparecen y se actualizan solas en Google Calendar, Outlook o el calendario del iPhone. Cada correo de aviso además trae un botón “Agregar a Google Calendar”.",
   },
   {
-    question: "¿Me avisan cuando alguien reserva?",
+    question: "¿El asistente IA da consejos legales?",
     answer:
-      "Sí, al instante: te llega un correo con el detalle de la reserva y un enlace que abre tu WhatsApp con el mensaje listo para coordinar el abono con la clienta. Desde tu panel confirmas, cancelas o revisas todas tus reservas.",
+      "No — y está instruido para no hacerlo. Orienta sobre tus áreas de práctica, el valor de la consulta y la disponibilidad, y guía al cliente a agendar una reunión contigo. El consejo legal lo das tú, en la reunión.",
   },
   {
-    question: "¿Las reservas llegan a mi Google Calendar?",
+    question: "¿Puedo cobrar la primera consulta?",
     answer:
-      "Sí. Te suscribes una sola vez desde tu panel y tus reservas aparecen y se actualizan solas en Google Calendar, Outlook o el calendario del iPhone. Además, cada correo de aviso trae un botón “Agregar a Google Calendar” para anotar esa hora al instante.",
+      "Tú decides: la agenda soporta reservas con abono (la hora queda pendiente hasta la transferencia) o reservas libres que tú confirmas. Muchos estudios usan el abono para filtrar consultas serias.",
   },
   {
-    question: "¿Puedo bloquear días u horas en que no atiendo?",
+    question: "¿Cuánto cuesta una página web para un abogado o estudio jurídico?",
     answer:
-      "Sí. Desde tu panel bloqueas un día completo o una hora puntual (vacaciones, trámites, hora médica) y ese horario desaparece de inmediato de la agenda que ven tus clientas.",
+      "El sitio completo (Web Pyme) cuesta $249.990 y la agenda de reuniones se agrega desde $99.990 — IVA incluido, con dominio y hosting el primer año. Antes de pagar, ves una demo con la identidad de tu estudio, gratis.",
   },
   {
-    question: "¿Cómo recibo el abono?",
+    question: "¿Sirve para un estudio con varios abogados?",
     answer:
-      "Directo a tu cuenta, por transferencia: coordinas con la clienta por WhatsApp (el mensaje con tus datos sale listo desde el panel) y confirmas la reserva cuando llega el abono. El dinero nunca pasa por nosotros.",
+      "Sí. El sitio presenta al equipo completo y la agenda parte centralizada (una agenda del estudio); la agenda individual por abogado está disponible como ampliación.",
   },
   {
-    question: "¿Sirve para barberías, uñas, pestañas o estética?",
+    question: "¿Cuánto demora?",
     answer:
-      "Sí — la agenda funciona igual para salones de belleza, barberías, manicure y uñas esculpidas, extensiones de pestañas, estética y spa: defines tus servicios con sus precios y duraciones, y la agenda se arma sola con tu horario.",
-  },
-  {
-    question: "¿Y si mis clientas ya me agendan por Instagram?",
-    answer:
-      "Van a seguir llegando por Instagram — la diferencia es que el link de tu bio ahora apunta a una agenda que se atiende sola, en vez de un ida y vuelta de mensajes a toda hora. Tú revisas reservas confirmadas en lugar de responder “¿tienes hora el viernes?” veinte veces al día.",
+      "La demo la ves en 24 horas y el sitio queda publicado en 72 horas desde tu aprobación. Solo pagas si la demo te convence.",
   },
 ];
 
+const pymePlan = plans.find((p) => p.id === "pyme");
 const agendaAddon = addons.find((a) => a.name.toLowerCase().includes("agenda"));
-const botPlan = plans.find((p) => p.id === "bot");
 
-export default function SalonesPage() {
+export default function AbogadosPage() {
   const waHref = site.whatsapp
-    ? buildWhatsAppLink(site.whatsapp, "Hola! Tengo un salón y quiero mi demo gratis con agenda online")
+    ? buildWhatsAppLink(site.whatsapp, "Hola! Tengo un estudio jurídico y quiero mi demo gratis")
     : "/contacto";
 
   return (
@@ -117,15 +113,16 @@ export default function SalonesPage() {
         />
         <div className="relative mx-auto flex max-w-6xl flex-col gap-[18px]">
           <span className="font-mono text-sm tracking-[0.14em] text-primary">
-            SALONES · BARBERÍAS · UÑAS Y PESTAÑAS · ESTÉTICA
+            ABOGADOS · ESTUDIOS JURÍDICOS · NOTARÍAS Y CONSULTORAS
           </span>
           <h1 className="m-0 max-w-[900px] text-4xl font-black leading-[1.05] tracking-tight sm:text-[54px]">
-            Página web con agenda online para salones de belleza
+            Página web para abogados y estudios jurídicos
           </h1>
           <p className="m-0 max-w-[680px] text-lg leading-[1.6] text-soft sm:text-[19px]">
-            Tus clientas reservan hora solas — con <strong className="text-foreground">abono</strong>{" "}
-            para que nadie te deje plantada. Tú recibes el aviso al instante, confirmas con un click y
-            un asistente IA responde precios y horarios por ti, las 24 horas.
+            Presencia seria, áreas de práctica claras y una{" "}
+            <strong className="text-foreground">agenda de reuniones online</strong> — presencial o
+            videollamada — sincronizada con tu Google Calendar. Tus clientes agendan solos; tú llegas
+            a la reunión con la consulta ordenada.
           </p>
           <div className="mt-2 flex flex-wrap gap-3.5">
             <Link
@@ -143,9 +140,9 @@ export default function SalonesPage() {
             </a>
           </div>
           <div className="flex flex-wrap gap-7 font-mono text-[13px] tracking-[0.06em] text-soft">
-            <span>✓ DEMO CON TU MARCA EN 24H</span>
+            <span>✓ DEMO CON TU ESTUDIO EN 24H</span>
             <span>✓ PRECIO CERRADO, IVA INCLUIDO</span>
-            <span>✓ RESERVAS CON ABONO</span>
+            <span>✓ AGENDA SINCRONIZADA</span>
           </div>
         </div>
       </header>
@@ -154,14 +151,14 @@ export default function SalonesPage() {
       <section className="border-t border-line px-4 py-16 sm:px-6 sm:py-[90px] lg:px-8">
         <div className="mx-auto flex max-w-[820px] flex-col gap-5">
           <h2 className="m-0 text-3xl font-black tracking-tight sm:text-[44px]">
-            Tu agenda no debería vivir en los DM
+            Tu cliente te googlea antes de llamarte
           </h2>
           <p className="m-0 text-lg leading-[1.7] text-soft">
-            “¿Tienes hora el viernes?” a las 11 de la noche. El ida y vuelta de mensajes para
-            cuadrar una hora. Y lo peor: la clienta que reservó, no llegó y te dejó el sillón vacío
-            en tu mejor horario. Una agenda online con abono resuelve las tres cosas: las horas se
-            reservan solas, cada reserva llega con compromiso de pago, y tú dedicas las manos a lo
-            que te genera plata — no al teléfono.
+            Antes de confiarle su caso a alguien, la gente busca: quién es, qué hace, dónde atiende.
+            Un estudio sin sitio web — o con uno abandonado — pierde esa primera impresión frente al
+            que sí la tiene. Y después viene la segunda fricción: cuadrar la reunión por teléfono,
+            entre audiencias. Un sitio serio con agenda online resuelve las dos cosas: la
+            credibilidad se ve, y la reunión se agenda sola en el horario que tú definiste.
           </p>
         </div>
       </section>
@@ -171,7 +168,7 @@ export default function SalonesPage() {
         <div className="mx-auto flex max-w-6xl flex-col gap-3.5 pb-8">
           <span className="font-mono text-sm tracking-[0.14em] text-primary">QUÉ INCLUYE</span>
           <h2 className="m-0 text-3xl font-black tracking-tight sm:text-[44px]">
-            Un sitio que atiende mientras tú atiendes
+            Credibilidad online, agenda bajo control
           </h2>
         </div>
         <div className="mx-auto grid max-w-6xl gap-[18px] sm:grid-cols-2 lg:grid-cols-3">
@@ -193,15 +190,15 @@ export default function SalonesPage() {
             <h2 className="m-0 text-3xl font-black tracking-tight sm:text-[44px]">Cuánto cuesta</h2>
           </div>
           <div className="grid gap-[18px] sm:grid-cols-2">
-            {botPlan && (
+            {pymePlan && (
               <div className="flex flex-col gap-3 rounded-[14px] border border-line bg-card p-7">
                 <div className="flex items-baseline justify-between gap-3">
-                  <span className="text-[20px] font-extrabold">{botPlan.name}</span>
-                  <span className="shrink-0 font-mono text-lg font-bold text-primary">{botPlan.price}</span>
+                  <span className="text-[20px] font-extrabold">{pymePlan.name}</span>
+                  <span className="shrink-0 font-mono text-lg font-bold text-primary">{pymePlan.price}</span>
                 </div>
                 <span className="text-[15px] leading-[1.55] text-soft">
-                  Tu sitio con galería, servicios y precios, más el asistente IA respondiendo por tu
-                  negocio en la web. IVA incluido, entrega en 72 horas.
+                  El sitio completo del estudio: áreas de práctica, equipo, formulario de contacto y
+                  asistente IA. IVA incluido, dominio y hosting el primer año.
                 </span>
               </div>
             )}
@@ -217,7 +214,7 @@ export default function SalonesPage() {
           </div>
           <div className="flex flex-wrap items-center justify-between gap-5 rounded-[14px] border border-dashed border-line bg-background px-7 py-[22px]">
             <span className="text-base text-soft">
-              ¿Solo quieres partir con lo básico? Mira todos los planes desde $99.990.
+              ¿Prefieres partir más simple? Mira todos los planes desde $99.990.
             </span>
             <Link href="/servicios" className="whitespace-nowrap text-[15px] font-bold text-primary hover:underline">
               Ver planes y precios →
@@ -235,18 +232,18 @@ export default function SalonesPage() {
           {[
             {
               n: "01",
-              t: "Nos cuentas de tu salón",
-              d: "Tus servicios con precios, tu horario de atención y tu Instagram. Con eso armamos todo.",
+              t: "Nos cuentas del estudio",
+              d: "Áreas de práctica, equipo y cómo prefieres las reuniones (presencial, videollamada o ambas).",
             },
             {
               n: "02",
               t: "Ves tu demo en 24 horas",
-              d: "Tu sitio con tu marca, la agenda funcionando y el asistente respondiendo tus precios. Gratis, sin compromiso.",
+              d: "El sitio con la identidad de tu estudio y la agenda funcionando. Gratis, sin compromiso.",
             },
             {
               n: "03",
               t: "Publicada en 72 horas",
-              d: "Ajustamos lo que quieras, conectamos tu dominio y pones el link en tu bio. Solo pagas si la demo te convenció.",
+              d: "Ajustamos lo que pidas, conectamos tu dominio y sincronizamos tu calendario. Solo pagas si te convence.",
             },
           ].map((s) => (
             <div key={s.n} className="flex flex-col gap-3 rounded-[14px] border border-line bg-card p-7">
@@ -274,7 +271,7 @@ export default function SalonesPage() {
             __html: JSON.stringify(
               buildServicesJsonLd(
                 [
-                  botPlan ? { name: botPlan.name, price: botPlan.price, description: botPlan.description } : null,
+                  pymePlan ? { name: pymePlan.name, price: pymePlan.price, description: pymePlan.description } : null,
                   agendaAddon
                     ? { name: agendaAddon.name, price: agendaAddon.priceFrom, description: agendaAddon.description }
                     : null,
@@ -293,11 +290,11 @@ export default function SalonesPage() {
         />
         <div className="relative mx-auto flex max-w-[760px] flex-col items-center gap-6 text-center">
           <h2 className="m-0 text-4xl font-black leading-[1.02] tracking-tight sm:text-[56px]">
-            Deja que tu agenda se llene sola
+            Que tu estudio se vea como trabaja
           </h2>
           <p className="m-0 max-w-[560px] text-lg leading-[1.6] text-soft">
-            Cuéntanos de tu salón hoy y mañana ves tu sitio con la agenda funcionando — con tus
-            servicios, tus precios y tu marca. Si no te gusta, lo borramos y quedamos como amigas.
+            Cuéntanos de tu estudio hoy y mañana ves el sitio con tu identidad y la agenda
+            funcionando. Si no te convence, lo borramos — sin costo y sin letra chica.
           </p>
           <Link
             href="/demo"

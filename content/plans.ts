@@ -166,7 +166,7 @@ export const addons: Addon[] = [
     name: "Agenda online con abono",
     priceFrom: "desde $99.990",
     description:
-      "Tus clientes reservan hora solos (servicio, día y hora) y la reserva queda pendiente hasta el abono. Tú recibes aviso al instante, confirmas desde tu panel y bloqueas los días u horas en que no atiendes. Ideal para salones, barberías, clínicas y consultas.",
+      "Tus clientes reservan hora solos (servicio, día y hora) y la reserva queda pendiente hasta el abono. Tú recibes aviso al instante, confirmas desde tu panel, bloqueas los días u horas en que no atiendes y tus reservas se sincronizan con tu Google Calendar u Outlook. Ideal para salones, barberías, consultas médicas y dentales, abogados y todo negocio que agende horas.",
   },
   {
     icon: "DatabaseZap",
