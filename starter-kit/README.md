@@ -61,11 +61,31 @@ Setup por cliente (~1 hora + verificación de Meta Business):
   cliente elija "A, B o C" — útil como parte del gancho de venta de la demo. Cada
   variante se puede abrir a pantalla completa en `/variantes/<id>`.
 
+### Tienda online con Webpay (módulo `tienda`)
+
+- `/tienda` — catálogo desde `store.products` del config, carrito persistido en
+  localStorage; `/tienda/carrito` — checkout con datos del comprador y pago
+  **Webpay Plus** (API REST de Transbank, sin SDK: `lib/webpay.ts`); retorno en
+  `/api/checkout/retorno` (aprobado / rechazado / anulado / timeout) y
+  confirmación en `/tienda/pedido/<id>`; panel de pedidos en `/tienda/admin`.
+- Sin variables de entorno corre contra el **ambiente de integración** de
+  Transbank (credenciales públicas de prueba): el flujo completo funciona y no
+  se cobra dinero real — perfecto para demos. Tarjeta de prueba: VISA
+  4051 8856 0044 6623, CVV 123, cualquier fecha (RUT 11.111.111-1, clave 123).
+- Los precios siempre se resuelven en el servidor desde el config; el cliente
+  solo envía slugs y cantidades.
+- Pedidos en memoria (mismo patrón MVP que la agenda): la página de confirmación
+  lee el resultado desde la URL de retorno, así que funciona aunque el store
+  viva en otro isolate serverless. En producción se respalda en Postgres.
+
 Variables de entorno (`.env.local`, ver `.env.example`):
 
 - `GEMINI_API_KEY` — requerido para el chat IA (modelo `gemini-2.5-flash-lite`, tier gratuito en Google AI Studio).
 - `RESEND_API_KEY` — opcional, requerido solo si el módulo `contactForm` debe enviar emails reales.
 - `NEXT_PUBLIC_SITE_URL` — usado en metadata, sitemap.xml y robots.txt.
+- `TBK_ENV=produccion` + `TBK_COMMERCE_CODE` + `TBK_API_KEY` — solo para cobrar de
+  verdad con Webpay (requiere código de comercio validado por Transbank); sin
+  ellas el módulo tienda usa el ambiente de integración.
 
 ## Flujo de trabajo por cliente
 

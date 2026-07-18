@@ -55,6 +55,7 @@ const clientConfig = defineClientConfig({
     faq: false,
     pricing: false,
     chat: true,
+    // tienda: true, // + bloque `store` con productos (ver restaurante.config.ts)
   },
 
   chat: {

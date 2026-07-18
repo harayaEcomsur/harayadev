@@ -37,6 +37,11 @@ export function Header({ config }: { config: ClientConfig }) {
               Agendar
             </a>
           )}
+          {modules.tienda && (
+            <a href="/tienda" className="hover:text-primary">
+              Tienda
+            </a>
+          )}
           <a href="/#servicios" className="hover:text-primary">
             Servicios
           </a>

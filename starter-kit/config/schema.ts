@@ -105,6 +105,11 @@ export const clientConfigSchema = z.object({
     // "pendiente de abono"), panel del dueño en /agenda/admin (confirmar, revisar,
     // bloquear días/horas) y aviso por email de cada reserva nueva.
     agenda: z.boolean().default(false),
+    // Módulo tienda online: /tienda con catálogo y carrito, checkout con Webpay
+    // Plus (Transbank). Sin env vars corre contra el ambiente de integración de
+    // Transbank (pago de prueba, flujo completo visible); producción se activa
+    // con TBK_ENV=produccion + TBK_COMMERCE_CODE + TBK_API_KEY.
+    tienda: z.boolean().default(false),
   }),
 
   // Configuración del módulo agenda (requiere modules.agenda).
@@ -124,6 +129,31 @@ export const clientConfigSchema = z.object({
       // wa.me que abre WhatsApp con el resumen listo para enviar.
       ownerNotifyWhatsapp: z.string().optional(),
       ownerNotifyEmail: z.string().email().optional(),
+    })
+    .optional(),
+
+  // Catálogo de la tienda (requiere modules.tienda). Igual que properties: en la
+  // demo/MVP vive en el config; en producción se administra vía panel o mantención.
+  store: z
+    .object({
+      products: z
+        .array(
+          z.object({
+            slug: z.string(),
+            name: z.string(),
+            // Precio en CLP, entero: Webpay opera montos enteros en pesos.
+            price: z.number().int().positive(),
+            description: z.string(),
+            imageUrl: z.string().optional(),
+            category: z.string().optional(),
+            available: z.boolean().default(true),
+          })
+        )
+        .max(200),
+      // Se muestra en el checkout y en la confirmación del pedido.
+      shippingNote: z
+        .string()
+        .default("Después del pago coordinamos la entrega o el retiro por WhatsApp."),
     })
     .optional(),
 

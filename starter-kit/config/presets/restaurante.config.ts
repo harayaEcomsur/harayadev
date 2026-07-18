@@ -73,6 +73,42 @@ const clientConfig = defineClientConfig({
     faq: true,
     pricing: false,
     chat: true,
+    tienda: true,
+  },
+
+  store: {
+    products: [
+      {
+        slug: "pack-12-empanadas",
+        name: "Pack 12 empanadas congeladas",
+        price: 14990,
+        description: "Pino, queso o mixtas — listas para hornear en casa.",
+        category: "Para llevar",
+      },
+      {
+        slug: "aji-verde-250",
+        name: "Ají verde de la casa 250 g",
+        price: 3990,
+        description: "La receta que acompaña nuestros choripanes, en frasco.",
+        category: "Salsas",
+      },
+      {
+        slug: "salsa-bbq-300",
+        name: "Salsa BBQ ahumada 300 ml",
+        price: 4490,
+        description: "Ahumada en casa, ideal para carnes y sándwiches.",
+        category: "Salsas",
+      },
+      {
+        slug: "gift-card-almuerzo",
+        name: "Gift card almuerzo para dos",
+        price: 15990,
+        description: "Dos menús del día + bebidas. Se canjea presentando el número de pedido.",
+        category: "Gift cards",
+      },
+    ],
+    shippingNote:
+      "Retiro en el local (Av. Providencia 1234) o despacho a Providencia y Ñuñoa — lo coordinamos por WhatsApp después del pago.",
   },
 
   testimonials: [
