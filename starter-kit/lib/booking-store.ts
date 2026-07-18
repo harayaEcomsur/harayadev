@@ -16,6 +16,8 @@ export interface Booking {
   name: string;
   phone: string;
   status: "pendiente" | "confirmada" | "cancelada";
+  // Presente cuando el abono se pagó online con Webpay.
+  payment?: { amount: number; authorizationCode?: string; cardLast4?: string };
   createdAt: string;
 }
 
@@ -125,6 +127,22 @@ export function setBookingStatus(id: string, status: Booking["status"]): boolean
   const b = store().bookings.find((x) => x.id === id);
   if (!b) return false;
   b.status = status;
+  return true;
+}
+
+export function getBooking(id: string): Booking | undefined {
+  return store().bookings.find((x) => x.id === id);
+}
+
+// Abono aprobado por Webpay: registra el pago y confirma la reserva de una vez.
+export function setBookingPaid(
+  id: string,
+  payment: { amount: number; authorizationCode?: string; cardLast4?: string }
+): boolean {
+  const b = getBooking(id);
+  if (!b) return false;
+  b.payment = payment;
+  b.status = "confirmada";
   return true;
 }
 

@@ -36,6 +36,7 @@ export default function AgendaPage({ searchParams }: { searchParams: { servicio?
                 daysAhead={booking?.daysAhead ?? 14}
                 depositNote={booking?.depositNote ?? "Para confirmar tu hora se solicita un abono."}
                 initialService={searchParams.servicio}
+                depositAmount={booking?.depositAmount}
               />
             </Suspense>
           </div>

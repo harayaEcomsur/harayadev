@@ -61,6 +61,16 @@ Setup por cliente (~1 hora + verificación de Meta Business):
   cliente elija "A, B o C" — útil como parte del gancho de venta de la demo. Cada
   variante se puede abrir a pantalla completa en `/variantes/<id>`.
 
+### Abono de la agenda con Webpay (`booking.depositAmount`)
+
+- Si el config define `booking.depositAmount` (CLP entero), al terminar una
+  reserva aparece el botón "Pagar abono con Webpay"; el pago aprobado **confirma
+  la reserva automáticamente** (sin pasar por el panel). Anulado/rechazado: la
+  reserva sigue pendiente y el flujo actual por transferencia no cambia.
+- Es el diferenciador directo contra los SaaS de agenda por suscripción: reserva
+  con abono pagado, a pago único. Usa la misma integración `lib/webpay.ts` y las
+  mismas variables `TBK_*` del módulo tienda (sin ellas: ambiente de integración).
+
 ### Tienda online con Webpay (módulo `tienda`)
 
 - `/tienda` — catálogo desde `store.products` del config, carrito persistido en

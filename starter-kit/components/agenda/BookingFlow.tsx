@@ -2,18 +2,23 @@
 
 import { useEffect, useMemo, useState } from "react";
 import type { ClientConfig } from "@/config/schema";
+import { formatCLP } from "@/lib/clp";
 
 // Flujo público de reserva: servicio → día → hora → datos → pendiente de abono.
+// Con depositAmount configurado, el abono se paga al tiro con Webpay y la
+// reserva se confirma sola.
 export function BookingFlow({
   services,
   daysAhead,
   depositNote,
   initialService,
+  depositAmount,
 }: {
   services: { title: string; price?: string }[];
   daysAhead: number;
   depositNote: string;
   initialService?: string;
+  depositAmount?: number;
 }) {
   const [service, setService] = useState(
     services.some((s) => s.title === initialService) ? (initialService as string) : services[0]?.title ?? ""
@@ -24,6 +29,8 @@ export function BookingFlow({
   const [status, setStatus] = useState<"idle" | "loading" | "sending" | "error">("idle");
   const [errorMsg, setErrorMsg] = useState("");
   const [done, setDone] = useState<{ id: string; service: string; date: string; time: string } | null>(null);
+  const [paying, setPaying] = useState(false);
+  const [payError, setPayError] = useState("");
 
   const days = useMemo(() => {
     const out: { iso: string; label: string; weekday: string }[] = [];
@@ -89,6 +96,29 @@ export function BookingFlow({
     }
   }
 
+  async function payDeposit() {
+    if (!done) return;
+    setPayError("");
+    setPaying(true);
+    try {
+      const res = await fetch("/api/agenda/abono", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: done.id }),
+      });
+      const d = await res.json().catch(() => null);
+      if (!res.ok || !d?.url || !d?.token) {
+        setPayError(d?.error ?? "No se pudo iniciar el pago — intenta de nuevo.");
+        setPaying(false);
+        return;
+      }
+      window.location.href = `${d.url}?token_ws=${encodeURIComponent(d.token)}`;
+    } catch {
+      setPayError("Error de conexión — intenta de nuevo.");
+      setPaying(false);
+    }
+  }
+
   if (done) {
     return (
       <div className="rounded-2xl border border-primary/30 bg-primary/5 p-6 sm:p-8">
@@ -100,6 +130,22 @@ export function BookingFlow({
         <div className="mt-4 rounded-xl border border-foreground/15 bg-background p-4">
           <p className="text-sm font-semibold text-foreground">⏳ Pendiente de abono</p>
           <p className="mt-1 text-sm text-foreground/70">{depositNote}</p>
+          {depositAmount ? (
+            <>
+              <button
+                type="button"
+                onClick={payDeposit}
+                disabled={paying}
+                className="mt-3 rounded-xl bg-primary px-6 py-3 text-sm font-bold uppercase tracking-wider text-white hover:opacity-90 disabled:opacity-60"
+              >
+                {paying ? "Conectando con Webpay…" : `Pagar abono de ${formatCLP(depositAmount)} con Webpay`}
+              </button>
+              <p className="mt-2 text-xs text-foreground/60">
+                Pago con tarjeta de débito o crédito. Al aprobarse, tu hora queda confirmada al instante.
+              </p>
+              {payError && <p className="mt-2 text-sm font-semibold text-primary">{payError}</p>}
+            </>
+          ) : null}
         </div>
         <p className="mt-4 text-sm text-foreground/60">
           Te contactaremos al número que dejaste para confirmar. ¡Nos vemos!

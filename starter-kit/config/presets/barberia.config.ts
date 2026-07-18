@@ -72,6 +72,15 @@ const clientConfig = defineClientConfig({
     faq: true,
     pricing: true,
     chat: true,
+    agenda: true,
+  },
+
+  booking: {
+    slotMinutes: 45,
+    daysAhead: 14,
+    depositNote:
+      "Para confirmar tu hora pedimos un abono de $5.000, que se descuenta del servicio. Puedes pagarlo al tiro con tarjeta.",
+    depositAmount: 5000,
   },
 
   testimonials: [

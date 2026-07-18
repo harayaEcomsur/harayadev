@@ -124,6 +124,11 @@ export const clientConfigSchema = z.object({
       depositNote: z
         .string()
         .default("Para confirmar tu hora se solicita un abono. Te contactaremos con los datos de transferencia."),
+      // Monto del abono en CLP (entero). Si se define, al reservar aparece el
+      // botón "Pagar abono con Webpay" y la reserva se confirma sola con el pago
+      // aprobado (misma integración lib/webpay.ts del módulo tienda). Si no se
+      // define, el abono se coordina por transferencia como siempre.
+      depositAmount: z.number().int().positive().optional(),
       // WhatsApp del negocio para avisos gratuitos (wa.me en correos / panel).
       // No requiere API de Meta: al llegar una reserva, el correo incluye un enlace
       // wa.me que abre WhatsApp con el resumen listo para enviar.
