@@ -69,16 +69,37 @@ function seed(s: Store) {
 
 const DAY_NAMES = ["domingo", "lunes", "martes", "miércoles", "jueves", "viernes", "sábado"];
 
+// Sin tildes ni mayúsculas, para comparar "miércoles"/"Miercoles"/"sábado" parejo.
+function normalizeDay(s: string): string {
+  return s
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "");
+}
+
+const DAY_NAMES_NORM = DAY_NAMES.map(normalizeDay);
+
+// ¿El día `dayIdx` (0=domingo) calza con una etiqueta como "Lunes a viernes",
+// "Martes a sábado", "Lunes y domingo" o "Jueves"? Los rangos "X a Y" se expanden
+// de verdad (incluye los días intermedios) y soportan cruce de semana
+// ("Viernes a lunes"); cualquier otra etiqueta calza si menciona el día.
+function dayMatchesLabel(dayIdx: number, label: string): boolean {
+  const l = normalizeDay(label);
+  const range = l.match(/([a-z]+)\s+a\s+([a-z]+)/);
+  if (range) {
+    const from = DAY_NAMES_NORM.indexOf(range[1]);
+    const to = DAY_NAMES_NORM.indexOf(range[2]);
+    if (from >= 0 && to >= 0) {
+      return from <= to ? dayIdx >= from && dayIdx <= to : dayIdx >= from || dayIdx <= to;
+    }
+  }
+  return l.includes(DAY_NAMES_NORM[dayIdx]);
+}
+
 function hoursForDate(date: string): { open: string; close: string } | null {
   const dayIdx = new Date(date + "T12:00:00").getDay();
-  const dayName = DAY_NAMES[dayIdx];
   for (const h of clientConfig.contact.hours ?? []) {
-    const label = h.day.toLowerCase();
-    const matches =
-      label.includes(dayName) ||
-      (label.includes("lunes a viernes") && dayIdx >= 1 && dayIdx <= 5) ||
-      (label.includes("lunes a sábado") && dayIdx >= 1 && dayIdx <= 6);
-    if (matches) {
+    if (dayMatchesLabel(dayIdx, h.day)) {
       if (h.closed || !h.open || !h.close) return null;
       return { open: h.open, close: h.close };
     }
