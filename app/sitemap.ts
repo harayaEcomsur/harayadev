@@ -10,6 +10,7 @@ const ROUTES = [
   "/pagina-web-para-inmobiliarias",
   "/pagina-web-para-salones-de-belleza",
   "/pagina-web-para-abogados",
+  "/cuanto-cuesta-una-pagina-web-en-chile",
 ];
 
 export default function sitemap(): MetadataRoute.Sitemap {

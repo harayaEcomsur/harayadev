@@ -214,7 +214,12 @@ export default function AbogadosPage() {
           </div>
           <div className="flex flex-wrap items-center justify-between gap-5 rounded-[14px] border border-dashed border-line bg-background px-7 py-[22px]">
             <span className="text-base text-soft">
-              ¿Prefieres partir más simple? Mira todos los planes desde $99.990.
+              ¿Prefieres partir más simple? Mira todos los planes desde $99.990. ¿Comparando
+              opciones? Revisa{" "}
+              <Link href="/cuanto-cuesta-una-pagina-web-en-chile" className="font-bold text-primary hover:underline">
+                cuánto cuesta una página web en Chile
+              </Link>
+              .
             </span>
             <Link href="/servicios" className="whitespace-nowrap text-[15px] font-bold text-primary hover:underline">
               Ver planes y precios →

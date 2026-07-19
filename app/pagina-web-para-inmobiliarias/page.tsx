@@ -218,6 +218,13 @@ export default function InmobiliariasPage() {
               </div>
             </div>
           </div>
+          <p className="mx-auto mt-5 max-w-6xl text-sm text-soft">
+            ¿Comparando opciones del mercado? Revisa{" "}
+            <Link href="/cuanto-cuesta-una-pagina-web-en-chile" className="font-bold text-primary hover:underline">
+              cuánto cuesta una página web en Chile
+            </Link>{" "}
+            — la guía con los precios reales 2026.
+          </p>
         </section>
       )}
 
