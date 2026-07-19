@@ -7,18 +7,11 @@
 // No interactivo:    npm run new-client -- --name "Panadería Rosita" [--preset restaurante]
 //                    (salta las preguntas que ya respondiste por flag)
 import { parseArgs } from "node:util";
-import { existsSync, readFileSync, writeFileSync, mkdirSync, copyFileSync } from "node:fs";
+import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { execSync } from "node:child_process";
 import readline from "node:readline/promises";
 import path from "node:path";
-import {
-  extractColors,
-  pickPalette,
-  ensureContrastWithWhite,
-  hexToRgb,
-  rgbToHex,
-  hslToRgb,
-} from "./palette-core";
+import { slugify, suggestLayout, suggestPreset, applyIdentity, applyLogoAndPalette } from "./wizard-core";
 
 const { values } = parseArgs({
   options: {
@@ -40,33 +33,6 @@ async function ask(question: string, fallback = ""): Promise<string> {
   const answer = done ? "" : String(value).trim();
   if (!process.stdin.isTTY) console.log(answer); // eco para logs cuando viene por pipe
   return answer || fallback;
-}
-
-function slugify(name: string): string {
-  return name
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/(^-|-$)/g, "");
-}
-
-// El layout es lo primero que evita que todo se vea igual: se sugiere por rubro
-// y siempre se confirma con un humano.
-function suggestLayout(rubro: string): "inmobiliaria" | "corporativo" | "clasico" {
-  const r = rubro.toLowerCase();
-  if (/(inmobili|propiedad|corretaje|corredor)/.test(r)) return "inmobiliaria";
-  if (/(abogad|juridic|jurídic|legal|contab|contador|consultor|auditor|notari|arquitect|ingenier)/.test(r))
-    return "corporativo";
-  return "clasico";
-}
-
-function suggestPreset(rubro: string): string {
-  const r = rubro.toLowerCase();
-  if (/(restauran|comida|food|cafe|café|pasteler|panader|sushi|pizz)/.test(r)) return "restaurante";
-  if (/(barber|peluquer|estetic|estétic|salon|salón|spa|manicur)/.test(r)) return "barberia";
-  if (/(abogad|jurid|juríd|contab|contador|consultor|inmobili|propiedad)/.test(r)) return "profesional";
-  return "_template";
 }
 
 async function main() {
@@ -122,55 +88,19 @@ async function main() {
     console.error(`No existe el preset "${preset}" en config/presets/`);
     process.exit(1);
   }
-  let content = readFileSync(presetFile, "utf-8")
-    .replace(/slug:\s*"[^"]*"/, `slug: "${slug}"`)
-    .replace(/businessName:\s*"[^"]*"/, `businessName: "${businessName}"`);
-  if (rubro) content = content.replace(/rubro:\s*"[^"]*"/, `rubro: "${rubro}"`);
-  if (style) content = content.replace(/fontPairing:\s*"[^"]*"/, `fontPairing: "${style}"`);
   // Los presets exportan default; la config activa debe exportar `clientConfig`.
-  content = content
+  let content = readFileSync(presetFile, "utf-8")
     .replace(/const clientConfig = defineClientConfig\(/, "export const clientConfig = defineClientConfig(")
     .replace(/\nexport default clientConfig;\n?/, "\n");
-  if (!content.includes("layout:")) {
-    content = content.replace(/fontPairing:\s*"([^"]*)",/, `fontPairing: "$1",\n    layout: "${layout}",`);
-  }
+  // Identidad real en meta + TODO el copy del preset (lib compartida con la fábrica).
+  content = applyIdentity(content, { businessName, slug, rubro, style, layout });
 
   // --- paleta desde el logo, si hay ---
   let paletteBlock = "";
   if (logoPath && existsSync(logoPath)) {
-    const assetsDir = path.join(process.cwd(), "public", "clients", slug);
-    mkdirSync(assetsDir, { recursive: true });
-    const ext = path.extname(logoPath).toLowerCase();
-    const logoDest = path.join(assetsDir, `logo${ext}`);
-    copyFileSync(logoPath, logoDest);
-
-    try {
-      const p = pickPalette(extractColors(logoPath));
-      const accentAsPrimary = ensureContrastWithWhite(hexToRgb(p.accent)!);
-      const darkBg = hslToRgb(p.baseHsl.h, 0.3, 0.1);
-      const darkPrimary = ensureContrastWithWhite(hslToRgb(p.baseHsl.h, Math.max(p.baseHsl.s, 0.5), 0.45));
-      content = content
-        .replace(/logoUrl:\s*"[^"]*"/, `logoUrl: "/clients/${slug}/logo${ext}"`)
-        .replace(/faviconUrl:\s*"[^"]*"/, `faviconUrl: "/clients/${slug}/logo${ext}"`)
-        .replace(/primary:\s*"[^"]*"/, `primary: "${p.primary}"`)
-        .replace(/accent:\s*"[^"]*"/, `accent: "${p.accent}"`)
-        .replace(/background:\s*"[^"]*"/, `background: "${p.background}"`)
-        .replace(/foreground:\s*"[^"]*"/, `foreground: "${p.foreground}"`);
-      // Variantes A/B/C para que el cliente elija en /variantes.
-      const variants = `
-  themeVariants: [
-    { id: "a", name: "Fiel al logo", palette: { primary: "${p.primary}", accent: "${p.accent}", background: "${p.background}", foreground: "${p.foreground}" } },
-    { id: "b", name: "Acento protagonista", palette: { primary: "${rgbToHex(accentAsPrimary.color)}", accent: "${p.primary}", background: "${rgbToHex(hslToRgb(p.accentHsl.h, 0.18, 0.98))}", foreground: "${p.foreground}" } },
-    { id: "c", name: "Modo oscuro", palette: { primary: "${rgbToHex(darkPrimary.color)}", accent: "${p.accent}", background: "${rgbToHex(darkBg)}", foreground: "#F4F2EF" } },
-  ],
-`;
-      content = content.replace(/\n  seo: \{/, `${variants}\n  seo: {`);
-      paletteBlock = `- Paleta extraída del logo: primary ${p.primary}, accent ${p.accent}${
-        p.primaryAdjusted ? ` (primary oscurecido desde ${p.primaryOriginal} por contraste WCAG)` : ""
-      }\n- Variantes A/B/C generadas — enviar /variantes al cliente para que elija.`;
-    } catch {
-      paletteBlock = "- ⚠ No se pudo extraer paleta del logo (¿blanco y negro?). Elegir a mano.";
-    }
+    const r = applyLogoAndPalette(content, slug, logoPath);
+    content = r.content;
+    paletteBlock = r.note;
   }
 
   writeFileSync(path.join(process.cwd(), "config", "client.config.ts"), content, "utf-8");

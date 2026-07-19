@@ -61,6 +61,30 @@ Setup por cliente (~1 hora + verificación de Meta Business):
   cliente elija "A, B o C" — útil como parte del gancho de venta de la demo. Cada
   variante se puede abrir a pantalla completa en `/variantes/<id>`.
 
+### Fábrica de demos (`npm run demo`)
+
+Una demo de prospección (D0) en un solo comando, sin preguntas:
+
+```bash
+npm run demo -- --name "Corredora García" --rubro "corretaje de propiedades" \
+  --logo https://sitio-del-prospecto.cl/logo.png --whatsapp 56912345678 --deploy
+```
+
+- Preset y layout sugeridos por rubro; logo local o **URL (se descarga solo)**;
+  paleta WCAG + variantes A/B/C; **nombre real del negocio aplicado a TODO el
+  copy del preset** (hero, nosotros, chat, mensajes de WhatsApp) + contacto + SEO.
+- Crea el branch `demo/<slug>` con config + BRIEF y **vuelve al branch original**,
+  lista para encadenar la siguiente demo (batching).
+- `--deploy`: publica en Vercel como `demo-<slug>` con `SITE_NOINDEX=1` automático.
+- Flags: `--name` (obligatorio), `--rubro`, `--logo`, `--whatsapp`, `--phone`,
+  `--email`, `--address`, `--preset`, `--layout`, `--style`, `--deploy`, `--no-branch`.
+- Objetivo de la fábrica: que el costo humano por D0 sea juntar los datos del
+  prospecto (~5–10 min), no armar el sitio. Antes de enviar: mirar la home 30
+  segundos y tocar 1 dato distintivo del prospecto (2 min máx., lo dice el BRIEF).
+- El wizard `npm run new-client` sigue siendo el camino para clientes que
+  compraron (preguntas de contexto, inspiración de competencia, branch `client/`);
+  ambos comparten la misma lógica en `scripts/wizard-core.ts`.
+
 ### Abono de la agenda con Webpay (`booking.depositAmount`)
 
 - Si el config define `booking.depositAmount` (CLP entero), al terminar una

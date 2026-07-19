@@ -12,6 +12,7 @@
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
     "new-client": "tsx scripts/new-client.ts",
+    "demo": "tsx scripts/new-demo.ts",
     "palette": "tsx scripts/palette.ts"
   },
   "dependencies": {
