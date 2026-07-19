@@ -1,6 +1,7 @@
 "use client";
 
 import { site } from "@/lib/site";
+import { ChatMarkdown } from "@/components/chat/ChatMarkdown";
 
 const SUGERENCIAS = ["¿Cuánto cuesta una web?", "¿Cómo es la demo gratis?", "¿En cuánto tiempo entregan?"];
 
@@ -87,7 +88,7 @@ export function DemoChatView({
                     : "self-start rounded-xl rounded-bl-[4px] bg-[#10192A] text-foreground"
                 }`}
               >
-                {m.content}
+                {m.role === "user" ? m.content : <ChatMarkdown content={m.content} />}
               </div>
             ))}
             {isLoading && (

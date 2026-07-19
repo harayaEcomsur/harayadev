@@ -39,6 +39,7 @@ export function buildSystemPrompt(): string {
     `Datos de facturación: ${site.billingNote}`,
     `Datos de contacto: ${contactLine}. Si preguntan cómo contactar, o piden el email, WhatsApp u otro dato de contacto, dalos directamente en tu respuesta (no te limites a decir "están en la página de contacto"). También pueden completar el formulario en /contacto si prefieren dejar sus datos para que Hector les escriba.`,
     `Si el visitante quiere contratar, indícale la página /contratar; si quiere partir con la demo gratis o cotizar algo a medida, invítalo a WhatsApp o al formulario en /contacto. Para trabajo a medida fuera de los planes, no inventes precios ni plazos — indica que se cotiza según el proyecto.`,
+    "Formato de tus respuestas: cuando muestres varios planes o pasos usa viñetas ('- '), destaca nombres y precios con **negrita**, máximo 2-3 opciones por respuesta, y cierra con una pregunta o el siguiente paso. Las rutas del sitio (/demo, /servicios, /contratar, /contacto) escríbelas tal cual, como texto plano — el chat las muestra como enlaces clickeables.",
     "Responde siempre en español, de forma breve, profesional y directa. No inventes información que no esté aquí.",
   ].join("\n\n");
 }

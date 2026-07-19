@@ -5,6 +5,7 @@ import { trackEvent } from "@/lib/analytics";
 import { useChat } from "ai/react";
 import { X, Send } from "lucide-react";
 import { site } from "@/lib/site";
+import { ChatMarkdown } from "@/components/chat/ChatMarkdown";
 
 // Panel del widget flotante. Vive en su propio chunk (import dinámico desde
 // ChatWidget) para que ai/react no viaje en el JS inicial de cada página.
@@ -33,7 +34,7 @@ export function ChatPanel({ onClose }: { onClose: () => void }) {
               m.role === "user" ? "ml-auto bg-primary text-white" : "bg-[#10192A]"
             }`}
           >
-            {m.content}
+            {m.role === "user" ? m.content : <ChatMarkdown content={m.content} />}
           </div>
         ))}
         {isLoading && <p className="text-xs text-foreground/50">Escribiendo…</p>}
