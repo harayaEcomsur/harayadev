@@ -1,7 +1,9 @@
-import { generateText } from "ai";
+import { generateText, type CoreMessage } from "ai";
 import { google } from "@/lib/gemini";
 import { clientConfig } from "@/config/client.config";
 import { buildSystemPrompt } from "@/lib/assistant-prompt";
+import { buildAgendaTools } from "@/lib/chat-tools";
+import { getHistory, appendHistory } from "@/lib/wa-history";
 
 // Webhook de WhatsApp Business Cloud API: el mismo asistente del sitio
 // respondiendo el WhatsApp del negocio (módulo "Asistente IA en tu WhatsApp").
@@ -74,17 +76,24 @@ export async function POST(req: Request) {
     const from: string = message.from;
     const userText: string = message.text.body;
 
+    // Historial corto por número: permite completar el flujo de agendar en
+    // varios mensajes (servicio → hora → nombre) como en el chat del sitio.
+    const history: CoreMessage[] = getHistory(from).map((t) => ({ role: t.role, content: t.content }));
+
     const { text } = await generateText({
       model: google(clientConfig.chat.model),
       system:
         buildSystemPrompt() +
         "\n\nEstás respondiendo por WhatsApp: sé especialmente breve (2-4 frases), sin markdown ni asteriscos. Si el cliente necesita atención humana, dile que alguien del equipo le responderá por este mismo chat.",
-      prompt: userText,
+      messages: [...history, { role: "user", content: userText }],
       maxTokens: clientConfig.chat.maxTokensPerReply,
+      tools: buildAgendaTools(),
+      maxToolRoundtrips: 4,
     });
 
     if (text?.trim()) {
       await sendWhatsAppText(from, text.trim());
+      appendHistory(from, { role: "user", content: userText }, { role: "assistant", content: text.trim() });
     }
   } catch (error) {
     console.error("[whatsapp webhook]", error);

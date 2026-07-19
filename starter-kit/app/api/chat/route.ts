@@ -2,9 +2,13 @@ import { streamText } from "ai";
 import { google } from "@/lib/gemini";
 import { clientConfig } from "@/config/client.config";
 import { buildSystemPrompt } from "@/lib/assistant-prompt";
+import { buildAgendaTools } from "@/lib/chat-tools";
 import { checkRateLimit } from "@/lib/rate-limit";
 
-export const runtime = "edge";
+// nodejs (no edge): las tools de la agenda escriben en el mismo store en
+// memoria (globalThis) que usan /api/agenda y el panel — edge usa otro isolate
+// y las reservas creadas por el chat no se verían.
+export const runtime = "nodejs";
 
 export async function POST(req: Request) {
   if (!process.env.GEMINI_API_KEY) {
@@ -35,6 +39,10 @@ export async function POST(req: Request) {
       system: buildSystemPrompt(),
       messages,
       maxTokens: clientConfig.chat.maxTokensPerReply,
+      // Agenda conversacional: el asistente consulta disponibilidad real y crea
+      // la reserva desde la conversación (tools vacías si el módulo está apagado).
+      tools: buildAgendaTools(),
+      maxToolRoundtrips: 4,
     });
 
     return result.toDataStreamResponse();

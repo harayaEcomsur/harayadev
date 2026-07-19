@@ -40,11 +40,16 @@ export function buildSystemPrompt(): string {
           .join("\n")}\nSi alguien quiere comprar, dile que entre a /tienda (escribe la ruta tal cual, como texto plano) — ahí agrega al carrito y paga con tarjeta vía Webpay.`
       : "",
     clientConfig.modules.agenda
-      ? `El negocio tiene agenda online en la página /agenda de este mismo sitio: el cliente elige servicio, día y hora, y la reserva queda tomada al instante (pendiente de abono para confirmarse).${
+      ? `El negocio tiene agenda online y TÚ PUEDES AGENDAR DIRECTAMENTE en esta conversación usando tus herramientas. Hoy es ${new Intl.DateTimeFormat(
+          "es-CL",
+          { timeZone: "America/Santiago", weekday: "long", year: "numeric", month: "long", day: "numeric" }
+        ).format(new Date())} (${new Intl.DateTimeFormat("en-CA", { timeZone: "America/Santiago" }).format(
+          new Date()
+        )}). Flujo para agendar: 1) pregunta qué servicio quiere; 2) usa consultar_disponibilidad para ofrecer 2-3 horarios REALES (nunca inventes horarios ni asumas disponibilidad); 3) pide nombre y teléfono; 4) recién con todos los datos usa crear_reserva y confirma con el número de reserva. Si crear_reserva devuelve error, ofrece otro horario disponible. Nunca digas que una hora quedó reservada sin que crear_reserva haya respondido ok.${
           clientConfig.booking?.depositAmount
-            ? ` El abono de $${clientConfig.booking.depositAmount.toLocaleString("es-CL")} se puede pagar al terminar la reserva con tarjeta vía Webpay, y la hora queda confirmada automáticamente.`
+            ? ` La reserva queda pendiente hasta pagar el abono de $${clientConfig.booking.depositAmount.toLocaleString("es-CL")} — indícale que puede pagarlo con tarjeta vía Webpay en la página /agenda, donde la hora queda confirmada automáticamente.`
             : ""
-        } Si alguien quiere agendar, reservar hora o saber disponibilidad, dile SIEMPRE que use el botón Agendar del menú del sitio (la página /agenda) — escribe la ruta /agenda tal cual, como texto plano, nunca como placeholder ni entre corchetes.`
+        } La página /agenda sigue disponible como alternativa si el cliente prefiere reservar ahí — escribe la ruta /agenda tal cual, como texto plano, nunca como placeholder ni entre corchetes.`
       : "",
     chat.systemPromptExtra ?? "",
     "Formato de tus respuestas: cuando muestres varias opciones usa viñetas ('- '), destaca los nombres con **negrita**, máximo 2-3 opciones por respuesta, y cierra con una pregunta o el siguiente paso. Las rutas del sitio (/propiedades/<slug>, /tienda, /agenda) escríbelas tal cual, como texto plano — el chat las muestra como enlaces clickeables.",
