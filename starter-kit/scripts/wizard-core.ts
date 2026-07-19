@@ -32,10 +32,11 @@ export function suggestLayout(rubro: string): "inmobiliaria" | "corporativo" | "
 
 export function suggestPreset(rubro: string): string {
   const r = rubro.toLowerCase();
+  if (/(inmobili|propiedad|corretaje|corredor)/.test(r)) return "inmobiliaria";
   if (/(restauran|comida|food|cafe|café|pasteler|panader|sushi|pizz|brownie|dulce|tienda|almacen|almacén)/.test(r))
     return "restaurante";
   if (/(barber|peluquer|estetic|estétic|salon|salón|spa|manicur|uñas|nails)/.test(r)) return "barberia";
-  if (/(abogad|jurid|juríd|contab|contador|consultor|inmobili|propiedad)/.test(r)) return "profesional";
+  if (/(abogad|jurid|juríd|contab|contador|consultor)/.test(r)) return "profesional";
   return "_template";
 }
 
