@@ -3,6 +3,7 @@
 import { useChat } from "ai/react";
 import { useState } from "react";
 import { MessageCircle, X, Send } from "lucide-react";
+import { ChatMarkdown } from "./ChatMarkdown";
 
 export function ChatWidget({ businessName, stacked }: { businessName: string; stacked?: boolean }) {
   const [open, setOpen] = useState(false);
@@ -27,7 +28,7 @@ export function ChatWidget({ businessName, stacked }: { businessName: string; st
                   m.role === "user" ? "ml-auto bg-primary text-white" : "bg-black/5"
                 }`}
               >
-                {m.content}
+                {m.role === "user" ? m.content : <ChatMarkdown content={m.content} />}
               </div>
             ))}
             {isLoading && <p className="text-xs text-foreground/50">Escribiendo…</p>}
@@ -49,7 +50,7 @@ export function ChatWidget({ businessName, stacked }: { businessName: string; st
       <button
         onClick={() => setOpen((v) => !v)}
         aria-label={open ? "Cerrar chat" : "Abrir chat"}
-        className="flex h-14 w-14 items-center justify-center rounded-full bg-primary text-white shadow-lg transition-transform hover:scale-105"
+        className="flex h-14 w-14 items-center justify-center rounded-full bg-primary text-white shadow-lg transition-transform active:scale-95"
       >
         {open ? <X size={24} /> : <MessageCircle size={24} />}
       </button>

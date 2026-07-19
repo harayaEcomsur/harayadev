@@ -47,6 +47,7 @@ export function buildSystemPrompt(): string {
         } Si alguien quiere agendar, reservar hora o saber disponibilidad, dile SIEMPRE que use el botón Agendar del menú del sitio (la página /agenda) — escribe la ruta /agenda tal cual, como texto plano, nunca como placeholder ni entre corchetes.`
       : "",
     chat.systemPromptExtra ?? "",
+    "Formato de tus respuestas: cuando muestres varias opciones usa viñetas ('- '), destaca los nombres con **negrita**, máximo 2-3 opciones por respuesta, y cierra con una pregunta o el siguiente paso. Las rutas del sitio (/propiedades/<slug>, /tienda, /agenda) escríbelas tal cual, como texto plano — el chat las muestra como enlaces clickeables.",
     "Responde siempre en español, de forma breve, cálida y profesional. No inventes información que no esté aquí.",
   ]
     .filter(Boolean)
