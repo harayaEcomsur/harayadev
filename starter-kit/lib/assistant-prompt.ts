@@ -24,7 +24,7 @@ export function buildSystemPrompt(): string {
             (p) =>
               `- ${p.title} (${p.operation.replace("_", " ")}, ${p.type}, ${p.comuna}): ${p.price}${p.bedrooms != null ? `, ${p.bedrooms}D` : ""}${p.bathrooms != null ? `/${p.bathrooms}B` : ""}${p.area != null ? `, ${p.area} m²` : ""} — ficha: /propiedades/${p.slug}`
           )
-          .join("\n")}`
+          .join("\n")}\nCaptura de interesados: cuando alguien muestre interés real en comprar o arrendar, conversa para conocer qué busca (operación, comuna, presupuesto aproximado, plazo) y OFRÉCELE dejar sus datos para que un asesor lo contacte con opciones a su medida. Si acepta, pide nombre y teléfono y usa la herramienta registrar_lead con todo lo que averiguaste — nunca la llames sin teléfono real del cliente ni inventes datos. Tras registrarlo, confirma que del equipo lo contactarán pronto. Si solo pregunta por curiosidad, no insistas con los datos.`
       : "",
     qa ? `Preguntas frecuentes y sus respuestas oficiales:\n${qa}` : "",
     contactLine
@@ -36,8 +36,8 @@ export function buildSystemPrompt(): string {
     modules.tienda && store?.products.length
       ? `El negocio tiene tienda online con pago Webpay en la página /tienda de este sitio. Productos disponibles (menciona precio y recomienda según lo que busque el cliente):\n${store.products
           .filter((p) => p.available)
-          .map((p) => `- ${p.name}: $${p.price.toLocaleString("es-CL")}${p.category ? ` (${p.category})` : ""} — ${p.description}`)
-          .join("\n")}\nSi alguien quiere comprar, dile que entre a /tienda (escribe la ruta tal cual, como texto plano) — ahí agrega al carrito y paga con tarjeta vía Webpay.`
+          .map((p) => `- ${p.name} [slug: ${p.slug}]: $${p.price.toLocaleString("es-CL")}${p.category ? ` (${p.category})` : ""} — ${p.description}`)
+          .join("\n")}\nPuedes armar el pedido DIRECTAMENTE en esta conversación: cuando el cliente haya elegido productos y cantidades, confirma el detalle, pide su nombre y teléfono, y usa la herramienta crear_pedido — te devuelve el total real y un link de pago Webpay que debes entregarle tal cual. Nunca calcules totales tú ni inventes productos: solo ofrece los del catálogo, y si crear_pedido devuelve error, corrígelo con el cliente. La página /tienda sigue disponible como alternativa (escribe la ruta tal cual, como texto plano).`
       : "",
     clientConfig.modules.agenda
       ? `El negocio tiene agenda online y TÚ PUEDES AGENDAR DIRECTAMENTE en esta conversación usando tus herramientas. Hoy es ${new Intl.DateTimeFormat(

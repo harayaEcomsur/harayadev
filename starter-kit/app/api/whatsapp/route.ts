@@ -3,6 +3,9 @@ import { google } from "@/lib/gemini";
 import { clientConfig } from "@/config/client.config";
 import { buildSystemPrompt } from "@/lib/assistant-prompt";
 import { buildAgendaTools } from "@/lib/chat-tools";
+import { buildLeadTools } from "@/lib/lead-tools";
+import { buildStoreTools } from "@/lib/store-tools";
+import { logChat } from "@/lib/chat-log";
 import { getHistory, appendHistory } from "@/lib/wa-history";
 
 // Webhook de WhatsApp Business Cloud API: el mismo asistente del sitio
@@ -87,13 +90,14 @@ export async function POST(req: Request) {
         "\n\nEstás respondiendo por WhatsApp: sé especialmente breve (2-4 frases), sin markdown ni asteriscos. Si el cliente necesita atención humana, dile que alguien del equipo le responderá por este mismo chat.",
       messages: [...history, { role: "user", content: userText }],
       maxTokens: clientConfig.chat.maxTokensPerReply,
-      tools: buildAgendaTools(),
+      tools: { ...buildAgendaTools(), ...buildLeadTools(), ...buildStoreTools() },
       maxToolRoundtrips: 4,
     });
 
     if (text?.trim()) {
       await sendWhatsAppText(from, text.trim());
       appendHistory(from, { role: "user", content: userText }, { role: "assistant", content: text.trim() });
+      logChat({ canal: "whatsapp", userText, assistantText: text.trim() });
     }
   } catch (error) {
     console.error("[whatsapp webhook]", error);

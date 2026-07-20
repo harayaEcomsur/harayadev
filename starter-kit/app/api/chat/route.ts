@@ -3,6 +3,9 @@ import { google } from "@/lib/gemini";
 import { clientConfig } from "@/config/client.config";
 import { buildSystemPrompt } from "@/lib/assistant-prompt";
 import { buildAgendaTools } from "@/lib/chat-tools";
+import { buildLeadTools } from "@/lib/lead-tools";
+import { buildStoreTools } from "@/lib/store-tools";
+import { logChat } from "@/lib/chat-log";
 import { checkRateLimit } from "@/lib/rate-limit";
 
 // nodejs (no edge): las tools de la agenda escriben en el mismo store en
@@ -39,10 +42,17 @@ export async function POST(req: Request) {
       system: buildSystemPrompt(),
       messages,
       maxTokens: clientConfig.chat.maxTokensPerReply,
-      // Agenda conversacional: el asistente consulta disponibilidad real y crea
-      // la reserva desde la conversación (tools vacías si el módulo está apagado).
-      tools: buildAgendaTools(),
+      // Tools conversacionales según módulos activos: agenda (reservar), leads
+      // inmobiliarios (registrar interesado) y tienda (pedido + link Webpay).
+      tools: { ...buildAgendaTools(), ...buildLeadTools(), ...buildStoreTools() },
       maxToolRoundtrips: 4,
+      // Registro para el resumen diario al dueño (/api/resumen).
+      onFinish({ text }) {
+        const lastUser = [...messages].reverse().find((m: { role: string }) => m.role === "user");
+        if (lastUser?.content && text) {
+          logChat({ canal: "web", userText: String(lastUser.content), assistantText: text });
+        }
+      },
     });
 
     return result.toDataStreamResponse();

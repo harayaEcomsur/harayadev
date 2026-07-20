@@ -120,6 +120,44 @@ Variables de entorno (`.env.local`, ver `.env.example`):
 - `TBK_ENV=produccion` + `TBK_COMMERCE_CODE` + `TBK_API_KEY` — solo para cobrar de
   verdad con Webpay (requiere código de comercio validado por Transbank); sin
   ellas el módulo tienda usa el ambiente de integración.
+- `CRON_SECRET` — protege el resumen diario (`/api/resumen`); lo manda Vercel Cron.
+
+### El asistente actúa, no solo responde (tools)
+
+El asistente del sitio (y el de WhatsApp: mismo cerebro) no deriva a una página
+— resuelve dentro de la conversación. Las herramientas se activan solas según
+los módulos encendidos en el config:
+
+| Módulo | Herramientas | Qué hace el asistente |
+|---|---|---|
+| `agenda` | `consultar_disponibilidad`, `crear_reserva` | Ofrece horarios reales y toma la hora; si hay `depositAmount`, indica el abono |
+| `propiedades` | `registrar_lead` | Conversa, califica (operación, comuna, presupuesto, plazo) y avisa al dueño con link para escribirle al interesado |
+| `tienda` | `crear_pedido` | Arma el pedido y entrega el link de pago Webpay |
+
+Reglas del diseño (importantes al modificarlas):
+
+- **La fuente de verdad es el servidor, nunca el modelo**: la disponibilidad la
+  responde el motor de la agenda y los precios salen del catálogo del config.
+  Si el modelo pide un horario tomado o un producto inexistente, la herramienta
+  lo rechaza y le sugiere alternativas válidas.
+- Las reservas creadas conversando pasan por el mismo camino que las del
+  formulario (`lib/booking-actions.ts`), así que los avisos al dueño son iguales.
+- Prueba las herramientas sin gastar cuota del modelo con
+  `npx tsx scripts/test-tools.ts` (las ejecuta directamente contra el config activo).
+
+### Resumen diario al dueño (`/api/resumen`)
+
+Una vez al día, un cron le manda al dueño por WhatsApp y email un resumen de lo
+que hizo el asistente: cuántas conversaciones atendió, los temas repetidos,
+quiénes dejaron sus datos y las reservas nuevas. Sin paneles: el dueño se entera
+en el mismo lugar donde ya trabaja.
+
+- Lo dispara `vercel.json` (23:00 UTC). En una demo se puede llamar a mano con
+  `/api/resumen?clave=<AGENDA_ADMIN_KEY>`.
+- Sin actividad en las últimas 24 h no llama al modelo ni envía nada.
+- Los destinos son los mismos de la agenda (`booking.ownerNotifyEmail` /
+  `ownerNotifyWhatsapp`, o `BOOKINGS_NOTIFY_EMAIL`); el envío por Cloud API
+  requiere `NOTIFY_WA_TOKEN` + `NOTIFY_WA_PHONE_ID`.
 
 ## Flujo de trabajo por cliente
 

@@ -20,40 +20,53 @@ const EMPTY_PARTS_ERROR = /candidates[\s\S]*content[\s\S]*parts|Type validation 
 
 type ToolResultLike = { toolName?: string; result?: unknown };
 
-// Busca en los params del turno el último resultado de crear_reserva exitoso,
-// para poder redactar la confirmación determinista si el modelo enmudece.
-function lastBookingResult(params: { prompt?: unknown }): {
-  id: string;
-  dia?: string;
-  hora?: string;
-  abonoNota?: string;
-} | null {
+// Último resultado de tool del turno, para redactar una salida determinista si
+// el modelo enmudece (turno vacío) después de ejecutarla.
+function lastToolResult(params: { prompt?: unknown }): ToolResultLike | null {
   const prompt = params.prompt;
   if (!Array.isArray(prompt)) return null;
   for (let i = prompt.length - 1; i >= 0; i--) {
     const msg = prompt[i] as { role?: string; content?: unknown };
     if (msg?.role !== "tool" || !Array.isArray(msg.content)) continue;
-    for (const part of msg.content as ToolResultLike[]) {
-      if (part?.toolName !== "crear_reserva") continue;
-      const r = part.result as {
-        ok?: boolean;
-        reserva?: { id?: string; dia?: string; hora?: string };
-        abono?: { nota?: string } | null;
-      };
-      if (r?.ok && r.reserva?.id) {
-        return { id: r.reserva.id, dia: r.reserva.dia, hora: r.reserva.hora, abonoNota: r.abono?.nota };
-      }
+    const parts = msg.content as ToolResultLike[];
+    for (let j = parts.length - 1; j >= 0; j--) {
+      if (parts[j]?.toolName) return parts[j];
     }
   }
   return null;
 }
 
+// Texto de respaldo construido SOLO desde el resultado real de la tool — nunca
+// inventado. Los mensajes de error de nuestras tools ya están redactados para
+// el cliente final, así que se entregan tal cual.
 function fallbackText(params: { prompt?: unknown }): string | null {
-  const booking = lastBookingResult(params);
-  if (!booking) return null;
-  const cuando = booking.dia && booking.hora ? ` para el ${booking.dia} a las ${booking.hora}` : "";
-  const abono = booking.abonoNota ? ` ${booking.abonoNota}` : "";
-  return `¡Listo! Tu reserva${cuando} quedó tomada con el número ${booking.id}.${abono}`;
+  const part = lastToolResult(params);
+  if (!part) return null;
+  const r = part.result as Record<string, unknown> | undefined;
+  if (!r) return null;
+
+  if (typeof r.error === "string" && r.error) return r.error;
+
+  if (part.toolName === "crear_reserva" && r.ok) {
+    const reserva = r.reserva as { id?: string; dia?: string; hora?: string } | undefined;
+    const abono = r.abono as { nota?: string } | null | undefined;
+    if (!reserva?.id) return null;
+    const cuando = reserva.dia && reserva.hora ? ` para el ${reserva.dia} a las ${reserva.hora}` : "";
+    return `¡Listo! Tu reserva${cuando} quedó tomada con el número ${reserva.id}.${abono?.nota ? ` ${abono.nota}` : ""}`;
+  }
+
+  if (part.toolName === "crear_pedido" && r.ok) {
+    const total = typeof r.totalFormateado === "string" ? r.totalFormateado : "";
+    const link = typeof r.linkPago === "string" ? r.linkPago : "";
+    if (!link) return null;
+    return `¡Pedido ${r.pedidoId ?? ""} creado!${total ? ` Total: ${total}.` : ""} Paga con tarjeta aquí: ${link}`;
+  }
+
+  if (part.toolName === "registrar_lead" && r.ok) {
+    return "¡Listo! Dejé tus datos registrados — del equipo te contactarán pronto con opciones a tu medida. ¿Te ayudo con algo más?";
+  }
+
+  return null;
 }
 
 function tolerantModel(model: LanguageModelV1): LanguageModelV1 {
