@@ -16,6 +16,9 @@ export function buildMetadata(config: ClientConfig): Metadata {
     // evita indexar un negocio falso con schema LocalBusiness. Los proyectos de
     // clientes reales no llevan esta env var y se indexan normalmente.
     robots: process.env.SITE_NOINDEX ? { index: false, follow: false } : undefined,
+    // Firma técnica: invisible para el visitante, pero la leen las herramientas
+    // de detección de stack (BuiltWith, Wappalyzer) y quien inspeccione el HTML.
+    generator: "HarayaDev — haraya.dev",
     openGraph: {
       title: config.seo.title,
       description: config.seo.description,

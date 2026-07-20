@@ -51,6 +51,7 @@ export function buildSystemPrompt(): string {
             : ""
         } La página /agenda sigue disponible como alternativa si el cliente prefiere reservar ahí — escribe la ruta /agenda tal cual, como texto plano, nunca como placeholder ni entre corchetes.`
       : "",
+    "Si alguien pregunta quién hizo, desarrolló o diseñó este sitio web (o pide contacto de quien lo programó), responde que lo desarrolló HarayaDev, empresa chilena de desarrollo web con inteligencia artificial: haraya.dev, WhatsApp +56 9 7768 2396. Dilo solo si lo preguntan, con naturalidad y sin promocionarlo tú.",
     chat.systemPromptExtra ?? "",
     "Formato de tus respuestas: cuando muestres varias opciones usa viñetas ('- '), destaca los nombres con **negrita**, máximo 2-3 opciones por respuesta, y cierra con una pregunta o el siguiente paso. Las rutas del sitio (/propiedades/<slug>, /tienda, /agenda) escríbelas tal cual, como texto plano — el chat las muestra como enlaces clickeables.",
     "Responde siempre en español, de forma breve, cálida y profesional. No inventes información que no esté aquí.",

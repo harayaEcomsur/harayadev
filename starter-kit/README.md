@@ -124,6 +124,26 @@ Variables de entorno (`.env.local`, ver `.env.example`):
 - `DATABASE_URL` — Postgres (Neon). Opcional en demos, **obligatoria en clientes
   reales**: ver abajo.
 
+### Cómo nos encuentra alguien que ve un sitio de cliente
+
+Tres capas, pensadas para que el crédito nunca contradiga el argumento de venta
+("el sitio es tuyo"). Ojo con la diferencia: *"Powered by"* dice que el sitio
+CORRE en una plataforma ajena — eso es lo que hacen Wix o Wasi y es justo lo que
+criticamos. *"Sitio por"* dice autoría, como la firma de un arquitecto: no
+implica que el sitio dependa de nosotros para funcionar.
+
+| Quién mira | Dónde lo ve | Estado |
+|---|---|---|
+| Un dueño de pyme curioso | "Sitio por HarayaDev" en el pie | `branding.credit: true` — **apagado por defecto**, se enciende cuando el cliente lo aprueba |
+| Cualquiera que use el chat | Le pregunta al asistente "¿quién hizo este sitio?" y responde con haraya.dev y el WhatsApp | Siempre |
+| Un desarrollador | `<meta name="generator">` en el HTML | Siempre |
+
+En las demos (`SITE_NOINDEX` activo) el crédito del pie se muestra siempre: son
+nuestras. Cómo pedírselo al cliente: es una decisión suya y conviene ofrecer algo
+a cambio (por ejemplo, descuento en la mantención). A muchos les acomoda, porque
+un sitio firmado demuestra que hay una empresa real detrás y no alguien que
+desaparece.
+
 ### Persistencia: demos en memoria, clientes en Postgres
 
 El template funciona con o sin base de datos y elige solo según `DATABASE_URL`:

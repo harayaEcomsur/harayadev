@@ -42,6 +42,11 @@ export const clientConfigSchema = z.object({
     // y "corporativo" (banda sobria, áreas numeradas, estilo estudio de
     // abogados/consultora).
     layout: z.enum(["clasico", "inmobiliaria", "corporativo"]).default("clasico"),
+    // Crédito de autoría en el pie ("Sitio por HarayaDev"). Es autoría, no
+    // dependencia: el sitio es del cliente y sigue funcionando igual sin esto.
+    // Por eso viene APAGADO por defecto — se enciende cuando el cliente lo
+    // aprueba. En las demos va siempre encendido (son nuestras).
+    credit: z.boolean().default(false),
   }),
 
   hero: z.object({
