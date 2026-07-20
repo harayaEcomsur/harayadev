@@ -142,12 +142,21 @@ panel del dueño, el asistente de WhatsApp olvida la conversación a mitad de
 camino, y el resumen diario no ve nada. Para una demo eso da lo mismo; para un
 cliente real es inaceptable.
 
-Conectar Neon (5 minutos, tiene capa gratuita):
+Sirve cualquier Postgres — **Neon y Supabase funcionan sin tocar código**, solo
+cambia el connection string. Conectar (5 minutos, ambos tienen capa gratuita):
 
-1. Crear un proyecto en [neon.tech](https://neon.tech) (región recomendada: la
-   más cercana al despliegue).
-2. Copiar el connection string **pooled** (el que incluye `-pooler`).
+1. Crear el proyecto en [neon.tech](https://neon.tech) o
+   [supabase.com](https://supabase.com), en la región más cercana al despliegue.
+2. Copiar el connection string **pooled**: en Neon el que incluye `-pooler`; en
+   Supabase el del puerto `6543` (Transaction pooler). El cliente detecta ambos
+   y desactiva los prepared statements, que PgBouncer no soporta.
 3. `vercel env add DATABASE_URL` en el proyecto del cliente y volver a desplegar.
+
+Cuál conviene: **Supabase** si vas a necesitar además guardar imágenes (su
+Storage sirve para que el dueño actualice fotos por WhatsApp) o login real para
+el panel; ojo con que su capa gratuita **pausa los proyectos inactivos**, lo que
+para un sitio con poco tráfico significa caídas. **Neon** si quieres solo la base
+con ramas por cliente y que despierte sola tras la inactividad.
 
 Las tablas se crean solas en el primer request: no hay paso de migración. Para
 verificar la base antes de entregar el sitio:

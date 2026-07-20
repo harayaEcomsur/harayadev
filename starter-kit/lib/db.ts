@@ -19,15 +19,21 @@ export function hasDb(): boolean {
 export function db() {
   if (!process.env.DATABASE_URL) throw new Error("DATABASE_URL no está definida");
   if (!client) {
-    client = postgres(process.env.DATABASE_URL, {
+    const url = process.env.DATABASE_URL;
+    const local = url.includes("localhost") || url.includes("127.0.0.1");
+    // Los connection strings "pooled" (PgBouncer en modo transacción) no
+    // soportan prepared statements: Neon los marca con "-pooler" y Supabase con
+    // el puerto 6543. Sin esto, las consultas fallan con un error confuso.
+    const pooled = url.includes("-pooler") || url.includes(":6543") || url.includes("pgbouncer=true");
+
+    client = postgres(url, {
       // Una conexión por isolate: en serverless no hay proceso largo que reutilizar.
       max: 1,
       idle_timeout: 20,
       connect_timeout: 10,
-      // Neon exige TLS; en Postgres local (docker) no hay certificado.
-      ssl: process.env.DATABASE_URL.includes("localhost") || process.env.DATABASE_URL.includes("127.0.0.1")
-        ? false
-        : "require",
+      prepare: !pooled,
+      // Neon y Supabase exigen TLS; en Postgres local (docker) no hay certificado.
+      ssl: local ? false : "require",
       onnotice: () => {},
     });
   }
