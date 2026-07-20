@@ -46,7 +46,7 @@ async function main() {
     });
     console.log(JSON.stringify(ok, null, 2));
     console.log("esperado total: 14990*2 + 3990 =", 14990 * 2 + 3990);
-    console.log("pedidos en el store:", listOrders().length);
+    console.log("pedidos en el store:", (await listOrders()).length);
   } else {
     console.log("\n(módulo tienda apagado en el config activo)");
   }
@@ -63,7 +63,8 @@ async function main() {
         plazo: "3 meses",
       })
     );
-    console.log("leads en el store:", listLeads().length, JSON.stringify(listLeads()[0] ?? null));
+    const leadsGuardados = await listLeads();
+    console.log("leads en el store:", leadsGuardados.length, JSON.stringify(leadsGuardados[0] ?? null));
   } else {
     console.log("\n(módulo propiedades apagado en el config activo)");
   }

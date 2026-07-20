@@ -31,9 +31,9 @@ export async function GET(req: Request) {
   if (!isAuthorized(req)) return Response.json({ error: "No autorizado" }, { status: 401 });
 
   try {
-    const chats = recentChats(24);
+    const chats = await recentChats(24);
     const since = Date.now() - 24 * 60 * 60 * 1000;
-    const bookings = listBookings().filter((b) => {
+    const bookings = (await listBookings()).filter((b) => {
       const created = Date.parse(b.createdAt);
       return Number.isFinite(created) && created >= since;
     });

@@ -108,9 +108,9 @@ npm run demo -- --name "Corredora García" --rubro "corretaje de propiedades" \
   4051 8856 0044 6623, CVV 123, cualquier fecha (RUT 11.111.111-1, clave 123).
 - Los precios siempre se resuelven en el servidor desde el config; el cliente
   solo envía slugs y cantidades.
-- Pedidos en memoria (mismo patrón MVP que la agenda): la página de confirmación
-  lee el resultado desde la URL de retorno, así que funciona aunque el store
-  viva en otro isolate serverless. En producción se respalda en Postgres.
+- Los pedidos se guardan en Postgres si hay `DATABASE_URL` (ver Persistencia);
+  además la página de confirmación lee el resultado desde la URL de retorno, así
+  que muestra el pago correcto aunque el servidor que responde sea otro.
 
 Variables de entorno (`.env.local`, ver `.env.example`):
 
@@ -121,6 +121,38 @@ Variables de entorno (`.env.local`, ver `.env.example`):
   verdad con Webpay (requiere código de comercio validado por Transbank); sin
   ellas el módulo tienda usa el ambiente de integración.
 - `CRON_SECRET` — protege el resumen diario (`/api/resumen`); lo manda Vercel Cron.
+- `DATABASE_URL` — Postgres (Neon). Opcional en demos, **obligatoria en clientes
+  reales**: ver abajo.
+
+### Persistencia: demos en memoria, clientes en Postgres
+
+El template funciona con o sin base de datos y elige solo según `DATABASE_URL`:
+
+| | Sin `DATABASE_URL` | Con `DATABASE_URL` |
+|---|---|---|
+| Dónde viven reservas, pedidos, leads y conversaciones | Memoria del servidor | Postgres |
+| Datos de ejemplo en el panel | Sí (la demo nunca se ve vacía) | No (jamás datos falsos en un negocio real) |
+| Sobreviven a un reinicio | No | Sí |
+| Los ve cualquier servidor | No | Sí |
+| Para qué sirve | Demos D0 (cero configuración) | Cliente pagando |
+
+**Por qué importa**: en Vercel cada request puede caer en un servidor distinto.
+Sin base de datos, una reserva tomada por el asistente puede no aparecer en el
+panel del dueño, el asistente de WhatsApp olvida la conversación a mitad de
+camino, y el resumen diario no ve nada. Para una demo eso da lo mismo; para un
+cliente real es inaceptable.
+
+Conectar Neon (5 minutos, tiene capa gratuita):
+
+1. Crear un proyecto en [neon.tech](https://neon.tech) (región recomendada: la
+   más cercana al despliegue).
+2. Copiar el connection string **pooled** (el que incluye `-pooler`).
+3. `vercel env add DATABASE_URL` en el proyecto del cliente y volver a desplegar.
+
+Las tablas se crean solas en el primer request: no hay paso de migración. Para
+verificar la base antes de entregar el sitio:
+`DATABASE_URL=... npx tsx scripts/test-db.ts` (12 comprobaciones, incluida que
+dos personas no puedan tomar la misma hora).
 
 ### El asistente actúa, no solo responde (tools)
 

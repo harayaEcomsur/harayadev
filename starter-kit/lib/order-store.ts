@@ -1,10 +1,11 @@
+import { db, jsonb, withDb } from "@/lib/db";
+
 // Almacén de pedidos del módulo tienda.
 //
-// DEMO/MVP: en memoria (globalThis), igual que booking-store — suficiente para
-// mostrar el flujo completo (carrito → Webpay → confirmación → panel). En
-// producción este módulo se respalda en Postgres (Neon) reemplazando solo estas
-// funciones; por eso la página de confirmación también lee los datos del pago
-// desde la URL de retorno y no depende únicamente de esta memoria.
+// Con DATABASE_URL (Neon) los pedidos se guardan en Postgres — un pedido pagado
+// no puede perderse. Sin DATABASE_URL vive en memoria (globalThis), suficiente
+// para demos. Ver lib/db.ts. La página de confirmación además lee los datos del
+// pago desde la URL de retorno, así que no depende solo de este almacén.
 
 export interface OrderItem {
   slug: string;
@@ -31,7 +32,20 @@ function store(): { orders: Order[] } {
   return g.__orderStore;
 }
 
-export function createOrder(data: Pick<Order, "items" | "total" | "buyer">): Order {
+function rowToOrder(r: Record<string, unknown>): Order {
+  return {
+    id: String(r.id),
+    items: (r.items as OrderItem[]) ?? [],
+    total: Number(r.total),
+    buyer: r.buyer as Order["buyer"],
+    status: r.status as Order["status"],
+    authorizationCode: (r.authorization_code as string | null) ?? undefined,
+    cardLast4: (r.card_last4 as string | null) ?? undefined,
+    createdAt: new Date(r.created_at as string).toISOString(),
+  };
+}
+
+export async function createOrder(data: Pick<Order, "items" | "total" | "buyer">): Promise<Order> {
   const order: Order = {
     ...data,
     // Alfanumérico corto: Webpay exige buy_order de máx. 26 caracteres.
@@ -39,26 +53,68 @@ export function createOrder(data: Pick<Order, "items" | "total" | "buyer">): Ord
     status: "pendiente_pago",
     createdAt: new Date().toISOString(),
   };
-  store().orders.push(order);
-  return order;
+
+  return withDb(
+    async () => {
+      const sql = db();
+      await sql`
+        INSERT INTO orders (id, items, total, buyer, status, created_at)
+        VALUES (${order.id}, ${jsonb(order.items)}, ${order.total},
+                ${jsonb(order.buyer)}, ${order.status}, ${order.createdAt})
+      `;
+      return order;
+    },
+    () => {
+      store().orders.push(order);
+      return order;
+    }
+  );
 }
 
-export function getOrder(id: string): Order | undefined {
-  return store().orders.find((o) => o.id === id);
+export async function getOrder(id: string): Promise<Order | undefined> {
+  return withDb(
+    async () => {
+      const sql = db();
+      const rows = await sql`SELECT * FROM orders WHERE id = ${id} LIMIT 1`;
+      return rows[0] ? rowToOrder(rows[0] as Record<string, unknown>) : undefined;
+    },
+    () => store().orders.find((o) => o.id === id)
+  );
 }
 
-export function setOrderResult(
+export async function setOrderResult(
   id: string,
   status: Order["status"],
   detail?: { authorizationCode?: string; cardLast4?: string }
-): void {
-  const o = getOrder(id);
-  if (!o) return;
-  o.status = status;
-  if (detail?.authorizationCode) o.authorizationCode = detail.authorizationCode;
-  if (detail?.cardLast4) o.cardLast4 = detail.cardLast4;
+): Promise<void> {
+  await withDb(
+    async () => {
+      const sql = db();
+      await sql`
+        UPDATE orders SET
+          status = ${status},
+          authorization_code = COALESCE(${detail?.authorizationCode ?? null}, authorization_code),
+          card_last4 = COALESCE(${detail?.cardLast4 ?? null}, card_last4)
+        WHERE id = ${id}
+      `;
+    },
+    () => {
+      const o = store().orders.find((x) => x.id === id);
+      if (!o) return;
+      o.status = status;
+      if (detail?.authorizationCode) o.authorizationCode = detail.authorizationCode;
+      if (detail?.cardLast4) o.cardLast4 = detail.cardLast4;
+    }
+  );
 }
 
-export function listOrders(): Order[] {
-  return [...store().orders].sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+export async function listOrders(): Promise<Order[]> {
+  return withDb(
+    async () => {
+      const sql = db();
+      const rows = await sql`SELECT * FROM orders ORDER BY created_at DESC`;
+      return rows.map((r) => rowToOrder(r as Record<string, unknown>));
+    },
+    () => [...store().orders].sort((a, b) => b.createdAt.localeCompare(a.createdAt))
+  );
 }

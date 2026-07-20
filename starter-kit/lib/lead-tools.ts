@@ -90,7 +90,7 @@ export function buildLeadTools(): Record<string, CoreTool> {
       }),
       execute: async (data) => {
         try {
-          const lead = createLead(data);
+          const lead = await createLead(data);
 
           // Avisos al dueño, mismo criterio que la agenda: email siempre que haya
           // destino configurado; WhatsApp por Cloud API solo si hay NOTIFY_WA_TOKEN.

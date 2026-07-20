@@ -31,7 +31,7 @@ async function handle(params: URLSearchParams): Promise<Response> {
       const bookingId = bookingIdFromBuyOrder(result.buy_order);
       if (isApproved(result)) {
         const last4 = result.card_detail?.card_number?.slice(-4) ?? "";
-        setBookingPaid(bookingId, {
+        await setBookingPaid(bookingId, {
           amount: result.amount,
           authorizationCode: result.authorization_code,
           cardLast4: last4,

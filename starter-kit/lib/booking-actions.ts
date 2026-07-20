@@ -72,8 +72,8 @@ export function defaultOwnerWhatsapp(): string | undefined {
   return digits(fromConfig).length >= 8 ? fromConfig : undefined;
 }
 
-export function notifyTargets(): { email?: string; whatsapp?: string } {
-  const n = getNotify();
+export async function notifyTargets(): Promise<{ email?: string; whatsapp?: string }> {
+  const n = await getNotify();
   const whatsapp = n.whatsapp ?? defaultOwnerWhatsapp();
   return {
     email: n.email ?? clientConfig.booking?.ownerNotifyEmail ?? process.env.BOOKINGS_NOTIFY_EMAIL,
@@ -151,13 +151,13 @@ export async function createBookingAndNotify(data: {
   name: string;
   phone: string;
 }): Promise<CreateBookingResult> {
-  const result = createBooking(data);
+  const result = await createBooking(data);
   if ("error" in result) return { ok: false, error: result.error };
 
-  const targets = notifyTargets();
+  const targets = await notifyTargets();
   const summary = bookingSummary(result);
   const emailBody = emailWithWaLinks(summary, result, targets);
-  const quotaOk = consumeNotifyQuota();
+  const quotaOk = await consumeNotifyQuota();
   const [emailSent, whatsappSent] = await Promise.all([
     quotaOk
       ? notifyByEmail(

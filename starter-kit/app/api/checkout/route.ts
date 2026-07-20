@@ -43,7 +43,7 @@ export async function POST(req: Request) {
   }
   const total = items.reduce((n, i) => n + i.price * i.qty, 0);
 
-  const order = createOrder({ items, total, buyer: parsed.data.buyer });
+  const order = await createOrder({ items, total, buyer: parsed.data.buyer });
 
   const origin = process.env.NEXT_PUBLIC_SITE_URL ?? new URL(req.url).origin;
   try {

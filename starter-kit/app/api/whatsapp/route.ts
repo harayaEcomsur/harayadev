@@ -81,7 +81,7 @@ export async function POST(req: Request) {
 
     // Historial corto por número: permite completar el flujo de agendar en
     // varios mensajes (servicio → hora → nombre) como en el chat del sitio.
-    const history: CoreMessage[] = getHistory(from).map((t) => ({ role: t.role, content: t.content }));
+    const history: CoreMessage[] = (await getHistory(from)).map((t) => ({ role: t.role, content: t.content }));
 
     const { text } = await generateText({
       model: google(clientConfig.chat.model),
@@ -96,7 +96,7 @@ export async function POST(req: Request) {
 
     if (text?.trim()) {
       await sendWhatsAppText(from, text.trim());
-      appendHistory(from, { role: "user", content: userText }, { role: "assistant", content: text.trim() });
+      await appendHistory(from, { role: "user", content: userText }, { role: "assistant", content: text.trim() });
       logChat({ canal: "whatsapp", userText, assistantText: text.trim() });
     }
   } catch (error) {

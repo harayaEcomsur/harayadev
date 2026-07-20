@@ -34,7 +34,7 @@ const COPY: Record<string, { title: string; body: string }> = {
   },
 };
 
-export default function PedidoPage({
+export default async function PedidoPage({
   params,
   searchParams,
 }: {
@@ -47,7 +47,7 @@ export default function PedidoPage({
   const estado = searchParams.estado ?? "error";
   const copy = COPY[estado] ?? COPY.error;
   const paid = estado === "pagada";
-  const order = getOrder(params.id);
+  const order = await getOrder(params.id);
   const monto = searchParams.monto ? Number(searchParams.monto) : order?.total;
 
   const wspMessage = encodeURIComponent(

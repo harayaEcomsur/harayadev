@@ -20,11 +20,11 @@ const STATUS_STYLE: Record<string, string> = {
   anulada: "bg-black/5 text-foreground/60",
 };
 
-export default function PedidosAdminPage() {
+export default async function PedidosAdminPage() {
   const { modules } = clientConfig;
   if (!modules.tienda) notFound();
 
-  const orders = listOrders();
+  const orders = (await listOrders());
 
   return (
     <>

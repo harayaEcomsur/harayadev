@@ -33,7 +33,7 @@ const COPY: Record<string, { title: string; body: string }> = {
   },
 };
 
-export default function AbonoPage({
+export default async function AbonoPage({
   params,
   searchParams,
 }: {
@@ -46,7 +46,7 @@ export default function AbonoPage({
   const estado = searchParams.estado ?? "error";
   const copy = COPY[estado] ?? COPY.error;
   const paid = estado === "pagada";
-  const booking = getBooking(params.id);
+  const booking = await getBooking(params.id);
   const monto = searchParams.monto ? Number(searchParams.monto) : booking?.payment?.amount;
 
   const wspMessage = encodeURIComponent(

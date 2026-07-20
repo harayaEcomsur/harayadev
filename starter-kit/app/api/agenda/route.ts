@@ -37,10 +37,10 @@ export async function GET(req: Request) {
   const date = url.searchParams.get("date");
 
   if (isAdmin(req)) {
-    const n = getNotify();
+    const n = await getNotify();
     return Response.json({
-      bookings: listBookings(),
-      blocked: listBlocked(),
+      bookings: await listBookings(),
+      blocked: await listBlocked(),
       notify: {
         email: n.email ?? clientConfig.booking?.ownerNotifyEmail ?? process.env.BOOKINGS_NOTIFY_EMAIL ?? null,
         whatsapp: n.whatsapp ?? defaultOwnerWhatsapp() ?? null,
@@ -50,7 +50,7 @@ export async function GET(req: Request) {
     });
   }
   if (date && /^\d{4}-\d{2}-\d{2}$/.test(date)) {
-    return Response.json({ date, slots: slotsForDate(date) });
+    return Response.json({ date, slots: await slotsForDate(date) });
   }
   return Response.json({ error: "Falta ?date=YYYY-MM-DD" }, { status: 400 });
 }
@@ -101,17 +101,17 @@ export async function PATCH(req: Request) {
   if (!parsed.success) return Response.json({ error: "Datos inválidos" }, { status: 400 });
 
   if (parsed.data.action === "status") {
-    const ok = setBookingStatus(parsed.data.id, parsed.data.status);
+    const ok = await setBookingStatus(parsed.data.id, parsed.data.status);
     return Response.json({ ok });
   }
   if (parsed.data.action === "setNotify") {
-    setNotify({ email: parsed.data.email, whatsapp: parsed.data.whatsapp });
+    await setNotify({ email: parsed.data.email, whatsapp: parsed.data.whatsapp });
     return Response.json({ ok: true });
   }
   if (parsed.data.action === "testNotify") {
-    const targets = notifyTargets();
+    const targets = await notifyTargets();
     const text = `Aviso de prueba de la agenda de ${clientConfig.meta.businessName} — así te llegará cada reserva nueva ✅`;
-    const quotaOk = consumeNotifyQuota();
+    const quotaOk = await consumeNotifyQuota();
     const waMeUrl =
       targets.whatsapp && targets.whatsapp.replace(/\D/g, "").length >= 8
         ? buildWhatsAppLink(targets.whatsapp, text)
@@ -142,5 +142,5 @@ export async function PATCH(req: Request) {
     ]);
     return Response.json({ ok: true, emailSent, whatsappSent, waMeUrl });
   }
-  return Response.json({ ok: true, ...toggleBlocked(parsed.data.key) });
+  return Response.json({ ok: true, ...(await toggleBlocked(parsed.data.key)) });
 }

@@ -20,7 +20,7 @@ export async function POST(req: Request) {
   const parsed = schema.safeParse(body);
   if (!parsed.success) return Response.json({ error: "Datos inválidos" }, { status: 400 });
 
-  const booking = getBooking(parsed.data.id);
+  const booking = await getBooking(parsed.data.id);
   if (!booking) return Response.json({ error: "Reserva no encontrada." }, { status: 404 });
   if (booking.status === "cancelada") {
     return Response.json({ error: "Esa reserva está cancelada." }, { status: 409 });

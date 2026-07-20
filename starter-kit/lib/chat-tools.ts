@@ -70,7 +70,7 @@ export function buildAgendaTools(): Record<string, CoreTool> {
           if (fecha < today) return { error: "Esa fecha ya pasó." };
           if (fecha > addDays(today, daysAhead))
             return { error: `Solo se puede reservar hasta ${daysAhead} días hacia adelante.` };
-          const libres = slotsForDate(fecha)
+          const libres = (await slotsForDate(fecha))
             .filter((s) => s.available)
             .map((s) => s.time);
           return {
@@ -84,7 +84,7 @@ export function buildAgendaTools(): Record<string, CoreTool> {
         const resumen: { fecha: string; dia: string; horasDisponibles: string[] }[] = [];
         for (let i = 1; i <= daysAhead && resumen.length < 5; i++) {
           const d = addDays(today, i);
-          const libres = slotsForDate(d)
+          const libres = (await slotsForDate(d))
             .filter((s) => s.available)
             .map((s) => s.time);
           if (libres.length > 0) resumen.push({ fecha: d, dia: dayLabel(d), horasDisponibles: libres.slice(0, 6) });

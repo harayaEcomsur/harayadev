@@ -14,7 +14,7 @@ export async function GET(req: Request) {
   const clave = new URL(req.url).searchParams.get("clave");
   if (!key || clave !== key) return new Response("No autorizado", { status: 401 });
 
-  return new Response(buildIcsFeed(listBookings()), {
+  return new Response(buildIcsFeed(await listBookings()), {
     headers: {
       "Content-Type": "text/calendar; charset=utf-8",
       "Content-Disposition": `inline; filename="agenda-${clientConfig.meta.slug}.ics"`,

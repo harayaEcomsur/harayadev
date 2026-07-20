@@ -79,7 +79,7 @@ export function buildStoreTools(): Record<string, CoreTool> {
 
         // Mismo shape que el checkout; el email es obligatorio en Order pero el
         // chat puede no tenerlo — se guarda vacío y el contacto queda por teléfono.
-        const order = createOrder({
+        const order = await createOrder({
           items: resolved,
           total,
           buyer: { name: nombre, email: email ?? "", phone: telefono, note: "Pedido creado por el asistente del chat." },
