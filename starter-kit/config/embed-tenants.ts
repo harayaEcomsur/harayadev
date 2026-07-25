@@ -30,7 +30,10 @@ export interface EmbedTenant {
   // omite, el endpoint refleja el Origin (útil en demos); en producción conviene
   // acotarlo al dominio real del cliente.
   allowedOrigins?: string[];
-  // Modelo por tenant (opcional). Por defecto el barato.
+  // Modelo por tenant (opcional). Por defecto gemini-2.5-flash-lite (barato, ok
+  // para conversar). OJO: para tenants con `agenda`/tools de escritura usa
+  // gemini-2.5-flash — el -lite es demasiado débil decidiendo llamar la tool de
+  // reserva (conversa y "confirma" sin ejecutarla). Verificado en vivo.
   model?: string;
   // Agenda conversacional por tenant (opcional). Si está, el asistente puede
   // consultar disponibilidad REAL y crear reservas (nunca inventa horarios). El
@@ -64,7 +67,7 @@ const TENANTS: Record<string, EmbedTenant> = {
       "Ubicación: Villa Alemana (Pje. Brasilia 150).",
     ].join("\n"),
     whatsapp: "56900000000",
-    model: "gemini-2.0-flash",
+    model: "gemini-2.5-flash",
     agenda: {
       services: [
         "Manicure tradicional",
@@ -98,7 +101,12 @@ export function buildEmbedSystemPrompt(t: EmbedTenant): string {
     `Información del negocio (respondé SOLO con esto; no inventes precios, horarios ni servicios que no estén aquí):`,
     t.facts,
     t.agenda
-      ? `Puedes AGENDAR en la conversación: usa consultar_disponibilidad para ver horas libres reales (nunca inventes horarios) y crear_reserva cuando tengas servicio, fecha, hora, nombre y teléfono. Servicios reservables: ${t.agenda.services.join(", ")}.`
+      ? `TÚ PUEDES AGENDAR DIRECTAMENTE en esta conversación usando tus herramientas. Hoy es ${new Intl.DateTimeFormat(
+          "es-CL",
+          { timeZone: "America/Santiago", weekday: "long", year: "numeric", month: "long", day: "numeric" }
+        ).format(new Date())} (${new Intl.DateTimeFormat("en-CA", { timeZone: "America/Santiago" }).format(
+          new Date()
+        )}); resuelve tú las fechas relativas ("el próximo martes") a formato YYYY-MM-DD sin pedírselas al cliente. Flujo: 1) pregunta qué servicio quiere; 2) usa consultar_disponibilidad para ofrecer 2-3 horarios REALES (nunca inventes horarios); 3) pide nombre y teléfono; 4) en cuanto tengas servicio, fecha, hora, nombre y teléfono, llama de inmediato a crear_reserva —no pidas confirmaciones extra ni preguntes si ya consultó disponibilidad, el servidor valida la hora—. Si crear_reserva devuelve error, ofrece otro horario. NUNCA digas que una hora quedó reservada sin que crear_reserva haya respondido ok. Servicios reservables: ${t.agenda.services.join(", ")}.`
       : ``,
     `Cuando la persona quiera comprar, cotizar o que la contacten (y no sea una reserva de agenda): pídele su nombre y su teléfono (y email si lo tiene), y en cuanto te los dé, usa la tool registrar_contacto para avisar al negocio. Nunca inventes esos datos; úsalos tal como los entregó.`,
     t.whatsapp

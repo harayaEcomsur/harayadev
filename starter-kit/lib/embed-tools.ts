@@ -140,7 +140,7 @@ function buildEmbedAgendaTools(t: EmbedTenant): Record<string, CoreTool> {
 
     crear_reserva: tool({
       description:
-        "Crea una reserva REAL. Solo llamar con: servicio, fecha, hora (validada con consultar_disponibilidad), nombre y teléfono reales del cliente. Nunca inventes datos.",
+        "Crea una reserva REAL en la agenda. Llámala de inmediato en cuanto tengas los 5 datos: servicio, fecha (YYYY-MM-DD), hora (HH:mm), nombre y teléfono del cliente. NO necesitas haber llamado antes a consultar_disponibilidad ni pedir confirmaciones extra: el sistema valida la disponibilidad en el servidor y te avisa si la hora no está libre. Nunca inventes datos; úsalos tal como los dio el cliente.",
       parameters: z.object({
         servicio: z.string().min(2).max(120).describe("Servicio pedido, idealmente uno de los del negocio."),
         fecha: z.string().regex(DATE_RE).describe("Fecha YYYY-MM-DD."),
