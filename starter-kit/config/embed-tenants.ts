@@ -30,6 +30,20 @@ export interface EmbedTenant {
   allowedOrigins?: string[];
   // Modelo por tenant (opcional). Por defecto el barato.
   model?: string;
+  // Agenda conversacional por tenant (opcional). Si está, el asistente puede
+  // consultar disponibilidad REAL y crear reservas (nunca inventa horarios). El
+  // motor vive en lib/embed-agenda.ts, aislado del booking-store single-tenant.
+  agenda?: {
+    // Servicios reservables (nombres tal como los ve el cliente).
+    services: string[];
+    // Horario de atención, mismo formato que client.config.contact.hours:
+    // etiquetas como "Lunes a viernes", "Martes a sábado", "Sábado".
+    hours: { day: string; open?: string; close?: string; closed?: boolean }[];
+    // Duración de cada hora reservable en minutos (default 60).
+    slotMinutes?: number;
+    // Cuántos días hacia adelante se puede reservar (default 14).
+    daysAhead?: number;
+  };
 }
 
 const TENANTS: Record<string, EmbedTenant> = {
@@ -49,6 +63,24 @@ const TENANTS: Record<string, EmbedTenant> = {
     ].join("\n"),
     whatsapp: "56900000000",
     model: "gemini-2.0-flash",
+    agenda: {
+      services: [
+        "Manicure tradicional",
+        "Esmaltado permanente",
+        "Kapping",
+        "Soft gel",
+        "Pedicure spa",
+        "Lifting de pestañas",
+        "Extensiones de pestañas",
+      ],
+      hours: [
+        { day: "Martes a sábado", open: "10:00", close: "19:00" },
+        { day: "Domingo", closed: true },
+        { day: "Lunes", closed: true },
+      ],
+      slotMinutes: 60,
+      daysAhead: 14,
+    },
   },
 };
 
@@ -63,7 +95,10 @@ export function buildEmbedSystemPrompt(t: EmbedTenant): string {
     t.description,
     `Información del negocio (respondé SOLO con esto; no inventes precios, horarios ni servicios que no estén aquí):`,
     t.facts,
-    `Cuando la persona quiera reservar, comprar, cotizar o que la contacten: pídele su nombre y su teléfono (y email si lo tiene), y en cuanto te los dé, usa la tool registrar_contacto para avisar al negocio. Nunca inventes esos datos; úsalos tal como los entregó.`,
+    t.agenda
+      ? `Puedes AGENDAR en la conversación: usa consultar_disponibilidad para ver horas libres reales (nunca inventes horarios) y crear_reserva cuando tengas servicio, fecha, hora, nombre y teléfono. Servicios reservables: ${t.agenda.services.join(", ")}.`
+      : ``,
+    `Cuando la persona quiera comprar, cotizar o que la contacten (y no sea una reserva de agenda): pídele su nombre y su teléfono (y email si lo tiene), y en cuanto te los dé, usa la tool registrar_contacto para avisar al negocio. Nunca inventes esos datos; úsalos tal como los entregó.`,
     t.whatsapp
       ? `Si no sabes algo, o si la persona prefiere hablar con una persona ahora, indícale amablemente que escriba por WhatsApp al +${t.whatsapp}.`
       : `Si no sabes algo, indícalo con honestidad y ofrece tomar sus datos con registrar_contacto para que le respondan.`,
