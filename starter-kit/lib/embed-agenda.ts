@@ -1,14 +1,18 @@
+import { db, ensureSchema, hasDb, withDb } from "@/lib/db";
 import type { EmbedTenant } from "@/config/embed-tenants";
 
 // Motor de agenda del asistente EMBEBIBLE, SCOPED POR TENANT.
 //
 // Aislado a propósito del booking-store single-tenant (lib/booking-store.ts, que
-// sirve las demos vivas contra Postgres con índice único global (date,time)):
-// acá NO tocamos ese esquema. El almacén es en memoria por tenant (globalThis,
-// por isolate de Vercel). Persistencia por tenant en Postgres —columna tenant_id
-// + índice único (tenant_id,date,time)— es el siguiente paso antes de un cliente
-// real que pague; para las demos del add-on, memoria por tenant es suficiente y
-// prueba lo esencial: el asistente nunca inventa horarios (verdad de servidor).
+// sirve las demos vivas con la tabla `bookings` e índice único global
+// (date,time)): acá usamos una tabla PROPIA `embed_bookings` con columna
+// tenant_id e índice único (tenant_id,date,time), creada por su propio
+// ensureEmbedSchema —no tocamos db.ts ni el esquema single-tenant—.
+//
+// Con DATABASE_URL las reservas viven en Postgres (persisten entre isolates de
+// Vercel y la base impide que dos personas tomen la misma hora del mismo tenant).
+// Sin DATABASE_URL cae a memoria por tenant (globalThis): las demos del add-on
+// funcionan sin configurar base.
 
 export interface EmbedBooking {
   id: string;
@@ -31,6 +35,43 @@ function bucket(tenantId: string): EmbedBooking[] {
     g.__embedBookings.set(tenantId, arr);
   }
   return arr;
+}
+
+// Esquema propio del embed, colocado con su store. Idempotente y cacheado por
+// isolate. Reusa ensureSchema() para no competir con la creación de las tablas
+// single-tenant, y luego agrega solo la suya.
+let embedSchemaReady: Promise<void> | null = null;
+function ensureEmbedSchema(): Promise<void> {
+  if (!embedSchemaReady) {
+    embedSchemaReady = (async () => {
+      await ensureSchema();
+      const sql = db();
+      await sql`
+        CREATE TABLE IF NOT EXISTS embed_bookings (
+          id TEXT PRIMARY KEY,
+          tenant_id TEXT NOT NULL,
+          service TEXT NOT NULL,
+          date TEXT NOT NULL,
+          time TEXT NOT NULL,
+          name TEXT NOT NULL,
+          phone TEXT NOT NULL,
+          status TEXT NOT NULL,
+          created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+        )
+      `;
+      await sql`CREATE INDEX IF NOT EXISTS embed_bookings_tenant_date_idx ON embed_bookings (tenant_id, date)`;
+      // La unicidad es POR TENANT: la misma hora puede estar tomada en dos
+      // negocios distintos, pero no dos veces en el mismo.
+      await sql`
+        CREATE UNIQUE INDEX IF NOT EXISTS embed_bookings_slot_unico
+        ON embed_bookings (tenant_id, date, time) WHERE status <> 'cancelada'
+      `;
+    })().catch((error) => {
+      embedSchemaReady = null;
+      throw error;
+    });
+  }
+  return embedSchemaReady;
 }
 
 const DAY_NAMES_NORM = ["domingo", "lunes", "martes", "miercoles", "jueves", "viernes", "sabado"];
@@ -66,19 +107,14 @@ function hoursForDate(t: EmbedTenant, date: string): { open: string; close: stri
   return null;
 }
 
-// Grilla de horarios del día con la marca de disponibilidad. Única fuente de
-// verdad: la usan tanto la consulta como la creación de la reserva.
-export function slotsForDate(t: EmbedTenant, date: string): { time: string; available: boolean }[] {
+// Construye la grilla del día a partir del horario del tenant y marca qué horas
+// siguen libres según los `taken`. Pura: la comparten los caminos de base y memoria.
+function buildSlots(t: EmbedTenant, date: string, taken: Set<string>): { time: string; available: boolean }[] {
   const hours = hoursForDate(t, date);
   if (!hours) return [];
   const slotMinutes = t.agenda?.slotMinutes ?? 60;
   const [oh, om] = hours.open.split(":").map(Number);
   const [ch, cm] = hours.close.split(":").map(Number);
-  const taken = new Set(
-    bucket(t.id)
-      .filter((b) => b.date === date)
-      .map((b) => b.time)
-  );
   const slots: { time: string; available: boolean }[] = [];
   for (let m = oh * 60 + om; m + slotMinutes <= ch * 60 + cm; m += slotMinutes) {
     const time = `${String(Math.floor(m / 60)).padStart(2, "0")}:${String(m % 60).padStart(2, "0")}`;
@@ -87,11 +123,28 @@ export function slotsForDate(t: EmbedTenant, date: string): { time: string; avai
   return slots;
 }
 
-export function createBooking(
+// Única fuente de verdad de disponibilidad del tenant: la usan la consulta y la
+// creación de la reserva. Con base consulta `embed_bookings`; sin base, memoria.
+export async function slotsForDate(t: EmbedTenant, date: string): Promise<{ time: string; available: boolean }[]> {
+  return withDb(
+    async () => {
+      await ensureEmbedSchema();
+      const sql = db();
+      const rows = await sql`
+        SELECT time FROM embed_bookings
+        WHERE tenant_id = ${t.id} AND date = ${date} AND status <> 'cancelada'
+      `;
+      return buildSlots(t, date, new Set(rows.map((r) => String(r.time))));
+    },
+    () => buildSlots(t, date, new Set(bucket(t.id).filter((b) => b.date === date).map((b) => b.time)))
+  );
+}
+
+export async function createBooking(
   t: EmbedTenant,
   data: { service: string; date: string; time: string; name: string; phone: string }
-): EmbedBooking | { error: string } {
-  const slot = slotsForDate(t, data.date).find((s) => s.time === data.time);
+): Promise<EmbedBooking | { error: string }> {
+  const slot = (await slotsForDate(t, data.date)).find((s) => s.time === data.time);
   if (!slot) return { error: "Ese día no hay atención." };
   if (!slot.available) return { error: "Esa hora ya está tomada — elige otra." };
 
@@ -101,6 +154,29 @@ export function createBooking(
     status: "pendiente",
     createdAt: new Date().toISOString(),
   };
-  bucket(t.id).push(booking);
-  return booking;
+
+  if (!hasDb()) {
+    bucket(t.id).push(booking);
+    return booking;
+  }
+
+  // Con base NO usamos withDb (que degradaría a memoria en silencio y ocultaría
+  // el choque de horario): el índice único es la última defensa contra dos
+  // reservas simultáneas del mismo slot en el mismo tenant.
+  try {
+    await ensureEmbedSchema();
+    const sql = db();
+    await sql`
+      INSERT INTO embed_bookings (id, tenant_id, service, date, time, name, phone, status, created_at)
+      VALUES (${booking.id}, ${t.id}, ${booking.service}, ${booking.date}, ${booking.time},
+              ${booking.name}, ${booking.phone}, ${booking.status}, ${booking.createdAt})
+    `;
+    return booking;
+  } catch (error) {
+    if (String(error).includes("embed_bookings_slot_unico")) {
+      return { error: "Esa hora acaba de tomarla otra persona — elige otra." };
+    }
+    console.error("[embed-agenda] createBooking:", error);
+    return { error: "No pudimos registrar la reserva. Intenta de nuevo en unos minutos." };
+  }
 }

@@ -4,9 +4,11 @@
 // `tenantId`. Aislado a propósito de `client.config` y de `/api/chat` para no
 // tocar las demos vivas.
 //
-// MVP: conocimiento conversacional + derivación a WhatsApp. Las tools
-// transaccionales (agenda/pedido/lead con verdad de servidor) y el aislamiento
-// de secretos por tenant son el siguiente slice (ver diferenciador-vs-darwin.md).
+// Estado: conocimiento conversacional + derivación a WhatsApp + captura de
+// contacto por tenant + agenda por tenant con verdad de servidor (disponibilidad
+// y reservas, persistidas en Postgres si hay DATABASE_URL; ver lib/embed-agenda.ts).
+// Pendiente del siguiente slice: tienda/pedido por tenant y aislamiento de
+// secretos de pago por tenant (Webpay propio por cliente) — ver diferenciador-vs-darwin.md.
 
 export interface EmbedTenant {
   id: string;

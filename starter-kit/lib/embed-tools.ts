@@ -125,13 +125,13 @@ function buildEmbedAgendaTools(t: EmbedTenant): Record<string, CoreTool> {
           if (fecha < today) return { error: "Esa fecha ya pasó." };
           if (fecha > addDays(today, daysAhead))
             return { error: `Solo se puede reservar hasta ${daysAhead} días hacia adelante.` };
-          const libres = slotsForDate(t, fecha).filter((s) => s.available).map((s) => s.time);
+          const libres = (await slotsForDate(t, fecha)).filter((s) => s.available).map((s) => s.time);
           return { fecha, dia: dayLabel(fecha), horasDisponibles: libres, sinAtencion: libres.length === 0 };
         }
         const resumen: { fecha: string; dia: string; horasDisponibles: string[] }[] = [];
         for (let i = 1; i <= daysAhead && resumen.length < 5; i++) {
           const d = addDays(today, i);
-          const libres = slotsForDate(t, d).filter((s) => s.available).map((s) => s.time);
+          const libres = (await slotsForDate(t, d)).filter((s) => s.available).map((s) => s.time);
           if (libres.length > 0) resumen.push({ fecha: d, dia: dayLabel(d), horasDisponibles: libres.slice(0, 6) });
         }
         return { proximosDias: resumen, hoy: today, servicios: t.agenda?.services ?? [] };
@@ -150,7 +150,7 @@ function buildEmbedAgendaTools(t: EmbedTenant): Record<string, CoreTool> {
       }),
       execute: async ({ servicio, fecha, hora, nombre, telefono }) => {
         const service = matchService(t, servicio) ?? servicio;
-        const result = createBooking(t, { service, date: fecha, time: hora, name: nombre, phone: telefono });
+        const result = await createBooking(t, { service, date: fecha, time: hora, name: nombre, phone: telefono });
         if ("error" in result) return { error: result.error };
         await notifyOwnerBooking(t, result);
         return {
