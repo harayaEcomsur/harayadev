@@ -44,7 +44,10 @@ Setup por cliente (~1 hora + verificación de Meta Business):
    registrar el número del cliente (flujo Coexistence para conservar la app).
 3. Crear System User token permanente con permisos whatsapp_business_messaging.
 4. En Vercel (proyecto del cliente): WHATSAPP_VERIFY_TOKEN (inventado),
-   WHATSAPP_TOKEN y WHATSAPP_PHONE_NUMBER_ID.
+   WHATSAPP_TOKEN y WHATSAPP_PHONE_NUMBER_ID. **En producción, además
+   WHATSAPP_APP_SECRET** (el App Secret de la app de Meta): valida la firma
+   `X-Hub-Signature-256` y descarta payloads que no vengan de Meta. Sin él el
+   webhook queda abierto y cualquiera con la URL puede gastar tu cuota.
 5. En el panel de Meta, registrar el webhook: https://<sitio>/api/whatsapp con el
    verify token, y suscribir el campo "messages".
 6. Probar: escribir al número → responde el asistente. Conversaciones de servicio:
