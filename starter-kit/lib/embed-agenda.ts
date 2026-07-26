@@ -14,6 +14,8 @@ import type { EmbedTenant } from "@/config/embed-tenants";
 // Sin DATABASE_URL cae a memoria por tenant (globalThis): las demos del add-on
 // funcionan sin configurar base.
 
+export type EmbedBookingStatus = "pendiente" | "confirmada" | "cancelada";
+
 export interface EmbedBooking {
   id: string;
   service: string;
@@ -21,7 +23,7 @@ export interface EmbedBooking {
   time: string; // HH:mm
   name: string;
   phone: string;
-  status: "pendiente";
+  status: EmbedBookingStatus;
   createdAt: string;
 }
 
@@ -136,7 +138,12 @@ export async function slotsForDate(t: EmbedTenant, date: string): Promise<{ time
       `;
       return buildSlots(t, date, new Set(rows.map((r) => String(r.time))));
     },
-    () => buildSlots(t, date, new Set(bucket(t.id).filter((b) => b.date === date).map((b) => b.time)))
+    () =>
+      buildSlots(
+        t,
+        date,
+        new Set(bucket(t.id).filter((b) => b.date === date && b.status !== "cancelada").map((b) => b.time))
+      )
   );
 }
 
@@ -165,6 +172,30 @@ export async function listBookings(t: EmbedTenant): Promise<EmbedBooking[]> {
       return rows.map((r) => rowToBooking(r as Record<string, unknown>));
     },
     () => [...bucket(t.id)].sort((a, b) => (a.date + a.time).localeCompare(b.date + b.time))
+  );
+}
+
+export async function setBookingStatus(
+  tenantId: string,
+  id: string,
+  status: EmbedBookingStatus
+): Promise<boolean> {
+  return withDb(
+    async () => {
+      await ensureEmbedSchema();
+      const sql = db();
+      const rows = await sql`
+        UPDATE embed_bookings SET status = ${status}
+        WHERE tenant_id = ${tenantId} AND id = ${id} RETURNING id
+      `;
+      return rows.length > 0;
+    },
+    () => {
+      const b = bucket(tenantId).find((x) => x.id === id);
+      if (!b) return false;
+      b.status = status;
+      return true;
+    }
   );
 }
 

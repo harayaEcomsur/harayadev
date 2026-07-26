@@ -20,7 +20,7 @@ export interface EmbedOrder {
   items: EmbedOrderItem[];
   total: number;
   buyer: { name: string; phone: string; email?: string };
-  status: "pendiente" | "pagado" | "rechazado";
+  status: "pendiente" | "pagado" | "rechazado" | "entregado";
   authorizationCode?: string;
   createdAt: string;
 }
