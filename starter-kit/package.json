@@ -13,6 +13,8 @@
     "typecheck": "tsc --noEmit",
     "new-client": "tsx scripts/new-client.ts",
     "demo": "tsx scripts/new-demo.ts",
+    "prospect": "tsx scripts/prospect.ts",
+    "embed-tenant": "tsx scripts/new-embed-tenant.ts",
     "palette": "tsx scripts/palette.ts"
   },
   "dependencies": {

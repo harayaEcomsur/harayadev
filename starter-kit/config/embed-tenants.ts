@@ -67,6 +67,7 @@ export interface EmbedTenant {
 }
 
 const TENANTS: Record<string, EmbedTenant> = {
+  // <nuevo-tenant-aquí> — no borres este comentario: `npm run embed-tenant -- --write` inserta acá.
   // Tenant de demostración (Nails Color — design partner del MVP del add-on).
   // Datos placeholder: reemplazar por precios/horarios reales antes de usar en frío.
   demo: {
