@@ -112,6 +112,19 @@ export async function createOrder(
   return order;
 }
 
+// Todos los pedidos del tenant (para su panel), más nuevos primero.
+export async function listOrders(tenantId: string): Promise<EmbedOrder[]> {
+  return withDb(
+    async () => {
+      await ensureEmbedOrdersSchema();
+      const sql = db();
+      const rows = await sql`SELECT * FROM embed_orders WHERE tenant_id = ${tenantId} ORDER BY created_at DESC`;
+      return rows.map((r) => rowToOrder(r as Record<string, unknown>));
+    },
+    () => [...bucket(tenantId)].sort((a, b) => b.createdAt.localeCompare(a.createdAt))
+  );
+}
+
 export async function getOrder(tenantId: string, id: string): Promise<EmbedOrder | undefined> {
   return withDb(
     async () => {

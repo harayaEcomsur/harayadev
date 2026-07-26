@@ -140,6 +140,34 @@ export async function slotsForDate(t: EmbedTenant, date: string): Promise<{ time
   );
 }
 
+function rowToBooking(r: Record<string, unknown>): EmbedBooking {
+  return {
+    id: String(r.id),
+    service: String(r.service),
+    date: String(r.date),
+    time: String(r.time),
+    name: String(r.name),
+    phone: String(r.phone),
+    status: r.status as EmbedBooking["status"],
+    createdAt: new Date(r.created_at as string).toISOString(),
+  };
+}
+
+// Todas las reservas del tenant (para su panel). Ordenadas por fecha y hora.
+export async function listBookings(t: EmbedTenant): Promise<EmbedBooking[]> {
+  return withDb(
+    async () => {
+      await ensureEmbedSchema();
+      const sql = db();
+      const rows = await sql`
+        SELECT * FROM embed_bookings WHERE tenant_id = ${t.id} ORDER BY date, time
+      `;
+      return rows.map((r) => rowToBooking(r as Record<string, unknown>));
+    },
+    () => [...bucket(t.id)].sort((a, b) => (a.date + a.time).localeCompare(b.date + b.time))
+  );
+}
+
 export async function createBooking(
   t: EmbedTenant,
   data: { service: string; date: string; time: string; name: string; phone: string }
