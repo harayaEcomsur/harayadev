@@ -11,11 +11,18 @@ const check = (name: string, cond: boolean) => {
   if (!cond) fail++;
 };
 
-// Próximo martes y próximo lunes (relativo a hoy, zona Chile).
+// Próximo día de la semana `dow` (0=domingo), usando EXACTAMENTE el mismo cálculo
+// de weekday que el motor (new Date(date+"T12:00:00").getDay()) para evitar drift
+// UTC/local: escanea hacia adelante hasta que el día calce.
 function next(dow: number): string {
-  const d = new Date();
-  d.setDate(d.getDate() + ((dow - d.getDay() + 7) % 7 || 7));
-  return d.toISOString().slice(0, 10);
+  const base = new Date();
+  for (let i = 1; i <= 14; i++) {
+    const d = new Date(base);
+    d.setDate(d.getDate() + i);
+    const iso = d.toISOString().slice(0, 10);
+    if (new Date(iso + "T12:00:00").getDay() === dow) return iso;
+  }
+  throw new Error("no encontró el día");
 }
 
 async function main() {

@@ -49,6 +49,21 @@ export interface EmbedTenant {
     // Cuántos días hacia adelante se puede reservar (default 14).
     daysAhead?: number;
   };
+  // Tienda por tenant (opcional). Si está, el asistente puede armar un pedido y
+  // entregar link de pago Webpay. Los precios se resuelven en el servidor desde
+  // este catálogo (nunca desde el modelo). El aislamiento de la plata (Transbank
+  // propio por cliente) va por env vars namespaced — ver lib/embed-webpay.ts.
+  store?: {
+    products: {
+      slug: string;
+      name: string;
+      price: number; // CLP entero
+      description?: string;
+      category?: string;
+      available?: boolean; // default true
+    }[];
+    shippingNote?: string;
+  };
 }
 
 const TENANTS: Record<string, EmbedTenant> = {
@@ -86,6 +101,14 @@ const TENANTS: Record<string, EmbedTenant> = {
       slotMinutes: 60,
       daysAhead: 14,
     },
+    store: {
+      products: [
+        { slug: "gift-card-20000", name: "Gift Card $20.000", price: 20000, category: "Gift cards", description: "Tarjeta de regalo canjeable por servicios." },
+        { slug: "kit-cuidado-unas", name: "Kit de cuidado de uñas en casa", price: 14990, category: "Productos", description: "Aceite de cutícula, lima y crema de manos." },
+        { slug: "esmalte-premium", name: "Esmalte premium (unidad)", price: 6990, category: "Productos", description: "Esmalte de larga duración." },
+      ],
+      shippingNote: "Retiro en el salón (Villa Alemana) o despacho a coordinar por WhatsApp.",
+    },
   },
 };
 
@@ -108,7 +131,13 @@ export function buildEmbedSystemPrompt(t: EmbedTenant): string {
           new Date()
         )}); resuelve tú las fechas relativas ("el próximo martes") a formato YYYY-MM-DD sin pedírselas al cliente. Flujo: 1) pregunta qué servicio quiere; 2) usa consultar_disponibilidad para ofrecer 2-3 horarios REALES (nunca inventes horarios); 3) pide nombre y teléfono; 4) en cuanto tengas servicio, fecha, hora, nombre y teléfono, llama de inmediato a crear_reserva —no pidas confirmaciones extra ni preguntes si ya consultó disponibilidad, el servidor valida la hora—. Si crear_reserva devuelve error, ofrece otro horario. NUNCA digas que una hora quedó reservada sin que crear_reserva haya respondido ok. Servicios reservables: ${t.agenda.services.join(", ")}.`
       : ``,
-    `Cuando la persona quiera comprar, cotizar o que la contacten (y no sea una reserva de agenda): pídele su nombre y su teléfono (y email si lo tiene), y en cuanto te los dé, usa la tool registrar_contacto para avisar al negocio. Nunca inventes esos datos; úsalos tal como los entregó.`,
+    t.store && t.store.products.some((p) => p.available !== false)
+      ? `El negocio tiene TIENDA y puedes armar el pedido en la conversación. Productos (menciona precio, recomienda según lo que busque):\n${t.store.products
+          .filter((p) => p.available !== false)
+          .map((p) => `- ${p.name} [slug: ${p.slug}]: $${p.price.toLocaleString("es-CL")}${p.category ? ` (${p.category})` : ""}${p.description ? ` — ${p.description}` : ""}`)
+          .join("\n")}\nCuando el cliente elija productos y cantidades y te dé nombre y teléfono, llama a crear_pedido —te devuelve el total REAL y un link de pago Webpay que debes entregarle tal cual. Nunca calcules el total tú ni inventes productos: solo slugs del catálogo. Si crear_pedido devuelve error, corrígelo con el cliente.`
+      : ``,
+    `Cuando la persona quiera cotizar o que la contacten (y no sea reserva de agenda ni compra de tienda): pídele su nombre y su teléfono (y email si lo tiene), y en cuanto te los dé, usa la tool registrar_contacto para avisar al negocio. Nunca inventes esos datos; úsalos tal como los entregó.`,
     t.whatsapp
       ? `Si no sabes algo, o si la persona prefiere hablar con una persona ahora, indícale amablemente que escriba por WhatsApp al +${t.whatsapp}.`
       : `Si no sabes algo, indícalo con honestidad y ofrece tomar sus datos con registrar_contacto para que le respondan.`,

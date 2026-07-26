@@ -3,6 +3,9 @@ import { z } from "zod";
 import { notifyByEmail, notifyByWhatsApp } from "@/lib/booking-actions";
 import { buildWhatsAppLink } from "@/lib/whatsapp";
 import { slotsForDate, createBooking, type EmbedBooking } from "@/lib/embed-agenda";
+import { createOrder } from "@/lib/embed-store";
+import { embedWebpayEnv } from "@/lib/embed-webpay";
+import { createTransaction } from "@/lib/webpay";
 import type { EmbedTenant } from "@/config/embed-tenants";
 
 // Tools TRANSACCIONALES del asistente EMBEBIBLE, resueltas por tenant.
@@ -169,9 +172,99 @@ function buildEmbedAgendaTools(t: EmbedTenant): Record<string, CoreTool> {
   };
 }
 
+// Tools de tienda por tenant: solo si el tenant declaró `store` con productos
+// disponibles. Precios y total SIEMPRE del servidor; Webpay con las credenciales
+// del tenant (aislamiento de la plata) y retorno namespaced por tenant.
+function buildEmbedStoreTools(t: EmbedTenant): Record<string, CoreTool> {
+  const available = t.store?.products.filter((p) => p.available !== false) ?? [];
+  if (!t.store || available.length === 0) return {};
+
+  const catalog = new Map(available.map((p) => [p.slug, p]));
+  const norm = (s: string) => s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
+  const similar = (wanted: string): string[] => {
+    const w = norm(wanted);
+    const words = w.split(/[^a-z0-9]+/).filter((p) => p.length >= 3);
+    return [...catalog.keys()].filter((slug) => {
+      const s = norm(slug);
+      return s.includes(w) || w.includes(s) || words.some((p) => s.includes(p));
+    });
+  };
+  const clp = (n: number) => "$" + n.toLocaleString("es-CL");
+
+  return {
+    crear_pedido: tool({
+      description:
+        "Crea un pedido REAL de la tienda y entrega el link de pago Webpay. Solo llamar cuando el cliente ya eligió productos y cantidades y entregó nombre y teléfono. Nunca inventes productos ni precios: usa únicamente slugs del catálogo.",
+      parameters: z.object({
+        items: z
+          .array(
+            z.object({
+              slug: z.string().describe("Slug exacto del producto en el catálogo."),
+              cantidad: z.number().int().positive().max(99).describe("Cantidad de unidades."),
+            })
+          )
+          .min(1),
+        nombre: z.string().min(2).max(120).describe("Nombre del cliente."),
+        telefono: z.string().min(6).max(30).describe("Teléfono del cliente."),
+        email: z.string().email().optional().describe("Email del cliente, si lo entregó."),
+      }),
+      execute: async ({ items, nombre, telefono, email }) => {
+        const resolved: { slug: string; name: string; price: number; qty: number }[] = [];
+        for (const { slug, cantidad } of items) {
+          const product = catalog.get(slug);
+          if (!product) {
+            const parecidos = similar(slug);
+            return {
+              error:
+                `El producto "${slug}" no existe o no está disponible.` +
+                (parecidos.length > 0 ? ` ¿Quisiste decir: ${parecidos.join(", ")}?` : ""),
+              slugsValidos: [...catalog.keys()],
+            };
+          }
+          resolved.push({ slug, name: product.name, price: product.price, qty: cantidad });
+        }
+
+        const order = await createOrder(t, {
+          items: resolved,
+          buyer: { name: nombre, phone: telefono, email: email || undefined },
+        });
+
+        const origin = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+        try {
+          const tx = await createTransaction(
+            {
+              buyOrder: order.id,
+              sessionId: order.id,
+              amount: order.total,
+              returnUrl: `${origin}/api/embed/checkout/retorno?t=${encodeURIComponent(t.id)}`,
+            },
+            embedWebpayEnv(t)
+          );
+          return {
+            ok: true,
+            pedidoId: order.id,
+            total: order.total,
+            totalFormateado: clp(order.total),
+            linkPago: `${tx.url}?token_ws=${encodeURIComponent(tx.token)}`,
+            resumen: resolved.map((i) => ({ producto: i.name, cantidad: i.qty, subtotal: clp(i.price * i.qty) })),
+            nota: t.store?.shippingNote,
+          };
+        } catch (e) {
+          console.error("[embed-tools] Webpay create:", e);
+          return {
+            error:
+              "No pudimos conectar con Webpay para generar el link de pago. Pide al cliente intentar de nuevo en unos minutos.",
+          };
+        }
+      },
+    }),
+  };
+}
+
 export function buildEmbedTools(t: EmbedTenant): Record<string, CoreTool> {
   return {
     ...buildEmbedAgendaTools(t),
+    ...buildEmbedStoreTools(t),
     registrar_contacto: tool({
       description:
         "Registra los datos de contacto de una persona interesada y avisa al negocio. Llamar SOLO cuando la persona quiere reservar, comprar, cotizar o que la contacten, Y ya entregó su nombre y un teléfono real. Nunca inventes nombre ni teléfono: úsalos tal como los dio la persona.",
