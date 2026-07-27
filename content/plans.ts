@@ -13,6 +13,10 @@ export interface Plan {
   // Servicios sobre sitios existentes (mantención/mejora): el contrato referencia la
   // cotización aceptada en vez de un precio publicado.
   quoted?: boolean;
+  // El servicio se presta sobre el sitio que el cliente YA tiene (mejora): el
+  // formulario pide su URL actual. Distinto de `quoted`: un plan puede cotizarse
+  // sobre un sitio nuevo (p. ej. Plan Inmobiliaria) sin exigir URL previa.
+  overExisting?: boolean;
 }
 
 const STARTER_DEMO_URL = "https://starter-kit-beta-nine.vercel.app";
@@ -96,6 +100,7 @@ export const recurringServices: Plan[] = [
     includes: ["Diagnóstico gratis", "Rediseño o optimización", "Asistente IA opcional", "Precio cerrado tras cotizar"],
     delivery: "PLAZO SEGÚN COTIZACIÓN",
     quoted: true,
+    overExisting: true,
   },
 ];
 
