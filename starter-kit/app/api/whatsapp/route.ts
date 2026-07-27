@@ -1,3 +1,4 @@
+import { createHmac, timingSafeEqual } from "node:crypto";
 import { generateText, type CoreMessage } from "ai";
 import { google } from "@/lib/gemini";
 import { clientConfig } from "@/config/client.config";
@@ -33,6 +34,22 @@ export async function GET(req: Request) {
   return new Response("Forbidden", { status: 403 });
 }
 
+// Verifica la firma HMAC-SHA256 que Meta pone en X-Hub-Signature-256 sobre el
+// cuerpo CRUDO. Opt-in: solo se exige si WHATSAPP_APP_SECRET está configurado
+// (el App Secret de la app de Meta). Sin él, el webhook sigue funcionando pero
+// queda abierto — por eso conviene setearlo en producción para que nadie inyecte
+// mensajes falsos y gaste tokens/mensajes. Devuelve true si NO hay secreto (no
+// se puede/quiere verificar) o si la firma calza.
+function verifySignature(rawBody: string, signatureHeader: string | null): boolean {
+  const secret = process.env.WHATSAPP_APP_SECRET;
+  if (!secret) return true; // sin secreto configurado: no se verifica
+  if (!signatureHeader?.startsWith("sha256=")) return false;
+  const expected = "sha256=" + createHmac("sha256", secret).update(rawBody).digest("hex");
+  const a = Buffer.from(signatureHeader);
+  const b = Buffer.from(expected);
+  return a.length === b.length && timingSafeEqual(a, b);
+}
+
 async function sendWhatsAppText(to: string, body: string): Promise<boolean> {
   const res = await fetch(`${GRAPH_URL}/${process.env.WHATSAPP_PHONE_NUMBER_ID}/messages`, {
     method: "POST",
@@ -57,9 +74,24 @@ export async function POST(req: Request) {
   const configured =
     process.env.WHATSAPP_TOKEN && process.env.WHATSAPP_PHONE_NUMBER_ID && process.env.GEMINI_API_KEY;
 
+  // Cuerpo crudo primero: se necesita tal cual para validar la firma de Meta.
+  let raw: string;
+  try {
+    raw = await req.text();
+  } catch {
+    return Response.json({ ok: true });
+  }
+
+  // Firma HMAC de Meta (si WHATSAPP_APP_SECRET está seteado). Un payload sin
+  // firma válida se descarta en silencio con 200 (no revelar el motivo).
+  if (!verifySignature(raw, req.headers.get("x-hub-signature-256"))) {
+    console.warn("[whatsapp webhook] firma inválida — payload descartado");
+    return Response.json({ ok: true });
+  }
+
   let payload: unknown;
   try {
-    payload = await req.json();
+    payload = JSON.parse(raw);
   } catch {
     return Response.json({ ok: true });
   }
