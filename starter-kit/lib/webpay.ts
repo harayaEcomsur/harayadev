@@ -15,7 +15,14 @@ const INTEGRATION = {
   apiKey: "579B532A7440BB0C9079DED94D31EA1615BACEB56610332264630D42D0A36B1C",
 };
 
-export function webpayEnv(): { host: string; commerceCode: string; apiKey: string; production: boolean } {
+export interface WebpayCreds {
+  host: string;
+  commerceCode: string;
+  apiKey: string;
+  production: boolean;
+}
+
+export function webpayEnv(): WebpayCreds {
   if (process.env.TBK_ENV === "produccion") {
     const commerceCode = process.env.TBK_COMMERCE_CODE;
     const apiKey = process.env.TBK_API_KEY;
@@ -27,8 +34,11 @@ export function webpayEnv(): { host: string; commerceCode: string; apiKey: strin
   return { ...INTEGRATION, production: false };
 }
 
-async function tbkFetch(path: string, init: RequestInit): Promise<Response> {
-  const { host, commerceCode, apiKey } = webpayEnv();
+// creds opcional: el single-tenant usa webpayEnv() (comportamiento intacto); el
+// asistente embebible pasa las credenciales del tenant (aislamiento de la plata
+// por cliente — ver lib/embed-webpay.ts).
+async function tbkFetch(path: string, init: RequestInit, creds: WebpayCreds = webpayEnv()): Promise<Response> {
+  const { host, commerceCode, apiKey } = creds;
   return fetch(`${host}/rswebpaytransaction/api/webpay/v1.2${path}`, {
     ...init,
     headers: {
@@ -40,21 +50,28 @@ async function tbkFetch(path: string, init: RequestInit): Promise<Response> {
   });
 }
 
-export async function createTransaction(args: {
-  buyOrder: string;
-  sessionId: string;
-  amount: number;
-  returnUrl: string;
-}): Promise<{ token: string; url: string }> {
-  const res = await tbkFetch("/transactions", {
-    method: "POST",
-    body: JSON.stringify({
-      buy_order: args.buyOrder,
-      session_id: args.sessionId,
-      amount: args.amount,
-      return_url: args.returnUrl,
-    }),
-  });
+export async function createTransaction(
+  args: {
+    buyOrder: string;
+    sessionId: string;
+    amount: number;
+    returnUrl: string;
+  },
+  creds?: WebpayCreds
+): Promise<{ token: string; url: string }> {
+  const res = await tbkFetch(
+    "/transactions",
+    {
+      method: "POST",
+      body: JSON.stringify({
+        buy_order: args.buyOrder,
+        session_id: args.sessionId,
+        amount: args.amount,
+        return_url: args.returnUrl,
+      }),
+    },
+    creds ?? webpayEnv()
+  );
   if (!res.ok) {
     throw new Error(`Webpay create falló (${res.status}): ${await res.text().catch(() => "")}`);
   }
@@ -72,8 +89,8 @@ export interface CommitResult {
   card_detail?: { card_number?: string };
 }
 
-export async function commitTransaction(token: string): Promise<CommitResult> {
-  const res = await tbkFetch(`/transactions/${token}`, { method: "PUT" });
+export async function commitTransaction(token: string, creds?: WebpayCreds): Promise<CommitResult> {
+  const res = await tbkFetch(`/transactions/${token}`, { method: "PUT" }, creds ?? webpayEnv());
   if (!res.ok) {
     throw new Error(`Webpay commit falló (${res.status}): ${await res.text().catch(() => "")}`);
   }

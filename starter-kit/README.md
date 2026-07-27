@@ -53,6 +53,38 @@ Setup por cliente (~1 hora + verificación de Meta Business):
 6. Probar: escribir al número → responde el asistente. Conversaciones de servicio:
    1.000/mes gratis de Meta.
 
+### Asistente embebible multi-tenant (add-on sobre el sitio que el cliente YA tiene)
+
+Un asistente que se instala en CUALQUIER sitio (WordPress, Wix, HTML, VTEX) con una
+sola línea de `<script>`, servido desde el deploy central de HarayaDev. Es un camino
+aparte del sitio single-tenant: el mismo despliegue atiende a varios negocios,
+resueltos por `tenantId`, con su propio esquema Postgres (`embed_bookings`,
+`embed_orders`) — no toca el código ni las demos single-tenant.
+
+Qué hace, todo con verdad de servidor y aislado por tenant:
+- **Conversa** con el conocimiento del negocio y deriva a WhatsApp.
+- **Captura contacto/lead** y avisa al dueño (email + WhatsApp).
+- **Agenda**: consulta disponibilidad real y reserva (nunca inventa horarios).
+- **Tienda**: arma el pedido, resuelve precios en el servidor y entrega link de pago
+  **Webpay con las credenciales del PROPIO cliente** (la plata va a su Transbank).
+- **Panel del dueño** en `/embed/panel?t=<id>&clave=…`: ve y gestiona sus reservas y
+  pedidos (confirmar/cancelar, marcar entregado).
+
+Alta de un cliente nuevo (genera config + clave + env vars + snippet + link del panel):
+
+```bash
+npm run embed-tenant -- --id nails-color --name "Nails Color" \
+  --rubro "salón de uñas" --whatsapp 56912345678 --email duena@correo.cl \
+  --agenda --store --write
+```
+
+Luego: completar los `COMPLETAR` del bloque, `npm run typecheck`, commitear, y setear en
+Vercel las variables que imprime — `EMBED_ADMIN_KEY_<ID>` (protege el panel) y, si el
+cliente cobra de verdad, `TBK_ENV_<ID>` / `TBK_COMMERCE_CODE_<ID>` / `TBK_API_KEY_<ID>`
+(sin ellas usa el ambiente de integración de Transbank, sin cobro real). Los secretos
+viven SOLO en el entorno, nunca en el config. Modelo: usa `gemini-2.5-flash` para tenants
+con agenda/tienda (el `-lite` es muy débil para las tools de escritura).
+
 ### Paleta desde el logo y variantes de diseño
 
 - `npm run palette -- logo.png` extrae los colores dominantes del logo del cliente e
