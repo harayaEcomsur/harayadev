@@ -186,7 +186,7 @@ export function ContractForm() {
         <Field label="NOMBRE DE TU NEGOCIO">
           <input name="businessName" required maxLength={120} placeholder="Ej: Pastelería Rosita" className={inputClass} />
         </Field>
-        {plan.quoted && (
+        {plan.overExisting && (
           <Field label="URL DE TU SITIO ACTUAL">
             <input name="existingSiteUrl" required maxLength={300} placeholder="https://…" className={inputClass} />
           </Field>
