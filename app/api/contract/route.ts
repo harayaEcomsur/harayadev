@@ -1,20 +1,7 @@
 import { site } from "@/lib/site";
-import { contractRequestSchema, buildContract, type Contract } from "@/lib/contract";
+import { contractRequestSchema, buildContract, contractToText } from "@/lib/contract";
 
 export const runtime = "nodejs";
-
-function contractToText(contract: Contract): string {
-  return [
-    `CONTRATO ${contract.number} — ${contract.date}`,
-    ``,
-    `PRESTADOR: ${contract.provider.legalName} (RUT ${contract.provider.rut}), representada por ${contract.provider.representative}.`,
-    `CLIENTE: ${contract.client.company || contract.client.name} (RUT ${contract.client.rut}) — ${contract.client.name}, ${contract.client.email}, ${contract.client.phone}, ${contract.client.address}.`,
-    `NEGOCIO: ${contract.client.businessName}`,
-    `ENCARGO: ${contract.client.brief}`,
-    ``,
-    ...contract.clauses.map((c, i) => `${i + 1}. ${c.title.toUpperCase()}\n${c.body}`),
-  ].join("\n\n");
-}
 
 export async function POST(req: Request) {
   const body = await req.json().catch(() => null);

@@ -152,6 +152,21 @@ function modsTotal(request: ContractRequest): number {
   return (request.modifications ?? []).reduce((sum, m) => sum + (m.amount ? parseClp(m.amount) : 0), 0);
 }
 
+// Monto exacto a cobrar ahora para pago único ("full"). null si el plan es a
+// cotizar y todavía no hay agreedAmount — sin un número concreto no se puede
+// cobrar online (split/monthly tampoco están soportados: son varios hitos, no
+// un cargo único, así que el pago online por ahora solo cubre "full").
+export function amountDueNow(request: ContractRequest): number | null {
+  if (request.paymentPlan !== "full") return null;
+  const plan = allContractablePlans.find((p) => p.id === request.planId)!;
+  const extra = modsTotal(request);
+  if (plan.quoted) {
+    if (!request.agreedAmount) return null;
+    return parseClp(request.agreedAmount) + extra;
+  }
+  return parseClp(plan.price!) + extra;
+}
+
 function buildPaymentTerms(plan: Plan, request: ContractRequest): { priceLabel: string; terms: string[] } {
   const extra = modsTotal(request);
   const agreedBase = request.agreedAmount ? parseClp(request.agreedAmount) : null;
@@ -300,4 +315,17 @@ export function buildContract(request: ContractRequest): Contract {
     clauses,
     bank: getBankInfo(),
   };
+}
+
+export function contractToText(contract: Contract): string {
+  return [
+    `CONTRATO ${contract.number} — ${contract.date}`,
+    ``,
+    `PRESTADOR: ${contract.provider.legalName} (RUT ${contract.provider.rut}), representada por ${contract.provider.representative}.`,
+    `CLIENTE: ${contract.client.company || contract.client.name} (RUT ${contract.client.rut}) — ${contract.client.name}, ${contract.client.email}, ${contract.client.phone}, ${contract.client.address}.`,
+    `NEGOCIO: ${contract.client.businessName}`,
+    `ENCARGO: ${contract.client.brief}`,
+    ``,
+    ...contract.clauses.map((c, i) => `${i + 1}. ${c.title.toUpperCase()}\n${c.body}`),
+  ].join("\n\n");
 }
