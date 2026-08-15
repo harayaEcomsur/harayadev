@@ -85,9 +85,6 @@ export async function getPayment(paymentId: string): Promise<MpPayment> {
 export function verifyWebhookSignature(params: { xSignature: string | null; xRequestId: string | null; dataId: string }): boolean {
   const secret = process.env.MP_WEBHOOK_SECRET;
   if (!secret) return true;
-  // DEBUG temporal: huella del secreto (no el secreto) para comparar contra el
-  // valor local sin exponerlo — confirmar si Vercel tiene el mismo MP_WEBHOOK_SECRET.
-  console.error("[debug] webhook secret fingerprint:", createHmac("sha256", "fingerprint").update(secret).digest("hex").slice(0, 8));
   if (!params.xSignature || !params.xRequestId) return false;
 
   const parts: Record<string, string> = {};
