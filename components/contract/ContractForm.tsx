@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { trackEvent } from "@/lib/analytics";
 import { allContractablePlans } from "@/content/plans";
-import type { Contract } from "@/lib/contract";
+import type { Contract, ContractRequest } from "@/lib/contract";
 import { ContractView } from "./ContractView";
 
 const inputClass =
@@ -38,6 +38,7 @@ export function ContractForm() {
   const [status, setStatus] = useState<"idle" | "sending" | "error">("idle");
   const [errorMsg, setErrorMsg] = useState("");
   const [result, setResult] = useState<{ contract: Contract; emailSent: boolean; emailNote?: string } | null>(null);
+  const [lastRequest, setLastRequest] = useState<ContractRequest | null>(null);
 
   const plan = allContractablePlans.find((p) => p.id === planId)!;
   const paymentOptions =
@@ -61,7 +62,7 @@ export function ContractForm() {
     setStatus("sending");
     const data = new FormData(e.currentTarget);
 
-    const payload = {
+    const payload: ContractRequest = {
       planId,
       paymentPlan: effectivePayment,
       client: {
@@ -95,6 +96,7 @@ export function ContractForm() {
       }
       trackEvent("contrato_generado", { plan: planId, pago: effectivePayment });
       setResult(responseData);
+      setLastRequest(payload);
       window.scrollTo({ top: 0 });
     } catch {
       setStatus("error");
@@ -102,8 +104,15 @@ export function ContractForm() {
     }
   }
 
-  if (result) {
-    return <ContractView contract={result.contract} emailSent={result.emailSent} emailNote={result.emailNote} />;
+  if (result && lastRequest) {
+    return (
+      <ContractView
+        contract={result.contract}
+        emailSent={result.emailSent}
+        emailNote={result.emailNote}
+        request={lastRequest}
+      />
+    );
   }
 
   return (

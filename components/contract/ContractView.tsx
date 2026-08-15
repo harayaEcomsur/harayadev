@@ -1,7 +1,8 @@
 "use client";
 
-import { Printer } from "lucide-react";
-import type { Contract } from "@/lib/contract";
+import { useState } from "react";
+import { CreditCard, Printer } from "lucide-react";
+import type { Contract, ContractRequest } from "@/lib/contract";
 import { site } from "@/lib/site";
 import { buildWhatsAppLink } from "@/lib/whatsapp";
 
@@ -9,17 +10,44 @@ export function ContractView({
   contract,
   emailSent,
   emailNote,
+  request,
 }: {
   contract: Contract;
   emailSent: boolean;
   emailNote?: string;
+  request: ContractRequest;
 }) {
+  const [payStatus, setPayStatus] = useState<"idle" | "loading" | "error">("idle");
+  const [payError, setPayError] = useState("");
+
   const waHref = site.whatsapp
     ? buildWhatsAppLink(
         site.whatsapp,
         `Hola! Generé el contrato ${contract.number} (${contract.service.name}) y quiero coordinar el pago`
       )
     : null;
+
+  async function handlePay() {
+    setPayStatus("loading");
+    setPayError("");
+    try {
+      const res = await fetch("/api/contract/pagar", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(request),
+      });
+      const data = await res.json();
+      if (!res.ok || !data.url) {
+        setPayStatus("error");
+        setPayError(data.error ?? "No se pudo iniciar el pago.");
+        return;
+      }
+      window.location.href = data.url;
+    } catch {
+      setPayStatus("error");
+      setPayError("No se pudo conectar con Mercado Pago. Revisa tu conexión.");
+    }
+  }
 
   return (
     <div className="flex flex-col gap-6">
@@ -36,9 +64,18 @@ export function ContractView({
           </p>
         </div>
         <div className="flex flex-wrap gap-3">
+          {request.paymentPlan === "full" && (
+            <button
+              onClick={handlePay}
+              disabled={payStatus === "loading"}
+              className="inline-flex cursor-pointer items-center gap-2 rounded-[10px] bg-primary px-6 py-3.5 text-[15px] font-extrabold text-white transition-colors hover:bg-primary-hover disabled:opacity-60"
+            >
+              <CreditCard size={18} /> {payStatus === "loading" ? "Conectando…" : "Pagar ahora con Mercado Pago"}
+            </button>
+          )}
           <button
             onClick={() => window.print()}
-            className="inline-flex cursor-pointer items-center gap-2 rounded-[10px] bg-primary px-6 py-3.5 text-[15px] font-extrabold text-white transition-colors hover:bg-primary-hover"
+            className="inline-flex cursor-pointer items-center gap-2 rounded-[10px] border-[1.5px] border-line px-6 py-3.5 text-[15px] font-bold text-foreground transition-colors hover:border-soft"
           >
             <Printer size={18} /> Imprimir / guardar PDF
           </button>
@@ -53,6 +90,7 @@ export function ContractView({
             </a>
           )}
         </div>
+        {payStatus === "error" && <p className="m-0 text-sm text-primary">{payError}</p>}
       </div>
 
       {/* Documento */}
