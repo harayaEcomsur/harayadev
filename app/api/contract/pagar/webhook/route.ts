@@ -41,8 +41,10 @@ export async function POST(req: Request) {
   const url = new URL(req.url);
   const body = await req.json().catch(() => null);
 
-  const type = body?.type ?? url.searchParams.get("type") ?? url.searchParams.get("topic");
-  const dataId = body?.data?.id ?? url.searchParams.get("data.id") ?? url.searchParams.get("id");
+  const type = url.searchParams.get("type") ?? body?.type ?? url.searchParams.get("topic");
+  // El manifest de la firma se calcula con el data.id de la URL (no el del
+  // body) — así lo documenta Mercado Pago, y hay que pasarlo en minúsculas.
+  const dataId = (url.searchParams.get("data.id") ?? body?.data?.id ?? url.searchParams.get("id"))?.toString().toLowerCase();
 
   // Mercado Pago reintenta agresivamente si no recibe 2xx — se responde 200
   // siempre, incluso cuando la notificación no nos interesa o falla el email,
@@ -51,13 +53,14 @@ export async function POST(req: Request) {
     return new Response(null, { status: 200 });
   }
 
-  const valid = verifyWebhookSignature({
-    xSignature: req.headers.get("x-signature"),
-    xRequestId: req.headers.get("x-request-id"),
-    dataId: String(dataId),
-  });
+  const xSignature = req.headers.get("x-signature");
+  const xRequestId = req.headers.get("x-request-id");
+  const valid = verifyWebhookSignature({ xSignature, xRequestId, dataId });
   if (!valid) {
-    console.error("[contract/pagar/webhook] Firma x-signature inválida, se ignora", dataId);
+    console.error(
+      "[contract/pagar/webhook] Firma x-signature inválida, se ignora",
+      JSON.stringify({ dataId, xSignature, xRequestId, search: url.search })
+    );
     return new Response(null, { status: 200 });
   }
 
