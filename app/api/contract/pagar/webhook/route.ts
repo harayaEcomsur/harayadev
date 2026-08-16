@@ -1,5 +1,6 @@
 import { site } from "@/lib/site";
 import { getPayment, verifyWebhookSignature } from "@/lib/mercadopago";
+import { sendMetaPurchaseEvent } from "@/lib/meta-capi";
 
 export const runtime = "nodejs";
 
@@ -67,7 +68,16 @@ export async function POST(req: Request) {
   try {
     const payment = await getPayment(String(dataId));
     if (payment.status === "approved") {
-      await sendPaymentConfirmedEmail(payment.metadata ?? {}, payment.transaction_amount, payment.id);
+      const meta = payment.metadata ?? {};
+      await Promise.all([
+        sendPaymentConfirmedEmail(meta, payment.transaction_amount, payment.id),
+        sendMetaPurchaseEvent({
+          value: payment.transaction_amount,
+          currency: "CLP",
+          email: meta.client_email,
+          eventId: String(payment.id),
+        }),
+      ]);
     }
   } catch (e) {
     console.error("[contract/pagar/webhook]", e);
