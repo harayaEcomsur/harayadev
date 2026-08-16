@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Archivo, JetBrains_Mono } from "next/font/google";
 import { GoogleAnalyticsLazy } from "@/components/analytics/GoogleAnalyticsLazy";
+import { MetaPixel } from "@/components/analytics/MetaPixel";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { ChatWidget } from "@/components/chat/ChatWidget";
@@ -33,13 +34,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           // eslint-disable-next-line react/no-danger
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
-        {/* GA4 se activa solo cuando NEXT_PUBLIC_GA_ID está definida (producción). */}
-        {process.env.NEXT_PUBLIC_GA_ID && (
-          <>
-            <GoogleAnalyticsLazy gaId={process.env.NEXT_PUBLIC_GA_ID} />
-            <WhatsAppClickTracker />
-          </>
-        )}
+        {/* GA4 y Meta Pixel se activan solo si su ID está definido — cada uno es
+            independiente del otro. El tracker de clicks a WhatsApp alimenta a
+            los que estén activos, así que se monta si hay al menos uno. */}
+        {process.env.NEXT_PUBLIC_GA_ID && <GoogleAnalyticsLazy gaId={process.env.NEXT_PUBLIC_GA_ID} />}
+        {process.env.NEXT_PUBLIC_META_PIXEL_ID && <MetaPixel pixelId={process.env.NEXT_PUBLIC_META_PIXEL_ID} />}
+        {(process.env.NEXT_PUBLIC_GA_ID || process.env.NEXT_PUBLIC_META_PIXEL_ID) && <WhatsAppClickTracker />}
       </body>
     </html>
   );
