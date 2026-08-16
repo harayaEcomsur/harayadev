@@ -161,6 +161,13 @@ export function ContractView({
               <p className="m-0">RUT: {contract.bank.rut}</p>
               <p className="m-0">Aviso a: {contract.bank.email}</p>
             </div>
+            {contract.bank.rut !== contract.provider.rut && (
+              <p className="m-0 mt-3 text-[13px] leading-[1.5] text-[#5A6675]">
+                El RUT de esta cuenta es distinto al de {contract.provider.legalName} porque, al ser una E.I.R.L.
+                unipersonal, el cobro se recibe en la cuenta personal de {contract.provider.representative} — la
+                factura o boleta la emite igualmente {contract.provider.legalName}.
+              </p>
+            )}
           </section>
         ) : (
           <section className="mt-6 rounded-xl border border-[#E4E8EE] bg-[#F5F6F8] p-4">

@@ -273,7 +273,11 @@ export function buildContract(request: ContractRequest): Contract {
     },
     {
       title: "Forma de pago",
-      body: `El pago se realiza por transferencia bancaria según los siguientes hitos: ${terms.join(" ")}`,
+      body: `El pago se realiza por transferencia bancaria según los siguientes hitos: ${terms.join(" ")}${
+        request.paymentPlan === "full"
+          ? " Alternativamente, el pago único puede hacerse online con tarjeta de crédito o débito a través de Mercado Pago, desde este mismo documento."
+          : ""
+      }`,
     },
     {
       title: "Plazo",
