@@ -60,7 +60,13 @@ export async function createPreference(input: CreatePreferenceInput): Promise<Pr
     throw new Error(`Mercado Pago rechazó la preferencia (${res.status}): ${body}`);
   }
   const data = await res.json();
-  return { id: data.id, init_point: data.init_point };
+  // En credenciales de prueba Mercado Pago a veces omite init_point y solo
+  // entrega sandbox_init_point; en producción es al revés. Usar el que exista.
+  const checkoutUrl: string | undefined = data.init_point || data.sandbox_init_point;
+  if (!data.id || !checkoutUrl) {
+    throw new Error("Mercado Pago creó la preferencia pero no devolvió URL de checkout");
+  }
+  return { id: data.id, init_point: checkoutUrl };
 }
 
 export interface MpPayment {

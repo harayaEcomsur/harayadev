@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { CreditCard, Printer } from "lucide-react";
-import type { Contract, ContractRequest } from "@/lib/contract";
+import { amountDueNow, type Contract, type ContractRequest } from "@/lib/contract";
 import { site } from "@/lib/site";
 import { buildWhatsAppLink } from "@/lib/whatsapp";
 
@@ -64,7 +64,7 @@ export function ContractView({
           </p>
         </div>
         <div className="flex flex-wrap gap-3">
-          {request.paymentPlan === "full" && (
+          {amountDueNow(request) != null && (
             <button
               onClick={handlePay}
               disabled={payStatus === "loading"}
