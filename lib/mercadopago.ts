@@ -16,11 +16,25 @@ export interface CreatePreferenceInput {
   amount: number;
   payerEmail: string;
   payerName: string;
+  payerRut?: string;
   origin: string;
   // Solo identificadores cortos (no el contrato completo): Mercado Pago tiene
   // límite de tamaño en metadata y además normaliza las keys a minúsculas, así
   // que se usan nombres ya en snake_case para no depender de esa conversión.
   metadata: Record<string, string>;
+}
+
+// Chile: Mercado Pago espera RUT con guión y sin puntos (12345678-9).
+function normalizeRut(rut: string): string | null {
+  const cleaned = rut.replace(/[^0-9kK]/g, "").toUpperCase();
+  if (cleaned.length < 8 || cleaned.length > 9) return null;
+  return `${cleaned.slice(0, -1)}-${cleaned.slice(-1)}`;
+}
+
+function splitName(fullName: string): { name: string; surname: string } {
+  const parts = fullName.trim().split(/\s+/);
+  if (parts.length === 1) return { name: parts[0], surname: parts[0] };
+  return { name: parts[0], surname: parts.slice(1).join(" ") };
 }
 
 export interface Preference {
@@ -32,26 +46,50 @@ export async function createPreference(input: CreatePreferenceInput): Promise<Pr
   const token = mpAccessToken();
   if (!token) throw new Error("MP_ACCESS_TOKEN no configurado");
 
-  // Mercado Pago rechaza la preferencia si auto_return va con un origin que no
-  // controla (localhost/127.0.0.1) — solo lo manda cuando hay un dominio real,
-  // así se puede seguir probando en local sin necesitar un túnel público.
+  // Mercado Pago rechaza la preferencia si back_urls / auto_return / notification_url
+  // van con localhost — solo se mandan con un dominio público.
   const isPublicOrigin = !/^https?:\/\/(localhost|127\.0\.0\.1)/i.test(input.origin);
+  const { name, surname } = splitName(input.payerName);
+  const rut = input.payerRut ? normalizeRut(input.payerRut) : null;
 
   const res = await fetch(`${API}/checkout/preferences`, {
     method: "POST",
     headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
     body: JSON.stringify({
-      items: [{ title: input.title, quantity: 1, unit_price: input.amount, currency_id: "CLP" }],
-      payer: { email: input.payerEmail, name: input.payerName },
+      items: [
+        {
+          id: input.contractNumber,
+          title: input.title,
+          description: input.title,
+          category_id: "services",
+          quantity: 1,
+          unit_price: input.amount,
+          currency_id: "CLP",
+        },
+      ],
+      payer: {
+        email: input.payerEmail,
+        name,
+        surname,
+        ...(rut ? { identification: { type: "RUT", number: rut } } : {}),
+      },
+      // Un solo pago, sin cuotas: si el checkout pide elegir cuotas y no hay
+      // valor por defecto, el botón "Pagar" se queda deshabilitado.
+      payment_methods: { installments: 1, default_installments: 1 },
+      binary_mode: true,
       external_reference: input.contractNumber,
       metadata: input.metadata,
-      back_urls: {
-        success: `${input.origin}/contratar/pago/retorno`,
-        pending: `${input.origin}/contratar/pago/retorno`,
-        failure: `${input.origin}/contratar/pago/retorno`,
-      },
-      ...(isPublicOrigin ? { auto_return: "approved" } : {}),
-      notification_url: `${input.origin}/api/contract/pagar/webhook`,
+      ...(isPublicOrigin
+        ? {
+            back_urls: {
+              success: `${input.origin}/contratar/pago/retorno`,
+              pending: `${input.origin}/contratar/pago/retorno`,
+              failure: `${input.origin}/contratar/pago/retorno`,
+            },
+            auto_return: "approved",
+            notification_url: `${input.origin}/api/contract/pagar/webhook`,
+          }
+        : {}),
     }),
   });
 

@@ -42,6 +42,7 @@ export async function POST(req: Request) {
       amount,
       payerEmail: request.client.email,
       payerName: request.client.name,
+      payerRut: request.client.rut,
       origin,
       metadata: {
         contract_number: contract.number,
