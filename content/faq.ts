@@ -17,7 +17,7 @@ export const faqs: FaqItem[] = [
   {
     question: "¿Cómo se paga?",
     answer:
-      "Por transferencia bancaria, con dos alternativas: 100% al aprobar la demo, o 50% para partir y 50% contra entrega. Al contratar se genera un contrato simple donde queda todo por escrito — plan, precio, plazo y forma de pago — para que lo revises antes de transferir. Emitimos factura o boleta.",
+      "En pago único (100% al aprobar la demo) puedes pagar online con Mercado Pago — tarjeta de crédito o débito — o por transferencia. También está el 50% para partir y 50% contra entrega, que va por transferencia. Al contratar se genera un contrato simple donde queda todo por escrito — plan, precio, plazo y forma de pago — para que lo revises antes de pagar. Emitimos factura o boleta.",
   },
   {
     question: "¿Cómo se entrena el asistente IA con mi negocio?",

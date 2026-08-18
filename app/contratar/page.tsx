@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   ...buildMetadata(
     {
       title: "Contratar",
-      description: "Elige tu plan, la forma de pago por transferencia y genera tu contrato para revisar.",
+      description: "Elige tu plan y la forma de pago — Mercado Pago o transferencia — y genera tu contrato para revisar.",
     },
     "/contratar"
   ),
@@ -25,10 +25,11 @@ export default function ContratarPage() {
             Genera tu contrato para revisar
           </h1>
           <p className="m-0 text-base leading-[1.6] text-soft sm:text-lg">
-            Elige el plan y la forma de pago por transferencia. Se genera un contrato simple con todo
-            por escrito — precio, plazo e hitos de pago — para que lo revises antes de transferir un
-            peso. Si necesitas otra alternativa (por ejemplo otro reparto de pagos), se ajusta antes
-            de firmar.
+            Elige el plan y la forma de pago. Se genera un contrato simple con todo por escrito —
+            precio, plazo e hitos de pago — para que lo revises antes de pagar. En pago único
+            puedes pagar online con Mercado Pago (tarjeta de crédito o débito) o por transferencia.
+            Si necesitas otra alternativa (por ejemplo otro reparto de pagos), se ajusta antes de
+            firmar.
           </p>
         </header>
         <Suspense fallback={null}>

@@ -48,9 +48,15 @@ export function ContractForm() {
           {
             value: "full",
             label: "100% al aprobar la demo",
-            detail: plan.quoted ? "Pago único al aceptar el contrato" : "Un solo pago, después de ver tu demo funcionando",
+            detail: plan.quoted
+              ? "Pago único al aceptar el contrato: Mercado Pago (tarjeta) o transferencia"
+              : "Un solo pago, con Mercado Pago (tarjeta) o transferencia, después de ver tu demo",
           },
-          { value: "split", label: "50% inicio / 50% entrega", detail: "La mitad para partir, la mitad contra entrega" },
+          {
+            value: "split",
+            label: "50% inicio / 50% entrega",
+            detail: "La mitad para partir, la mitad contra entrega — por transferencia",
+          },
         ] as const);
 
   const effectivePayment = paymentOptions.some((o) => o.value === paymentPlan)
@@ -146,7 +152,7 @@ export function ContractForm() {
 
       {/* Forma de pago */}
       <div className="flex flex-col gap-2">
-        <span className={labelClass}>FORMA DE PAGO · TRANSFERENCIA BANCARIA</span>
+        <span className={labelClass}>FORMA DE PAGO</span>
         <div className="grid gap-2 sm:grid-cols-2">
           {paymentOptions.map((option) => {
             const selected = option.value === effectivePayment;
@@ -168,7 +174,9 @@ export function ContractForm() {
           })}
         </div>
         <p className="m-0 mt-1 font-mono text-[11px] leading-relaxed tracking-[0.04em] text-soft/60">
-          ¿NECESITAS OTRA ALTERNATIVA? EL CONTRATO ES UN BORRADOR: GENÉRALO Y LO AJUSTAMOS ANTES DE FIRMAR.
+          {effectivePayment === "full"
+            ? "AL GENERAR EL CONTRATO APARECE EL BOTÓN PARA PAGAR ONLINE CON MERCADO PAGO. TAMBIÉN PUEDES TRANSFERIR."
+            : "EL PAGO ONLINE CON MERCADO PAGO ESTÁ DISPONIBLE SOLO EN PAGO ÚNICO (100%). EL 50/50 Y LA MANTENCIÓN VAN POR TRANSFERENCIA."}
         </p>
       </div>
 
