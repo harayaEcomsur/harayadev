@@ -58,7 +58,7 @@ export default async function AbonoPage({
       <Header config={clientConfig} />
       <main className="py-14 sm:py-20">
         <div className="mx-auto max-w-2xl px-4 sm:px-6">
-          <div className="rounded-2xl border border-black/5 bg-white p-8 text-center shadow-sm">
+          <div className="rounded-2xl border border-foreground/10 bg-foreground/[0.03] p-8 text-center shadow-sm">
             {paid ? (
               <CheckCircle2 size={48} className="mx-auto text-green-600" />
             ) : estado === "error" ? (
@@ -69,7 +69,7 @@ export default async function AbonoPage({
             <h1 className="mt-4 font-heading text-2xl font-bold text-foreground sm:text-3xl">{copy.title}</h1>
             <p className="mt-2 text-foreground/70">{copy.body}</p>
 
-            <dl className="mt-6 space-y-1 rounded-xl bg-black/[0.03] p-4 text-left text-sm">
+            <dl className="mt-6 space-y-1 rounded-xl bg-foreground/[0.04] p-4 text-left text-sm">
               <div className="flex justify-between">
                 <dt className="text-foreground/60">Reserva</dt>
                 <dd className="font-semibold text-foreground">{params.id}</dd>
@@ -113,7 +113,7 @@ export default async function AbonoPage({
               ) : null}
               <a
                 href="/agenda"
-                className="rounded-full border border-black/10 px-6 py-2.5 text-sm font-semibold text-foreground/80 hover:border-primary hover:text-primary"
+                className="rounded-full border border-foreground/10 px-6 py-2.5 text-sm font-semibold text-foreground/80 hover:border-primary hover:text-primary"
               >
                 Volver a la agenda
               </a>

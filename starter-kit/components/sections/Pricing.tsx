@@ -11,7 +11,7 @@ export function Pricing({ plans }: { plans: NonNullable<ClientConfig["pricing"]>
           {plans.map((plan) => (
             <div
               key={plan.name}
-              className={`rounded-2xl border p-6 ${plan.highlighted ? "border-primary shadow-lg" : "border-black/10"}`}
+              className={`rounded-2xl border p-6 ${plan.highlighted ? "border-primary shadow-lg" : "border-foreground/10"}`}
             >
               <h3 className="font-heading text-xl font-semibold text-foreground">{plan.name}</h3>
               <p className="mt-2 text-3xl font-bold text-primary">{plan.price}</p>

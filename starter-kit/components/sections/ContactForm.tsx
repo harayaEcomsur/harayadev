@@ -57,7 +57,7 @@ export function ContactForm() {
           id="name"
           name="name"
           required
-          className="w-full rounded-lg border border-black/10 px-3 py-2 focus:border-primary focus:outline-none"
+          className="w-full rounded-lg border border-foreground/10 px-3 py-2 focus:border-primary focus:outline-none"
         />
       </div>
       <div>
@@ -68,7 +68,7 @@ export function ContactForm() {
           id="contactInfo"
           name="contactInfo"
           required
-          className="w-full rounded-lg border border-black/10 px-3 py-2 focus:border-primary focus:outline-none"
+          className="w-full rounded-lg border border-foreground/10 px-3 py-2 focus:border-primary focus:outline-none"
         />
       </div>
       <div>
@@ -80,7 +80,7 @@ export function ContactForm() {
           name="message"
           required
           rows={4}
-          className="w-full rounded-lg border border-black/10 px-3 py-2 focus:border-primary focus:outline-none"
+          className="w-full rounded-lg border border-foreground/10 px-3 py-2 focus:border-primary focus:outline-none"
         />
       </div>
       <button

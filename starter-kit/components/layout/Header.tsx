@@ -5,7 +5,7 @@ export function Header({ config }: { config: ClientConfig }) {
   const { branding, meta, modules } = config;
 
   return (
-    <header className="sticky top-0 z-30 border-b border-black/5 bg-background/90 backdrop-blur">
+    <header className="sticky top-0 z-30 border-b border-foreground/5 bg-background/90 backdrop-blur">
       <Container className="flex h-20 items-center justify-between sm:h-24">
         {/* El logo es la marca del cliente: va grande (2-3x el título), y el
             nombre en texto pasa a acompañarlo en chico. */}

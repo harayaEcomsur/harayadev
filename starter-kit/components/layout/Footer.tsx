@@ -7,7 +7,7 @@ export function Footer({ config }: { config: ClientConfig }) {
   const mostrarCredito = branding.credit || Boolean(process.env.SITE_NOINDEX);
 
   return (
-    <footer className="border-t border-black/5 py-10 text-sm text-foreground/60">
+    <footer className="border-t border-foreground/5 py-10 text-sm text-foreground/60">
       <Container className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <p>
           © {new Date().getFullYear()} {meta.businessName}. Todos los derechos reservados.

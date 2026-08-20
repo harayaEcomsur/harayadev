@@ -13,7 +13,7 @@ export function Services({ services }: { services: ClientConfig["services"] }) {
           {services.map((s) => (
             <div
               key={s.title}
-              className="rounded-2xl border border-black/5 p-6 shadow-sm transition-shadow hover:shadow-md"
+              className="rounded-2xl border border-foreground/5 p-6 shadow-sm transition-shadow hover:shadow-md"
             >
               <Icon name={s.icon} className="h-8 w-8 text-primary" />
               <h3 className="mt-4 font-heading text-lg font-semibold text-foreground">{s.title}</h3>

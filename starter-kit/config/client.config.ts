@@ -12,10 +12,16 @@ export const clientConfig = defineClientConfig({
     logoUrl: "/clients/sb-barberia-studio/logo.png",
     faviconUrl: "/clients/sb-barberia-studio/logo.png",
     palette: {
-      primary: "#1A1A1A",
+      // Negro/dorado fiel a los posts de @sb_salooon (fondo casi negro, textos
+      // dorados). "primary" además pinta botones con texto blanco encima
+      // (bg-primary + text-white en varios componentes compartidos), así que
+      // es un dorado más oscuro/bronce que mantiene contraste con blanco;
+      // "accent" es el dorado vívido del logo, usado solo como texto/detalle
+      // sobre el fondo oscuro (ahí sí contrasta fuerte).
+      primary: "#9C7A2A",
       accent: "#C9A227",
-      background: "#F7F5F2",
-      foreground: "#171412",
+      background: "#14110D",
+      foreground: "#F4EFE6",
     },
     fontPairing: "elegante",
     layout: "clasico",
@@ -25,7 +31,7 @@ export const clientConfig = defineClientConfig({
     title: "Preocupados por tu imagen",
     subtitle: "Cortes, asesoría de estilo y afeitado en Achupalla, Viña del Mar. Reserva tu hora en minutos.",
     ctaLabel: "Reservar hora",
-    ctaHref: "#contacto",
+    ctaHref: "/agenda",
     backgroundImageUrl: "/clients/barberia-don-manuel/hero.jpg",
   },
 
