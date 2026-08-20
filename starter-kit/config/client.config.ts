@@ -4,7 +4,7 @@ export const clientConfig = defineClientConfig({
   meta: {
     slug: "sb-barberia-studio",
     businessName: "SB Barbería Studio",
-    rubro: "barbería",
+    rubro: "Barbería y estética masculina",
     locale: "es-CL",
   },
 
@@ -12,48 +12,45 @@ export const clientConfig = defineClientConfig({
     logoUrl: "/clients/sb-barberia-studio/logo.png",
     faviconUrl: "/clients/sb-barberia-studio/logo.png",
     palette: {
-      primary: "#547E7E",
-      accent: "#EEDDDD",
-      background: "#F9FBFB",
-      foreground: "#172626",
+      primary: "#1A1A1A",
+      accent: "#C9A227",
+      background: "#F7F5F2",
+      foreground: "#171412",
     },
     fontPairing: "elegante",
     layout: "clasico",
   },
 
   hero: {
-    title: "Estilo clásico, técnica moderna",
-    subtitle: "Cortes, barba y afeitado tradicional en Ñuñoa. Reserva tu hora en minutos.",
+    title: "Preocupados por tu imagen",
+    subtitle: "Cortes, asesoría de estilo y afeitado en Achupalla, Viña del Mar. Reserva tu hora en minutos.",
     ctaLabel: "Reservar hora",
     ctaHref: "#contacto",
     backgroundImageUrl: "/clients/barberia-don-manuel/hero.jpg",
   },
 
   services: [
-    { icon: "Scissors", title: "Corte clásico", description: "Corte a tijera y máquina, incluye lavado.", price: "$9.000" },
-    { icon: "Sparkles", title: "Afeitado tradicional", description: "Afeitado a navaja con toalla caliente.", price: "$7.000" },
-    { icon: "Wrench", title: "Arreglo de barba", description: "Perfilado y diseño de barba a tu estilo.", price: "$6.000" },
-    { icon: "Star", title: "Combo corte + barba", description: "Nuestro servicio más pedido.", price: "$14.000" },
-    { icon: "Award", title: "Membresía mensual", description: "4 cortes al mes con precio preferencial.", price: "$29.990/mes" },
+    { icon: "Scissors", title: "Corte SB Studio", description: "Corte a tijera y máquina. Incluye lavado, asesoría de estilo y un bebestible de cortesía.", price: "Consulta valor" },
+    { icon: "Sparkles", title: "Corte + limpieza de cejas", description: "Todo lo del Corte SB Studio, más limpieza de cejas.", price: "Consulta valor" },
   ],
 
   about: {
-    title: "Tradición barbera desde 2015",
-    body: "Don Manuel aprendió el oficio de su padre y hoy lidera un equipo de 4 barberos en el corazón de Ñuñoa. Ambiente relajado, buena música y atención de primera.",
+    title: "Calidad, asesoría y estilo",
+    body: "SB Barbería Studio, en Achupalla (Viña del Mar), le pone foco a tu imagen: cada corte incluye lavado, asesoría de estilo y un bebestible de cortesía, con la opción de sumar limpieza de cejas. Todos los martes, 10% de descuento en el servicio.",
     imageUrl: "/clients/barberia-don-manuel/nosotros.jpg",
   },
 
   gallery: [
-    { url: "/clients/barberia-don-manuel/galeria-1.jpg", alt: "Corte clásico terminado" },
+    { url: "/clients/barberia-don-manuel/galeria-1.jpg", alt: "Corte terminado" },
     { url: "/clients/barberia-don-manuel/galeria-2.jpg", alt: "Interior de la barbería" },
-    { url: "/clients/barberia-don-manuel/galeria-3.jpg", alt: "Afeitado a navaja" },
+    { url: "/clients/barberia-don-manuel/galeria-3.jpg", alt: "Atención en el sillón" },
   ],
 
   contact: {
     phone: "+56 9 8765 4321",
     whatsapp: "56987654321",
     whatsappPrefilledMessage: "Hola! Quiero reservar hora en SB Barbería Studio",
-    email: "reservas@barberiadonmanuel.cl",
+    email: "reservas@sbbarberiastudio.cl",
     address: "Elicura 145, Achupalla, Viña del Mar",
     mapQuery: "Elicura 145, Achupalla, Viña del Mar, Chile",
     hours: [
@@ -62,7 +59,7 @@ export const clientConfig = defineClientConfig({
       { day: "Lunes y domingo", closed: true },
     ],
     socials: [
-      { platform: "instagram", url: "https://instagram.com/barberiadonmanuel" },
+      { platform: "instagram", url: "https://instagram.com/sb_salooon" },
     ],
   },
 
@@ -80,63 +77,64 @@ export const clientConfig = defineClientConfig({
     slotMinutes: 45,
     daysAhead: 14,
     depositNote:
-      "Para confirmar tu hora pedimos un abono de $5.000, que se descuenta del servicio. Puedes pagarlo al tiro con tarjeta.",
+      "Para confirmar tu hora pedimos un abono, que se descuenta del servicio. Puedes pagarlo al tiro con tarjeta.",
     depositAmount: 5000,
   },
 
   testimonials: [
-    { name: "Francisco T.", quote: "Llevo 3 años yendo, nunca me han dejado mal.", rating: 5 },
-    { name: "Ignacio P.", quote: "El mejor afeitado tradicional que he probado en Santiago.", rating: 5 },
+    { name: "Cliente frecuente", quote: "Me gusta que el corte venga con asesoría, no solo llegan y cortan.", rating: 5 },
+    { name: "Cliente nuevo", quote: "Buena onda, ambiente cómodo y quedé conforme con el resultado.", rating: 5 },
   ],
 
   faq: [
     { q: "¿Necesito reservar hora?", a: "Se recomienda reservar por WhatsApp, aunque también atendemos por orden de llegada según disponibilidad." },
-    { q: "¿Atienden niños?", a: "Sí, tenemos precio especial para menores de 12 años." },
+    { q: "¿Qué incluye el corte?", a: "Todo corte incluye lavado, asesoría de estilo y un bebestible de cortesía. La limpieza de cejas es opcional." },
+    { q: "¿Tienen promociones?", a: "Sí: con la membresía, cada 5 cortes obtienes 1 gratis (o cada 10, según el plan). Además, todos los martes hay 10% de descuento en tu servicio." },
     { q: "¿Aceptan tarjeta?", a: "Sí, débito y crédito." },
   ],
 
   pricing: [
     {
-      name: "Corte simple",
-      price: "$9.000",
-      features: ["Corte a tijera y máquina", "Lavado incluido"],
+      name: "Corte SB Studio",
+      price: "Consulta valor",
+      features: ["Corte a tijera y máquina", "Lavado incluido", "Asesoría de estilo", "Bebestible de cortesía"],
     },
     {
-      name: "Combo completo",
-      price: "$14.000",
-      features: ["Corte", "Arreglo de barba", "Toalla caliente"],
+      name: "Corte + limpieza de cejas",
+      price: "Consulta valor",
+      features: ["Todo lo del corte SB Studio", "Limpieza de cejas"],
       highlighted: true,
     },
     {
-      name: "Membresía mensual",
-      price: "$29.990/mes",
-      features: ["4 cortes al mes", "Prioridad de agenda", "10% dto. en productos"],
+      name: "Membresía SB Studio",
+      price: "Acumulable",
+      features: ["5 cortes → 1 corte gratis", "10 cortes → 1 corte gratis", "Martes: 10% dto. en tu servicio"],
     },
   ],
 
   chat: {
-    businessDescription: "SB Barbería Studio es una barbería tradicional en Ñuñoa, Santiago, con más de 8 años de trayectoria y 4 barberos.",
+    businessDescription: "SB Barbería Studio es una barbería en Achupalla, Viña del Mar, enfocada en la imagen del cliente: cada corte incluye lavado, asesoría de estilo y un bebestible de cortesía, con limpieza de cejas opcional. Tienen membresía por cortes acumulados y descuento los martes.",
     qaPairs: [
       { q: "¿Cuál es el horario?", a: "Martes a viernes de 10:00 a 20:00, sábado de 9:00 a 18:00. Cerrado lunes y domingo." },
-      { q: "¿Cuánto cuesta un corte?", a: "El corte clásico cuesta $9.000, y el combo corte + barba $14.000." },
-      { q: "¿Cómo reservo hora?", a: "Puedes reservar directamente por WhatsApp indicando el día y horario de tu preferencia." },
-      { q: "¿Dónde están ubicados?", a: "En Irarrázaval 3456, Ñuñoa, Santiago." },
+      { q: "¿Qué incluye un corte?", a: "Lavado, asesoría de estilo y un bebestible de cortesía. La limpieza de cejas es opcional." },
+      { q: "¿Tienen descuentos?", a: "Todos los martes hay 10% de descuento en tu servicio, y con la membresía cada 5 o 10 cortes obtienes 1 gratis." },
+      { q: "¿Cómo reservo hora?", a: "Puedes reservar directamente por WhatsApp o desde la agenda del sitio, indicando el día y horario de tu preferencia." },
+      { q: "¿Dónde están ubicados?", a: "En Elicura 145, Achupalla, Viña del Mar." },
     ],
     fallbackToWhatsapp: true,
   },
 
   themeVariants: [
-    { id: "a", name: "Fiel al logo", palette: { primary: "#547E7E", accent: "#EEDDDD", background: "#F9FBFB", foreground: "#172626" } },
-    { id: "b", name: "Acento protagonista", palette: { primary: "#AF6060", accent: "#547E7E", background: "#FBF9F9", foreground: "#172626" } },
-    { id: "c", name: "Modo oscuro", palette: { primary: "#2C8383", accent: "#EEDDDD", background: "#122121", foreground: "#F4F2EF" } },
+    { id: "a", name: "Fiel al logo", palette: { primary: "#1A1A1A", accent: "#C9A227", background: "#F7F5F2", foreground: "#171412" } },
+    { id: "b", name: "Acento protagonista", palette: { primary: "#C9A227", accent: "#1A1A1A", background: "#FFFDF8", foreground: "#171412" } },
+    { id: "c", name: "Modo oscuro", palette: { primary: "#C9A227", accent: "#8A7126", background: "#14110D", foreground: "#F4EFE6" } },
   ],
 
   seo: {
-    title: "SB Barbería Studio — Barbería",
-    description: "Barbería tradicional en Ñuñoa. Cortes clásicos, afeitado a navaja y arreglo de barba. Reserva tu hora por WhatsApp.",
+    title: "SB Barbería Studio — Barbería en Viña del Mar",
+    description: "Barbería en Achupalla, Viña del Mar. Cortes con lavado, asesoría de estilo y bebestible de cortesía. Reserva tu hora por WhatsApp o agenda online.",
     businessType: "HairSalon",
     priceRange: "$$",
-    keywords: ["barberia ñuñoa", "corte de pelo hombre", "afeitado tradicional santiago"],
+    keywords: ["barberia viña del mar", "barberia achupalla", "corte de pelo hombre viña del mar"],
   },
 });
-
